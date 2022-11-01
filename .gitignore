@@ -2,6 +2,10 @@
 __pycache__/
 source/__pycache__/
 
+# EasyTl cache folder
+cache/*
+!cache/.gitkeep
+
 # PyCharm files
 .idea/
 
