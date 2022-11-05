@@ -11,7 +11,7 @@ This is a userbot for Telegram, that have very comfortable plugin API.
 - <a href="https://github.com/ftdot/EasyTl/README.md#clone-repository-to-the-local-directory">Clone repository to the local directory</a>
 - <a href="https://github.com/ftdot/EasyTl/README.md#enter-to-the-directory">Enter to the directory</a>
 - <a href="https://github.com/ftdot/EasyTl/README.md#set-up-api_id-api_hash-and-my_id-in-easytlpy">Set up API_ID, API_HASH and MY_ID in easytl.py</a>
-- <a href=" https://github.com/ftdot/EasyTl/edit/master/README.md#run-this">Run this</a>
+- <a href="https://github.com/ftdot/EasyTl/README.md#run-this">Run this</a>
 
 <a href="https://github.com/ftdot/EasyTl/README.md#why-you-shouldnt-use-the-userbot-now">Why you shouldn't use the userbot now?</a>
 
