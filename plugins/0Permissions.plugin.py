@@ -1,0 +1,68 @@
+# description := Library-plugin | Allows to manage the commands permissions
+# required_platforms := windows, linux, android
+# etl_version := 0
+# version := 1.1
+# update_link := no-link
+# lang_links := no-links
+# requirements := no-requirements
+# author := ftdot (https://github.com/ftdot)
+# changelog := Added "trust" command
+
+
+async def call_w_permissions(func, event, args: list[str], var: str):
+    """(System method) Calls the command (function) with checking the permissions
+
+    :param func: Function
+    :type func: function
+    :param event: Telethon's event variable
+    :param args: List with the arguments
+    :type args: list[str]
+    :param var: Variant of the function, that was called
+    :type var: str
+    """
+
+    # check the sender id in the commands allowed ids
+    if not (await event.get_sender()).id in namespace.pcommands[func.__name__]:
+        return
+
+    await func(event, args, var)  # call the function
+
+
+# trusts some command to the user that message was replied
+@this.command(namespace.translator.get('builtin_libs.Permissions.trust_command').split('; '))
+async def trust(event, args: list[str], var: str):
+    if not len(args) > 0:
+        return
+
+    # check if first argument is exists in the registered commands
+    if not args[0] in namespace.commands:
+        return
+    fname = namespace.commands[args[0]].__name__
+
+    # check if the command is danger or no
+    if 'danger' in namespace.pcommands[fname]:
+        await namespace.instance.send_unsuccess(
+            event,
+            namespace.translator.get('builtin_libs.Permissions.danger_command_message')
+        )
+        return
+
+    # find the message that was replied to
+    msg = [msg async for msg in namespace.instance.client.iter_messages(event.chat_id, 25)
+                    if msg.id == event.reply_to.reply_to_msg_id]
+
+    # check if the message is exists
+    if not any(msg):
+        return
+    if (sender_id := (await msg[0].get_sender()).id) in namespace.pcommands[fname]:
+        await namespace.instance.send_success(
+            event,
+            namespace.translator.get('builtin_libs.Permissions.already_trusted_message')
+        )
+        return
+
+    # add user id to the commands trusted ids
+    await namespace.instance.send_success(event, namespace.translator.get('builtin_libs.Permissions.trusted_message'))
+    namespace.pcommands[fname].append(sender_id)
+
+namespace.call_w_permissions = call_w_permissions
