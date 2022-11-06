@@ -2,6 +2,8 @@
   <img src="https://github.com/ftdot/ftdot/raw/main/imgs/easytl_banner_nb.png" />
 </p>
 
+[![Latest tag](https://img.shields.io/github/v/tag/ftdot/EasyTl?label=LATEST%20TAG&style=for-the-badge)](https://github.com/ftdot/EasyTl/tags)
+[![Issues](https://img.shields.io/github/issues/ftdot/EasyTl?style=for-the-badge)](https://github.com/ftdot/EasyTl/issues)
 # EasyTl
 This is a userbot for Telegram, that have very comfortable plugin API.
 **EasyTl** is the recreated project **ftub**, named also as **tub**.

@@ -13,9 +13,20 @@ logs/*
 # PyCharm files
 .idea/
 
-# Do not use my sessions and cookies for test =)
+# do not use my sessions and cookies for test =)
+test_creds.py
 .google-cookie
 EasyTl.session
+EasyTl.session-journal
 
-# What I want to do you're will not see!
+# what I want to do you're will not see!
 todo_.txt
+
+# keep only required plugins and languages
+lang/*
+!lang/core_*.ini
+!lang/builtin_libs_*.ini
+
+plugins/*
+!plugins/0Core.plugin.py
+!plugins/0Permissions.plugin.py

@@ -9,7 +9,7 @@
 # changelog := Added "trust" command
 
 
-async def call_w_permissions(func, event, args: list[str], var: str):
+async def call_w_permissions(func, event, args: list[str]):
     """(System method) Calls the command (function) with checking the permissions
 
     :param func: Function
@@ -21,16 +21,26 @@ async def call_w_permissions(func, event, args: list[str], var: str):
     :type var: str
     """
 
+    user_id = (await event.get_sender()).id
+
+    namespace.instance.logger.debug(f'call_w_permissions : '
+                                    f'Get permissions for the function {func.__name__}() for the user id {user_id}')
+
     # check the sender id in the commands allowed ids
-    if not (await event.get_sender()).id in namespace.pcommands[func.__name__]:
+    if user_id not in namespace.pcommands[func.__name__]:
+        namespace.instance.logger.debug(f'call_w_permissions : '
+                                        f'User hasn\'t permissions to execute this function')
         return
 
-    await func(event, args, var)  # call the function
+    namespace.instance.logger.debug(f'call_w_permissions : '
+                                    f'Call the function {func.__name__}()')
+
+    await func(event, args)  # call the function
 
 
 # trusts some command to the user that message was replied
 @this.command(namespace.translator.get('builtin_libs.Permissions.trust_command').split('; '))
-async def trust(event, args: list[str], var: str):
+async def trust(event, args: list[str]):
     if not len(args) > 0:
         return
 

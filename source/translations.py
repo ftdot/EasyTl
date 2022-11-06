@@ -20,12 +20,23 @@ class Translator:
 
         self._cache = {}
 
+    @staticmethod
+    def cyrillic(string: str):
+        """Fixes cyrillic encoding problem
+
+        :returns: Encoded string with UTF-8
+        """
+
+        return string.encode('1251').decode('utf8')
+
     def load_file(self, path: str):
         """(System method) Loads a file to the translations dictionary
 
         :param path: Path to the file
         :type path: str
         """
+
+        self.namespace.instance.logger.debug('TRANSLATOR : Loading languages from the file by path '+path)
 
         n = os.path.basename(path)[:-7]
         self.translations[n] = ConfigParser()
@@ -46,7 +57,10 @@ class Translator:
         :type head: str
         """
 
+        self.namespace.instance.logger.debug('TRANSLATOR : Initializing head ' + head)
+
         if head in self.translations:
+            self.namespace.instance.logger.debug('TRANSLATOR : Already initialized')
             return
         self.load_file(os.path.join(self.lang_dir, head+'_en.ini'))
 
@@ -60,13 +74,18 @@ class Translator:
         :rtype: str
         """
 
+        self.namespace.instance.logger.debug('TRANSLATOR : Get key ' + key)
+
         if key in self._cache:
+            self.namespace.instance.logger.debug('TRANSLATOR : Return cached value')
             return self._cache[key]
+
+        self.namespace.instance.logger.debug('TRANSLATOR : Parsing the key value')
 
         path = key.split('.')
         value = self.translations
         for p in path:
             value = value[p]
 
-        self._cache[key] = self.namespace.cyrillic(value)
+        self._cache[key] = self.cyrillic(value)
         return self._cache[key]
