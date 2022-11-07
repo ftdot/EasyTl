@@ -8,19 +8,20 @@
 This is a userbot for Telegram, that have very comfortable plugin API.
 **EasyTl** is the recreated project **ftub**, named also as **tub**.
 
-## Navigation
-<a href="https://github.com/ftdot/EasyTl/README.md#usage">Usage</a>
-- <a href="https://github.com/ftdot/EasyTl/README.md#clone-repository-to-the-local-directory">Clone repository to the local directory</a>
-- <a href="https://github.com/ftdot/EasyTl/README.md#enter-to-the-directory">Enter to the directory</a>
-- <a href="https://github.com/ftdot/EasyTl/README.md#set-up-api_id-api_hash-and-my_id-in-easytlpy">Set up API_ID, API_HASH and MY_ID in easytl.py</a>
-- <a href="https://github.com/ftdot/EasyTl/README.md#run-this">Run this</a>
+## 📘 Navigation
+📖 <a href="#usage">Usage</a>
+- <a href="#clone-repository-to-the-local-directory">Clone repository to the local directory</a>
+- <a href="#enter-to-the-directory">Enter to the directory</a>
+- <a href="#set-up-api_id-api_hash-and-my_id-in-easytlpy">Set up API_ID, API_HASH and MY_ID in easytl.py</a>
+- - <a href="#fast-guide">Fast guide</a>
+- <a href="#run-this">Run this</a>
 
-<a href="https://github.com/ftdot/EasyTl/README.md#why-you-shouldnt-use-the-userbot-now">Why you shouldn't use the userbot now?</a>
+❓ <a href="https://github.com/ftdot/EasyTl/README.md#why-you-shouldnt-use-the-userbot-now">Why you shouldn't use the userbot now?</a>
 
-<a href="https://github.com/ftdot/EasyTl/README.md#what-is-planning-in-this-project">What is planning in this project?</a>
+❓ <a href="https://github.com/ftdot/EasyTl/README.md#what-is-planning-in-this-project">What is planning in this project?</a>
 
 ## Usage
-Currently this version is alpha-test, this means that the project is unstable and haven't full documentation.
+Currently, this version is alpha-test, this means that the project is unstable and haven't full documentation.
 Report any bug if you found there - https://github.com/ftdot/EasyTl/issues
 
 #### Clone repository to the local directory
@@ -44,7 +45,7 @@ MY_ID     = -1               # ur id from @myidbot
 lang      = 'en'             # language of userbot
 ```
 
-Fast guide:
+#### Fast guide:
 * Go to page https://my.telegram.org/
 * Authorize with telegram to this page
 * Go to Apps tab
