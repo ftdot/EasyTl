@@ -50,7 +50,9 @@ if __name__ == '__main__':
             main_instance.logger.debug('Add notify about a restart of the userbot')
 
             main_instance.namespace.notify_stack.append(
-                main_instance.f_success(main_instance.namespace.translator.get('core.restart_command.restarted_notify'))
+                main_instance.f_success(
+                    main_instance.namespace.translations['core']['command.restart']['restarted_notify']
+                )
             )
 
     main_instance.run()

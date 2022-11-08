@@ -99,8 +99,8 @@ class Plugin:
 
             # write notify about the error
             self.namespace.notify_stack.append(
-                self.namespace.translator.get('core.core.error_notify').format(
-                    self.namespace.translator.get('core.plugin_api.send_request_error').format(self.plugin_name)
+                self.namespace.translations['core']['error_notify'].format(
+                    self.namespace.translations['core']['pluginapi']['send_request_error'].format(self.plugin_name)
                 )
             )
             self.errored = True
@@ -122,11 +122,11 @@ class Plugin:
 
             # write notify about updated plugin
             self.namespace.notify_stack.append(
-                self.namespace.translator.get('core.plugin_api.update_notify').format(self.plugin_name)
+                self.namespace.translations['core']['pluginapi']['update_notify'].format(self.plugin_name)
             )
             self.namespace.notify_stack.append(
-                self.namespace.translator.get('core.plugin_api.changelog_notify').format(self.info.version,
-                                                                                         self.info.changelog)
+                self.namespace.translations['core']['pluginapi']['changelog_notify'].format(self.info.version,
+                                                                                            self.info.changelog)
             )
             return
 
@@ -163,8 +163,8 @@ class Plugin:
 
                 # write notify about the error
                 self.namespace.notify_stack.append(
-                    self.namespace.translator.get('core.core.error_notify').format(
-                        self.namespace.translator.get('core.plugin_api.requirements_error').format(self.plugin_name)
+                    self.namespace.translations['core']['error_notify'].format(
+                        self.namespace.translations['core']['pluginapi']['requirements_error'].format(self.plugin_name)
                     )
                 )
                 self.errored = True
@@ -187,9 +187,13 @@ class Plugin:
         except Exception as e:
             self.log_exception(e)
 
+            self.logger.debug(self.namespace.translations)
+
             # notify about the error
             self.namespace.notify_stack.append(
-                self.namespace.translator.get('core.plugin_api.plugin_execution_error').format(self.plugin_name)
+                self.namespace.translations['core']['error_notify'].format(
+                    self.namespace.translations['core']['pluginapi']['plugin_execution_error'].format(self.plugin_name)
+                )
             )
             self.errored = True
 
@@ -310,8 +314,8 @@ class PluginsList:
                                                      f'Plugin {plugin_name} return an exception while executing it')
 
                 self.namespace.notify_stack.append(
-                    self.namespace.translator.get('core.core.error_notify').format(
-                        self.namespace.translator.get('core.plugin_api.plugin_execution_error').format('')
+                    self.namespace.translations['core']['error_notify'].format(
+                        self.namespace.translations['core']['pluginapi']['plugin_execution_error'].format('')
                     )
                 )
                 return False

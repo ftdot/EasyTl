@@ -2,6 +2,9 @@
 __pycache__/
 source/__pycache__/
 
+# Virtual Environment
+venv/
+
 # EasyTl cache folder
 cache/*
 !cache/.gitkeep
@@ -20,13 +23,18 @@ EasyTl.session
 EasyTl.session-journal
 
 # what I want to do you're will not see!
-todo_.txt
+todo*.txt
 
 # keep only required plugins and languages
 lang/*
-!lang/core_*.ini
-!lang/builtin_libs_*.ini
+!lang/core_*.toml
+!lang/permissions_*.toml
 
 plugins/*
 !plugins/0Core.plugin.py
 !plugins/0Permissions.plugin.py
+
+# in the progress :)
+README_ru.md
+README_ua.md
+documentation/

@@ -1,5 +1,5 @@
 import os.path
-from configparser import ConfigParser
+import tomllib
 from .namespace import Namespace
 
 
@@ -10,15 +10,15 @@ class Translator:
     :type lang_dir: str
     :param lang: Language (Country code)
     :type lang: str
+
+    :ivar namespace: Instance of the Namespace
+    :type namespace: Namespace
     """
 
     def __init__(self, lang_dir: str = os.path.join('.', 'lang'), lang: str = 'en'):
         self.lang_dir, self.lang = lang_dir, lang
 
-        self.translations = {}
         self.namespace = None
-
-        self._cache = {}
 
     @staticmethod
     def cyrillic(string: str):
@@ -38,14 +38,19 @@ class Translator:
 
         self.namespace.instance.logger.debug('TRANSLATOR : Loading languages from the file by path '+path)
 
-        n = os.path.basename(path)[:-7]
-        self.translations[n] = ConfigParser()
-        self.translations[n].read(path)
+        n = os.path.basename(path)[:-8]
+        with open(path, 'rb') as f:
+            self.namespace.translations[n] = tomllib.load(f)
 
-    def load_language(self):
+    def load_languages(self):
         """(System method) Loads the languages to the current languages dictionary"""
 
-        files = [f for f in os.listdir(self.lang_dir) if f.endswith(self.lang+'.ini')]
+        # check for the translations dict in the namespace
+        if 'translations' not in self.namespace.values:
+            self.namespace.instance.logger.debug('TRANSLATOR : Create translations dict in the namespace')
+            self.namespace.translations = {}
+
+        files = [f for f in os.listdir(self.lang_dir) if f.endswith(self.lang+'.toml')]
 
         for f in files:
             self.load_file(os.path.join(self.lang_dir, f))
@@ -59,33 +64,9 @@ class Translator:
 
         self.namespace.instance.logger.debug('TRANSLATOR : Initializing head ' + head)
 
-        if head in self.translations:
+        # check if head already in the dict
+        if head in self.namespace.translations:
             self.namespace.instance.logger.debug('TRANSLATOR : Already initialized')
             return
-        self.load_file(os.path.join(self.lang_dir, head+'_en.ini'))
 
-    def get(self, key: str) -> str:
-        """Gets the translation string by the key in the translations dict
-
-        :param key: Key (Format: [FILE HEAD].[HEADER].[KEY])
-        :type key: str
-
-        :returns: Translated string
-        :rtype: str
-        """
-
-        self.namespace.instance.logger.debug('TRANSLATOR : Get key ' + key)
-
-        if key in self._cache:
-            self.namespace.instance.logger.debug('TRANSLATOR : Return cached value')
-            return self._cache[key]
-
-        self.namespace.instance.logger.debug('TRANSLATOR : Parsing the key value')
-
-        path = key.split('.')
-        value = self.translations
-        for p in path:
-            value = value[p]
-
-        self._cache[key] = self.cyrillic(value)
-        return self._cache[key]
+        self.load_file(os.path.join(self.lang_dir, head+'_en.toml'))

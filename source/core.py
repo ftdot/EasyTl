@@ -87,7 +87,7 @@ class Instance:
 
         # init the translator
         self.namespace.translator.namespace = self.namespace
-        self.namespace.translator.load_language()
+        self.namespace.translator.load_languages()
 
         self.logger.debug('Loading plugins list')
 

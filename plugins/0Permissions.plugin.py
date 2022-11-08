@@ -1,13 +1,14 @@
 # description := Library-plugin | Allows to manage the commands permissions
 # required_platforms := windows, linux, android
 # etl_version := 0
-# version := 1.1
+# version := 1.2
 # update_link := no-link
 # lang_links := no-links
 # requirements := no-requirements
 # author := ftdot (https://github.com/ftdot)
-# changelog := Added "trust" command
+# changelog := Improvements with the translator
 
+namespace.translator.initialize('permissions')
 
 async def call_w_permissions(func, event, args: list[str]):
     """(System method) Calls the command (function) with checking the permissions
@@ -39,7 +40,7 @@ async def call_w_permissions(func, event, args: list[str]):
 
 
 # trusts some command to the user that message was replied
-@this.command(namespace.translator.get('builtin_libs.Permissions.trust_command').split('; '))
+@this.command(namespace.translations['permissions']['command']['trust']['names'])
 async def trust(event, args: list[str]):
     if not len(args) > 0:
         return
@@ -53,7 +54,7 @@ async def trust(event, args: list[str]):
     if 'danger' in namespace.pcommands[fname]:
         await namespace.instance.send_unsuccess(
             event,
-            namespace.translator.get('builtin_libs.Permissions.danger_command_message')
+            namespace.translations['permissions']['command']['trust']['danger_command_message']
         )
         return
 
@@ -67,12 +68,13 @@ async def trust(event, args: list[str]):
     if (sender_id := (await msg[0].get_sender()).id) in namespace.pcommands[fname]:
         await namespace.instance.send_success(
             event,
-            namespace.translator.get('builtin_libs.Permissions.already_trusted_message')
+            namespace.translations['permissions']['command']['trust']['already_trusted_message']
         )
         return
 
     # add user id to the commands trusted ids
-    await namespace.instance.send_success(event, namespace.translator.get('builtin_libs.Permissions.trusted_message'))
+    await namespace.instance.send_success(event,
+                                          namespace.translations['permissions']['command']['trust']['trusted_message'])
     namespace.pcommands[fname].append(sender_id)
 
 namespace.call_w_permissions = call_w_permissions

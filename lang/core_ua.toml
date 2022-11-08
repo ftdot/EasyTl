@@ -1,0 +1,25 @@
+
+prefixes = [ "easy", "ez", "изи" ]           # Префиксы для EasyT;
+error_notify = "⚠️⛔️ Звершилася помилка {0}"  # Любая ошибка будет форматирована под эту строку
+
+[pluginapi]
+send_request_error = "під час відправки запросу провірка для плагину {0}"
+requirements_error = "під час інсталяції для плагину {0}"
+plugin_execution_error = "під час запуску плагину {0}"
+
+update_notify = "Плагин {0} був оновлен до нової версії!"
+changelog_notify = "v{0} список змінень:\n\n{1}}"
+
+# Команды плагина Core
+
+[command.stop]
+names = [ "stop", "стоп" ]
+stop_notify = "юзербота остановлено"
+
+[command.restart]
+names = [ "restart", "рестарт" ]
+restart_notify = "юзербота буде перезавантажено"
+restarted_notify = "юизербот перезаватажен!"
+
+[command.pass]
+names = [ "pass", "пасс", "пас", "Ukraine_is_win" ]
