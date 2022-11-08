@@ -12,6 +12,9 @@ This is a userbot for Telegram, that have very comfortable plugin API.
 📖 <a href="#usage">Usage</a>
 - <a href="#clone-repository-to-the-local-directory">Clone repository to the local directory</a>
 - <a href="#enter-to-the-directory">Enter to the directory</a>
+- <a href="#setup">Setup</a>
+- - <a href="#for-the-linux">For the Linux</a>
+- - - <a href="#for-the-windows">For the Windows</a>
 - <a href="#set-up-api_id-api_hash-and-my_id-in-easytlpy">Set up API_ID, API_HASH and MY_ID in easytl.py</a>
 - - <a href="#fast-guide">Fast guide</a>
 - <a href="#run-this">Run this</a>
@@ -28,7 +31,22 @@ Report any bug if you found there - https://github.com/ftdot/EasyTl/issues
     # git clone https://github.com/ftdot/easytl
 #### Enter to the directory
     # cd easytl
-#### Set up API_ID, API_HASH and MY_ID in easytl.py
+
+### Setup
+To work with the EasyTl you must install required packages and run it by the python 3.11+.
+But you can run the installation script, that will do it all work, after that you can use EasyTl.
+
+**WARNING:** You must install the python 3.11 for first. You can do it from their official site: https://www.python.org/
+
+#### For the Linux:
+
+    # ./install.sh
+
+#### For the Windows:
+
+    You must run the install.bat file
+
+### Set up API_ID, API_HASH and MY_ID in easytl.py
 Open a file ``easytl.py`` by any editor and change these lines:
 ```python
 # How to get API_ID and API_HASH:
@@ -71,7 +89,7 @@ By default there languages are available:
 * ``ru`` - Russian
 * ``ua`` - Ukrainian
 
-#### Run this
+### Run this
 After you configured the userbot, run that.
 For Linux:
     # python3 easytl.py
