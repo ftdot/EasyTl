@@ -14,7 +14,7 @@ This is a userbot for Telegram, that have very comfortable plugin API.
 - <a href="#enter-to-the-directory">Enter to the directory</a>
 - <a href="#setup">Setup</a>
 - - <a href="#for-the-linux">For the Linux</a>
-- - - <a href="#for-the-windows">For the Windows</a>
+- - <a href="#for-the-windows">For the Windows</a>
 - <a href="#set-up-api_id-api_hash-and-my_id-in-easytlpy">Set up API_ID, API_HASH and MY_ID in easytl.py</a>
 - - <a href="#fast-guide">Fast guide</a>
 - <a href="#run-this">Run this</a>
