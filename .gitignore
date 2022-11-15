@@ -2,8 +2,8 @@
 __pycache__/
 source/__pycache__/
 
-# Virtual Environment
-venv/
+# PyCharm files
+.idea/
 
 # EasyTl cache folder
 cache/*
@@ -12,9 +12,6 @@ cache/*
 # EasyTl logs folder
 logs/*
 !logs/.gitkeep
-
-# PyCharm files
-.idea/
 
 # do not use my sessions and cookies for test =)
 test_creds.py

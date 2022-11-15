@@ -10,6 +10,11 @@ plugin_execution_error = "під час запуску плагину {0}"
 update_notify = "Плагин {0} був оновлен до нової версії!"
 changelog_notify = "v{0} список змінень:\n\n{1}}"
 
+[instance]
+telegram_get_number = "Введіть ваш номер телефону для авторизації до телеграму: "
+telegram_get_code = "Введіть отриманий код:  "
+telegram_get_password = "Введіть ваш пароль для доступу до аккаунту: "
+
 # Команды плагина Core
 
 [command.stop]
@@ -20,6 +25,10 @@ stop_notify = "юзербота остановлено"
 names = [ "restart", "рестарт" ]
 restart_notify = "юзербота буде перезавантажено"
 restarted_notify = "юизербот перезаватажен!"
+
+[command.clear-logs]
+names = [ "clearlogs", "clrlogs", "очистлоги" ]
+cleaned_message = "Логи було очищено!"
 
 [command.pass]
 names = [ "pass", "пасс", "пас", "Ukraine_is_win" ]

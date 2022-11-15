@@ -2,6 +2,7 @@ import os
 import logging
 import time
 import sys
+import tomllib
 from getpass import getpass
 from telethon import TelegramClient, events
 from .namespace import Namespace
@@ -45,6 +46,8 @@ class Instance:
     :type instance_name: str
     :ivar logger: An Logger object
     :type logger: logging.Logger
+    :ivar stdout_handler: An stream handler for the console output
+    :type stdout_handler: logging.StreamHandler
     """
 
     def __init__(self, api_id: int, api_hash: str, owner_id: int, plugins_dir: str = os.path.join('.', 'plugins'),
@@ -59,6 +62,7 @@ class Instance:
 
         self.client = None
         self.logger = None
+        self.stdout_handler = None
 
         self.prefixes = ['easy']
         self.platform = self.get_platform()
@@ -122,14 +126,14 @@ class Instance:
         )
 
         # init instance logger
-        self.logger = logging.Logger(self.instance_name)
+        self.logger = logging.Logger('EasyTl')
         self.logger.setLevel(log_level)
 
         # init a stream handler for the console output
-        handler = logging.StreamHandler(sys.stdout)
-        handler.setLevel(log_level)
-        handler.setFormatter(formatter)
-        self.logger.addHandler(handler)
+        self.stdout_handler = logging.StreamHandler(sys.stdout)
+        self.stdout_handler.setLevel(log_level)
+        self.stdout_handler.setFormatter(formatter)
+        self.logger.addHandler(self.stdout_handler)
 
     def partial_run(self):
         """Only starts the telegram client"""
@@ -206,8 +210,8 @@ class Instance:
         :rtype: str
         """
 
-        with open(os.path.join(self.config_dir, '_version')) as f:
-            return f.read()
+        with open(os.path.join(self.config_dir, 'version.toml'), 'rb') as f:
+            return tomllib.load(f)
 
     ####
 

@@ -65,3 +65,6 @@ except Exception as e:
     logger.debug('#' * 25)
 
 logging.info('All done, you can sleep peacefully')
+logging.info('To run the EasyTl, setup it by the guide here: '
+             'https://github.com/ftdot/EasyTl/tree/master#set-up-api_id-api_hash-and-my_id-in-easytlpy')
+logging.info('After you setup the credetinals, run it: https://github.com/ftdot/EasyTl/tree/master#run-tit')

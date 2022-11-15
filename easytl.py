@@ -5,6 +5,8 @@ import sys
 from source.core import Instance
 from source.translations import Translator
 
+# There is EasyTl usebot default instance
+
 # How to get API_ID and API_HASH:
 #    - Sign up for Telegram using any application.
 #    - Log in to your Telegram core: https://my.telegram.org.
@@ -28,8 +30,10 @@ lang_dir     = os.path.join(os.getcwd(), 'lang')
 config_dir   = os.path.join(os.getcwd(), 'config')
 logs_dir     = os.path.join(os.getcwd(), 'logs')
 
-log_level    = logging.INFO  # Set this to the logging.DEBUG if you want to see all debug information in the logs
+log_level          = logging.DEBUG
+console_log_level  = logging.INFO  # Set this to the logging.DEBUG if you want to see all the debug information
 
+# test_creds contains settings for this instance to do the tests
 if os.path.exists('test_creds.py'):
     from test_creds import *
 

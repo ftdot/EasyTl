@@ -5,8 +5,10 @@
 [![Latest tag](https://img.shields.io/github/v/tag/ftdot/EasyTl?label=LATEST%20TAG&style=for-the-badge)](https://github.com/ftdot/EasyTl/tags)
 [![Issues](https://img.shields.io/github/issues/ftdot/EasyTl?style=for-the-badge)](https://github.com/ftdot/EasyTl/issues)
 # EasyTl
-This is a userbot for Telegram, that have very comfortable plugin API.
-**EasyTl** is the recreated project **ftub**, named also as **tub**.
+This is a userbot for Telegram, that have very comfortable plugin API, thats allows for the developers easily create the plugins. 
+Plugins extends the functional of the Telegram, adding to it the user-side commands, with that u can do everything u want.
+
+#### EasyTl is the recreated project _ftub_, named also as _tub_.
 
 ## 📘 Navigation
 📖 <a href="#usage">Usage</a>
@@ -17,7 +19,7 @@ This is a userbot for Telegram, that have very comfortable plugin API.
 - - <a href="#for-the-windows">For the Windows</a>
 - <a href="#set-up-api_id-api_hash-and-my_id-in-easytlpy">Set up API_ID, API_HASH and MY_ID in easytl.py</a>
 - - <a href="#fast-guide">Fast guide</a>
-- <a href="#run-this">Run this</a>
+- <a href="#run-it">Run it</a>
 
 ❓ <a href="https://github.com/ftdot/EasyTl/README.md#why-you-shouldnt-use-the-userbot-now">Why you shouldn't use the userbot now?</a>
 
@@ -32,7 +34,7 @@ Report any bug if you found there - https://github.com/ftdot/EasyTl/issues
 #### Enter to the directory
     # cd easytl
 
-### Setup
+### Setup 
 To work with the EasyTl you must install required packages and run it by the python 3.11+.
 But you can run the installation script, that will do it all work, after that you can use EasyTl.
 
@@ -89,12 +91,19 @@ By default there languages are available:
 * ``ru`` - Russian
 * ``ua`` - Ukrainian
 
-### Run this
+### Run it
 After you configured the userbot, run that.
-For Linux:
-    # python3 easytl.py
-For Windows:
-    # python easytl.py
+
+
+#### For the Linux:
+```
+# python3 easytl.py
+```
+
+#### For the Windows:
+```
+python easytl.py
+```
 
 For first run, the userbot will ask you for the credetinals (Number and code). This is required to authorize the userbot
 

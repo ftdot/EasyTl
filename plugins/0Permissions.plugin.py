@@ -1,14 +1,18 @@
-# description := Library-plugin | Allows to manage the commands permissions
-# required_platforms := windows, linux, android
-# etl_version := 0
-# version := 1.2
-# update_link := no-link
-# lang_links := no-links
-# requirements := no-requirements
-# author := ftdot (https://github.com/ftdot)
-# changelog := Improvements with the translator
+# begin info
+#   description = "Library-plugin | Allows to manage the commands permissions"
+#   required_platforms = [ "windows", "linux", "android" ]
+#   etl_version_min = [ 1, 3, 0 ]
+#   etl_version_max = [ 1, 4, "*" ]
+#   version = "1.3"
+#   update_link = "no link"
+#   lang_links = "no link"
+#   requirements = "no requirements"
+#   author = "ftdot (https://github.com/ftdot)"
+#   changelog = [ "Support for the new version system", "v2 info lines format" ]
+# end info
 
 namespace.translator.initialize('permissions')
+
 
 async def call_w_permissions(func, event, args: list[str]):
     """(System method) Calls the command (function) with checking the permissions
@@ -18,8 +22,6 @@ async def call_w_permissions(func, event, args: list[str]):
     :param event: Telethon's event variable
     :param args: List with the arguments
     :type args: list[str]
-    :param var: Variant of the function, that was called
-    :type var: str
     """
 
     user_id = (await event.get_sender()).id
