@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://github.com/ftdot/ftdot/raw/main/imgs/easytl_banner_nb.png" />
+  <img src="https://github.com/ftdot/ftdot/raw/main/imgs/easytl_banner_nb-new.png" />
 </p>
 
 [![Latest tag](https://img.shields.io/github/v/tag/ftdot/EasyTl?label=LATEST%20TAG&style=for-the-badge)](https://github.com/ftdot/EasyTl/tags)
@@ -38,7 +38,7 @@ Report any bug if you found there - https://github.com/ftdot/EasyTl/issues
 To work with the EasyTl you must install required packages and run it by the python 3.11+.
 But you can run the installation script, that will do it all work, after that you can use EasyTl.
 
-**WARNING:** You must install the python 3.11 for first. You can do it from their official site: https://www.python.org/
+**WARNING:** You must install the python 3.11 for first. You can do it from it official site: https://www.python.org/
 
 #### For the Linux:
 
