@@ -1,5 +1,6 @@
 import os.path
 import tomllib
+import logging
 from .namespace import Namespace
 
 
@@ -19,6 +20,7 @@ class Translator:
         self.lang_dir, self.lang = lang_dir, lang
 
         self.namespace = None
+        self.logger = logging.Logger('EasyTl : Translator')
 
     @staticmethod
     def cyrillic(string: str):
@@ -36,7 +38,7 @@ class Translator:
         :type path: str
         """
 
-        self.namespace.instance.logger.debug('TRANSLATOR : Loading languages from the file by path '+path)
+        self.logger.debug('Loading languages from the file by path '+path)
 
         n = os.path.basename(path)[:-8]
         with open(path, 'rb') as f:
@@ -47,7 +49,7 @@ class Translator:
 
         # check for the translations dict in the namespace
         if 'translations' not in self.namespace.values:
-            self.namespace.instance.logger.debug('TRANSLATOR : Create translations dict in the namespace')
+            self.namespace.instance.logger.debug('Create translations dict in the namespace')
             self.namespace.translations = {}
 
         files = [f for f in os.listdir(self.lang_dir) if f.endswith(self.lang+'.toml')]
@@ -62,11 +64,11 @@ class Translator:
         :type head: str
         """
 
-        self.namespace.instance.logger.debug('TRANSLATOR : Initializing head ' + head)
+        self.logger.debug('Initializing head ' + head)
 
         # check if head already in the dict
         if head in self.namespace.translations:
-            self.namespace.instance.logger.debug('TRANSLATOR : Already initialized')
+            self.namespace.instance.logger.debug('Already initialized')
             return
 
         self.load_file(os.path.join(self.lang_dir, head+'_en.toml'))

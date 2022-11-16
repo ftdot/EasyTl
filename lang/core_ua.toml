@@ -1,5 +1,5 @@
 
-prefixes = [ "easy", "ez", "изи" ]           # Префиксы для EasyT;
+prefixes = [ "easy", "ez", "изи", "ізі" ]           # Префиксы для EasyT;
 error_notify = "⚠️⛔️ Звершилася помилка {0}"  # Любая ошибка будет форматирована под эту строку
 
 [pluginapi]
@@ -26,9 +26,9 @@ names = [ "restart", "рестарт" ]
 restart_notify = "юзербота буде перезавантажено"
 restarted_notify = "юизербот перезаватажен!"
 
-[command.clear-logs]
-names = [ "clearlogs", "clrlogs", "очистлоги" ]
-cleaned_message = "Логи було очищено!"
+[command.clear-cache]
+names = [ "clearcache", "clrcache", "очисткэш", "очисткєш" ]
+cleaned_message = "Кєш було очищено!"
 
 [command.pass]
 names = [ "pass", "пасс", "пас", "Ukraine_is_win" ]

@@ -27,9 +27,9 @@ names = [ "restart" ]
 restart_notify = "userbot is being restart"
 restarted_notify = "userbot is restarted!"
 
-[command.clear-logs]
-names = [ "clearlogs", "clrlogs" ]
-cleaned_message = "Logs has been clean!"
+[command.clear-cache]
+names = [ "clearcache", "clrcache" ]
+cleaned_message = "Cache has been cleaned!"
 
 [command.pass]
 names = [ "pass" ]

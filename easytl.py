@@ -24,11 +24,13 @@ lang      = 'en'             # language of userbot
 
 instance_name = 'Main Instance'
 
-plugins_dir  = os.path.join(os.getcwd(), 'plugins')
-cache_dir    = os.path.join(os.getcwd(), 'cache')
-lang_dir     = os.path.join(os.getcwd(), 'lang')
-config_dir   = os.path.join(os.getcwd(), 'config')
-logs_dir     = os.path.join(os.getcwd(), 'logs')
+install_dir  = os.getcwd()
+
+plugins_dir  = os.path.join(install_dir, 'plugins')
+cache_dir    = os.path.join(install_dir, 'cache')
+lang_dir     = os.path.join(install_dir, 'lang')
+config_dir   = os.path.join(install_dir, 'config')
+logs_dir     = os.path.join(install_dir, 'logs')
 
 log_level          = logging.DEBUG
 console_log_level  = logging.INFO  # Set this to the logging.DEBUG if you want to see all the debug information
@@ -40,7 +42,7 @@ if os.path.exists('test_creds.py'):
 # do not change the code below. It may cause problems!
 if __name__ == '__main__':
     main_instance = Instance(API_ID, API_HASH, MY_ID,
-                             plugins_dir, cache_dir, config_dir, logs_dir,
+                             install_dir, plugins_dir, cache_dir, config_dir, logs_dir,
                              Translator(lang_dir, lang), instance_name)
     main_instance.initialize_logging(log_level)
     main_instance.initialize()

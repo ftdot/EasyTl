@@ -26,9 +26,9 @@ names = [ "restart", "рестарт" ]
 restart_notify = "юзербот будет перезапущен"
 restarted_notify = "юизербот перезапущен!"
 
-[command.clear-logs]
-names = [ "clearlogs", "clrlogs", "очистлоги" ]
-cleaned_message = "Логи были очищены!"
+[command.clear-cache]
+names = [ "clearcache", "clrcache", "очисткэш" ]
+cleaned_message = "Кэш был очищен!"
 
 [command.pass]
 names = [ "pass", "пасс", "Ukraine_is_win" ]

@@ -24,8 +24,12 @@ namespace.instance.prefixes = namespace.translations['core']['prefixes']
 namespace.platform  = namespace.instance.get_platform()
 namespace.version   = namespace.instance.get_version()
 
-# Variables for the commands
-logs_dir = namespace.instance.logs_dir
+# variables for the commands
+logs_dir   = namespace.instance.logs_dir
+cache_dir  = namespace.instance.cache_dir
+
+# list with the temp (cache) files
+namespace.temp_files = []
 
 
 # stop the userbot
@@ -58,17 +62,25 @@ async def restart(event, _):
     await namespace.instance.client.disconnect()  # Disconnect from the telegram
 
 
-@this.command(namespace.translations['core']['command']['clear-logs']['names'])
-async def clear_logs(event, _):
-    namespace.logger.info('Cleaning the logs')
+@this.command(namespace.translations['core']['command']['clear-cache']['names'])
+async def clear_cache(event, _):
+    namespace.instance.logger.info('Cleaning the logs')
 
-    for f in [os.listdir(logs_dir)]:
-        if f == '.gitkeep':
+    for f in [os.path.join(logs_dir, f) for f in os.listdir(logs_dir)] + \
+             [os.path.join(cache_dir, f) for f in os.listdir(cache_dir)] + \
+             namespace.temp_files:
+        if '.gitkeep' in f:  # save ".gitkeep" file
             continue
 
-        os.remove(os.path.join(logs_dir, f))
+        # try to remove the file
+        try:
+            os.remove(f)
+        except:
+            pass
 
-    await namespace.instance.send_success(namespace.translations['core']['command']['clear-logs']['cleaned_message'])
+    namespace.temp_files = []
+
+    await namespace.instance.send_success(event, namespace.translations['core']['command']['clear-cache']['cleaned_message'])
 
 
 @this.command(namespace.translations['core']['command']['pass']['names'])

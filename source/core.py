@@ -13,15 +13,17 @@ from . import pluginapi
 class Instance:
     """Instance object of EasyTl userbot for Telegram
 
-    :param api_id: API_ID from my.telegram.org -> Apps for telethon
+    :param api_id: API_ID from my.telegram.org -> Apps, for the telethon
     :type api_id: int
-    :param api_hash: API_HASH from my.telegram.org -> Apps for telethon
+    :param api_hash: API_HASH from my.telegram.org -> Apps, for the telethon
     :type api_hash: str
     :param owner_id: Owner of EasyTl
     :type owner_id: int
-    :param plugins_dir: Path to the directory with plugins
+    :param install_dir: Path to the directory with the instance
+    :type install_dir: str
+    :param plugins_dir: Path to the directory with the plugins
     :type plugins_dir: str
-    :param cache_dir: Path to the directory with cache
+    :param cache_dir: Path to the directory with the cache
     :type cache_dir: str
     :param config_dir: Path to the configuration directory
     :type config_dir: str
@@ -50,13 +52,13 @@ class Instance:
     :type stdout_handler: logging.StreamHandler
     """
 
-    def __init__(self, api_id: int, api_hash: str, owner_id: int, plugins_dir: str = os.path.join('.', 'plugins'),
-                 cache_dir: str = os.path.join('.', 'cache'), config_dir: str = os.path.join('.', 'config'),
-                 logs_dir: str = os.path.join('.', 'logs'), translator: Translator = Translator(lang='en'),
-                 instance_name: str = 'Instance0'):
+    def __init__(self, api_id: int, api_hash: str, owner_id: int, install_dir: str = '.',
+                 plugins_dir: str = os.path.join('.', 'plugins'), cache_dir: str = os.path.join('.', 'cache'),
+                 config_dir: str = os.path.join('.', 'config'), logs_dir: str = os.path.join('.', 'logs'),
+                 translator: Translator = Translator(lang='en'), instance_name: str = 'Instance0'):
 
-        self.api_id, self.api_hash, self.owner_id, self.plugins_dir, self.cache_dir, \
-            = api_id, api_hash, owner_id, plugins_dir, cache_dir
+        self.api_id, self.api_hash, self.owner_id, self.install_dir, self.plugins_dir, self.cache_dir, \
+            = api_id, api_hash, owner_id, install_dir, plugins_dir, cache_dir
         self.config_dir, self.logs_dir, self.translator, self.instance_name \
             = config_dir, logs_dir, translator, instance_name
 
@@ -212,6 +214,16 @@ class Instance:
 
         with open(os.path.join(self.config_dir, 'version.toml'), 'rb') as f:
             return tomllib.load(f)
+
+    def log_plugins_to_stdout(self) -> bool:
+        """Gets the "log_plugins_to_stdout" value from the config
+
+        :return: Returns True if logging plugins to the stdout is enabled, otherwise False
+        :rtype: bool
+        """
+
+        with open(os.path.join(self.config_dir, '_log_plugins_to_stdout'), 'r') as f:
+            return True if f.read() == '1' else False
 
     ####
 
