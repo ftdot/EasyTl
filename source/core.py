@@ -149,7 +149,11 @@ class Instance:
         self.logger.info('Run Telegram client')
 
         # run telethon TelegramClient
-        self.client.start()
+        self.client.start(
+            phone=self._t_get_phone,
+            password=self._t_get_password,
+            code_callback=self._t_get_code
+        )
         self.client.run_until_disconnected()
 
     async def command_handler(self, length: int, cmd: list, event):
@@ -312,3 +316,35 @@ class Instance:
         """
 
         await self.send(event, self.f_unsuccess(message))
+
+    ####
+
+    async def _t_get_code(self) -> str:
+        """(System method) This method is using for get input (from the user) to authorize to the telegram.
+        But, this method is support translating
+
+        :return: User entered code
+        :rtype: str
+        """
+
+        return input(self.namespace.translations['core']['instance']['telegram_get_code'])
+
+    def _t_get_phone(self) -> str:
+        """(System method) This method is using for get input (from the user) to authorize to the telegram.
+        But, this method is support translating
+
+        :return: User entered phone number
+        :rtype: str
+        """
+
+        return input(self.namespace.translations['core']['instance']['telegram_get_number'])
+
+    def _t_get_password(self) -> str:
+        """(System method) This method is using for get input (from the user) to authorize to the telegram.
+        But, this method is support translating
+
+        :return: User entered password
+        :rtype: str
+        """
+
+        return input(self.namespace.translations['core']['instance']['telegram_get_password'])
