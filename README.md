@@ -111,7 +111,7 @@ For first run, the userbot will ask you for the credentials (Number and code). T
 ## Why you shouldn't use the userbot now?
 At the moment it is unstable and not have full documentation and functional, that required for normal work with this project.
 
-You can see my plugins for EasyTl [there](https://github.com/ftdot/easytl-content/plugins/)
+You can see my plugins for EasyTl [here](https://github.com/ftdot/easytl-content/tree/main/plugins)
 
 ## What is planning in this project?
 * Easy PluginAPI (already do, but it unstable)
