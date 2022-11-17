@@ -178,7 +178,7 @@ class Instance:
             for m in self.namespace.notify_stack:
                 self.logger.debug('Send message from notify stack')
                 await self.send(event, self.f_notify(m))  # send the message to a chat
-                self.namespace.notify_stack.remove(m)  # remove the message from the notify stack
+            self.namespace.notify_stack = [] # remove the message from the notify stack
 
         self.logger.debug('Call the command with permissions')
         await self.namespace.call_w_permissions(self.namespace.commands[cmd[0]], event, cmd[1:])

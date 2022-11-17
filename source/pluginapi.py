@@ -5,9 +5,10 @@ import requests
 import pkg_resources
 import subprocess
 import logging
+import tomllib
 from .namespace import Namespace
 from .utils import VersionCheckOperation, check_version_compatibility, parse_plugin_information
-from .filehash import get_file_hash
+from .filehash import get_file_hash, get_string_hash
 
 required_info_lines = {'description', 'required_platforms', 'etl_version',
                        'version', 'update_link', 'lang_links',
@@ -115,10 +116,14 @@ class Plugin:
 
         self.logger.debug('check_for_updates() : Check for the existing of hash cache of the plugin')
 
-        if not os.path.exists(hash_path):  # write the sha256 hash of the file in the cache
+        # check for the hash file
+        if not os.path.exists(hash_path):
+            # write the sha256 hash of the file in the cache
             with open(hash_path, 'w') as f:
                 f.write((fhash := get_file_hash(self.plugin_path)))
-        else:  # read the already cached file hash
+
+        else:
+            # read the already cached file hash
             with open(hash_path) as f:
                 fhash = f.read()
 
@@ -132,16 +137,16 @@ class Plugin:
         try:
             self.logger.debug('check_for_updates() : Try to update the plugin')
 
-            update_link = self.info['update_link'] if self.info_v2 else self.info.update_link
+            update_link = self.info['update_link']
 
             # check for update link and save the remote file hash
             if update_link != 'no link':
-                self.logger.debug('Link found. Sending request')
+                self.logger.debug(f'Link found ({update_link}). Sending request')
                 r = requests.get(update_link)
                 rhash = get_string_hash(r.content)
             else:
                 self.logger.debug('Link not setup. Skip the updating')
-                rhash = fhash
+                rhash = fhash  # write remote hash as local file hash to skip the update
 
         except Exception as e:
             self.log_exception(e)
@@ -164,9 +169,19 @@ class Plugin:
             with open(self.plugin_path, 'wb') as f:
                 f.write(r.content)
 
+            # Parse info lines
             self.logger.debug('check_for_updates() : Parsing new information about the plugin')
             self.parse_info_v2()
 
+            # check for the error
+            if self.errored:
+                self.logger.debug('check_for_updates() : Error detected')
+                return
+
+            self.logger.debug('check_for_updates() : Downloading the languages for the plugin')
+            self.download_languages()
+
+            # check for the error
             if self.errored:
                 self.logger.debug('check_for_updates() : Error detected')
                 return
@@ -179,8 +194,52 @@ class Plugin:
             )
             self.namespace.notify_stack.append(
                 self.namespace.translations['core']['pluginapi']['changelog_notify'].format(
-                    self.info['version'], '\n— '.join(self.info['changelog']))
+                    self.info['version'], '\n— '.join(self.info['changelog'])
+                )
             )
+
+            # Write new hash
+            with open(hash_path, 'w') as f:
+                f.write(get_file_hash(self.plugin_path))
+
+            return
+
+        self.logger.debug('check_for_updates() : No updates')
+
+    def download_languages(self):
+        """Does check for the plugin languages files"""
+
+        languages_link = self.info['lang_links']
+
+        if languages_link == "no link":
+            self.logger.debug('download_languages() : No links to the languages')
+            return
+
+        try:
+            self.logger.debug('download_languages() : Try to download the languages')
+
+            # check for update link and save the remote file hash
+            for ll in languages_link:
+                lname = ll[0]
+                llink = ll[1]
+                self.logger.debug(f'download_languages() : Downloading the language "{lname}" ({llink})')
+
+                r = requests.get(llink)
+
+                with open(os.path.join(self.namespace.instance.translator.lang_dir, lname), 'wb') as f:
+                    f.write(r.content)
+
+        except Exception as e:
+            self.log_exception(e)
+
+            # write notify about the error
+            self.namespace.notify_stack.append(
+                self.namespace.translations['core']['error_notify'].format(
+                    self.namespace.translations['core']['pluginapi']['download_languages_error'].format(
+                        self.plugin_name)
+                )
+            )
+            self.errored = True
             return
 
     def check_requirements(self):
@@ -259,7 +318,7 @@ class Plugin:
 
         self.logger.error('Exception has been generated, while executing the plugin')
         for line in traceback.format_exception(e):
-            self.logger.debug(self.logger_prefix + line.removesuffix('\n'))
+            self.logger.debug(line.removesuffix('\n'))
 
         self.logger.debug('#' * 25)
 
@@ -273,7 +332,6 @@ class Plugin:
 
         if is_v2:
             self.info = info
-            self.info_v2 = True
             return
 
         self.logger.error('parse_info_v2() : Error! Plugin is using the old v1 format of the info lines')

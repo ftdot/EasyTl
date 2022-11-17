@@ -4,6 +4,7 @@ error_notify = "⚠️⛔️ Error was occurred {0}"  # Any error will formatted
 
 [pluginapi]
 send_request_error = "while sending a check request of plugin {0}"
+download_languages_error = "while dowloading the plugin languages {0}"
 requirements_error = "while installing the requirements for plugin {0}"
 plugin_execution_error = "while executing plugin {0}"
 unsupported_version = "plugin {0} doesn't support this version of the EasyTl"
@@ -30,6 +31,10 @@ restarted_notify = "userbot is restarted!"
 [command.clear-cache]
 names = [ "clearcache", "clrcache" ]
 cleaned_message = "Cache has been cleaned!"
+
+[command.calc]
+names = [ "calculator", "calc" ]
+output_message = "**CALCULATOR** : `{0}`"
 
 [command.pass]
 names = [ "pass" ]

@@ -26,17 +26,17 @@ async def call_w_permissions(func, event, args: list[str]):
 
     user_id = (await event.get_sender()).id
 
-    namespace.instance.logger.debug(f'call_w_permissions : '
+    this.logger.debug(f'call_w_permissions : '
                                     f'Get permissions for the function {func.__name__}() for the user id {user_id}')
 
     # check the sender id in the commands allowed ids
     if user_id not in namespace.pcommands[func.__name__]:
-        namespace.instance.logger.debug(f'call_w_permissions : '
-                                        f'User hasn\'t permissions to execute this function')
+        this.logger.debug(f'call_w_permissions : '
+                          f'User hasn\'t permissions to execute this function')
         return
 
-    namespace.instance.logger.debug(f'call_w_permissions : '
-                                    f'Call the function {func.__name__}()')
+    this.logger.debug(f'call_w_permissions : '
+                      f'Call the function {func.__name__}()')
 
     await func(event, args)  # call the function
 
