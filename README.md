@@ -31,6 +31,7 @@ Report any bug if you found there - https://github.com/ftdot/EasyTl/issues
 
 #### Clone repository to the local directory
     # git clone https://github.com/ftdot/easytl
+
 #### Enter to the directory
     # cd easytl
 
@@ -72,7 +73,7 @@ lang      = 'en'             # language of userbot
 * Create app
 * Copy a value "API ID", replace `` API_ID = -1`` to the ``API_ID = [Your API ID]``
 * Copy a value "API HASH", replace `` API_HASH = ''`` to the ``API_ID = '[Your API HASH]'``
-* Go to the telegram and write to the bot @myidbot
+* Go to the telegram and write to the bot [@myidbot](https://t.me/myidbot)
 * Copy your id from the bot and write it to the ``MY_ID`` also as the API_ID (replace -1 with your id)
 
 After that manipulations, you must get something that:
@@ -105,12 +106,12 @@ After you configured the userbot, run that.
 python easytl.py
 ```
 
-For first run, the userbot will ask you for the credetinals (Number and code). This is required to authorize the userbot
+For first run, the userbot will ask you for the credentials (Number and code). This is required to authorize the userbot
 
 ## Why you shouldn't use the userbot now?
 At the moment it is unstable and not have full documentation and functional, that required for normal work with this project.
 
-You can see my plugins for EasyTl there: https://github.com/ftdot/easytl-plugins/
+You can see my plugins for EasyTl [there](https://github.com/ftdot/easytl-content/plugins/)
 
 ## What is planning in this project?
 * Easy PluginAPI (already do, but it unstable)
