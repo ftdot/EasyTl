@@ -1,0 +1,8 @@
+
+[command.search]
+names = [ "search", "щанайду", "заранайду" ]
+query_opened = "Запит був відкрит у браузері"
+
+[command.gsearch]
+names = [ "gsearch", "найти", "знайти" ]
+link_found = "Силку знайдено: {0}"

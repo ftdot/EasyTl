@@ -90,7 +90,7 @@ You may also change value ``lang`` to your country code. Its change the interfac
 By default there languages are available:
 * ``en`` - English
 * ``ru`` - Russian
-* ``ua`` - Ukrainian
+* ``uk`` - Ukrainian
 
 ### Run it
 After you configured the userbot, run that.

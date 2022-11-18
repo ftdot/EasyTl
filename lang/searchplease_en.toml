@@ -1,0 +1,8 @@
+
+[command.search]
+names = [ "search" ]
+query_opened = "Query hash been open in browser"
+
+[command.gsearch]
+names = [ "gsearch" ]
+link_found = "Link found: {0}"

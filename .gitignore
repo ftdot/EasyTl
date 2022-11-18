@@ -22,15 +22,6 @@ EasyTl.session-journal
 # what I want to do you're will not see!
 todo*.txt
 
-# keep only required plugins and languages
-lang/*
-!lang/core_*.toml
-!lang/permissions_*.toml
-
-plugins/*
-!plugins/0Core.plugin.py
-!plugins/0Permissions.plugin.py
-
 # in the progress :)
 README_ru.md
 README_ua.md
