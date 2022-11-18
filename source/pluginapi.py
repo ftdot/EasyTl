@@ -112,7 +112,7 @@ class Plugin:
     def check_for_updates(self):
         """Does check for the plugin updates"""
 
-        hash_path = os.path.join(self.namespace.cache_dir, self.plugin_name + '.hash')
+        hash_path = os.path.join(self.namespace.instance.cache_dir, self.plugin_name + '.hash')
 
         self.logger.debug('check_for_updates() : Check for the existing of hash cache of the plugin')
 

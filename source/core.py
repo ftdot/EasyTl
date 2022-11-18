@@ -65,8 +65,7 @@ class Instance:
         self.stdout_handler = None
 
         self.prefixes = ['easy']
-        self.namespace = Namespace({'cache_dir': self.cache_dir,
-                                    'instance': self,
+        self.namespace = Namespace({'instance': self,
                                     'pluginapi': pluginapi,
                                     'translator': self.translator,
                                     'commands': {},
