@@ -67,6 +67,7 @@ class Instance:
         self.prefixes = ['easy']
         self.namespace = Namespace({'instance': self,
                                     'pluginapi': pluginapi,
+                                    'Namespace': Namespace,
                                     'translator': self.translator,
                                     'commands': {},
                                     'pcommands': {},
