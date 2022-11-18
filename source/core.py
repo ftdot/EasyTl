@@ -36,8 +36,6 @@ class Instance:
 
     :ivar prefixes: List with the EasyTl prefixes, by the default is "easy"
     :type prefixes: list[str]
-    :ivar platform: The platform from the configuration directory
-    :type platform: str
     :ivar client: Telethon TelegramClient instance
     :type client: TelegramClient
     :ivar namespace: Instance of the Namespace
@@ -67,7 +65,6 @@ class Instance:
         self.stdout_handler = None
 
         self.prefixes = ['easy']
-        self.platform = self.get_platform()
         self.namespace = Namespace({'cache_dir': self.cache_dir,
                                     'instance': self,
                                     'pluginapi': pluginapi,
