@@ -42,8 +42,6 @@ class Instance:
     :type namespace: Namespace
     :ivar plugins: List with the plugins (Instance of PluginsList)
     :type plugins: pluginapi.PluginsList
-    :ivar instance_name: Name of the instance
-    :type instance_name: str
     :ivar logger: An Logger object
     :type logger: logging.Logger
     :ivar stdout_handler: An stream handler for the console output
@@ -154,7 +152,7 @@ class Instance:
         self.client.run_until_disconnected()
 
     async def command_handler(self, length: int, cmd: list, event):
-        """(System method) executing command
+        """(System method) Executes the command
 
         :param length: Length of "cmd" list
         :type length: int
@@ -181,7 +179,7 @@ class Instance:
         await self.namespace.call_w_permissions(self.namespace.commands[cmd[0]], event, cmd[1:])
 
     async def messages_handler(self, event):
-        """(System method) handles the message from Telegram
+        """(System method) Handles the messages from the Telegram
 
         :param event: Telethon's event variable
         """
@@ -206,11 +204,11 @@ class Instance:
         with open(os.path.join(self.config_dir, '_platform')) as f:
             return f.read()
 
-    def get_version(self) -> str:
-        """Returns the build version value (reads the "_version" file in the config directory)
+    def get_version(self) -> dict:
+        """Returns the build version dict (reads the "_version" file in the config directory)
 
-        :returns: Version (current numeric version of EasyTl)
-        :rtype: str
+        :returns: Version information dict
+        :rtype: dict
         """
 
         with open(os.path.join(self.config_dir, 'version.toml'), 'rb') as f:
@@ -294,7 +292,7 @@ class Instance:
 
     async def send_success(self, event, message: str):
         """Send message to current chat, formatted as success.
-        Shorthand for instance.send(event, instance.f_success(message))
+        Shorthand for Instance.send(event, Instance.f_success(message))
 
         :param event: Telethon's event variable
         :param message: Message that will be formatted as success and sent
@@ -305,7 +303,7 @@ class Instance:
 
     async def send_unsuccess(self, event, message: str):
         """Send message to current chat, formatted as unsuccess.
-        Shorthand for instance.send(event, instance.f_success(message))
+        Shorthand for Instance.send(event, Instance.f_unsuccess(message))
 
         :param event: Telethon's event variable
         :param message: Message that will be formatted as unsuccess and sent
