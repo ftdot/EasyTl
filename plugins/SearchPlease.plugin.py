@@ -4,8 +4,8 @@
 #   etl_version_min = [ 1, 3, 0 ]
 #   etl_version_max = [ 1, 4, "*" ]
 #   version = "1.3"
-#   update_link = "https://github.com/ftdot/easytl-content/raw/main/plugins/SearchPlease/SearchPlease.plugin.py"
-#   lang_links = [["searchplease_en.toml", "https://github.com/ftdot/easytl-content/raw/main/plugins/SearchPlease/translations/searchplease_en.toml"], ["searchplease_ru.toml", "https://github.com/ftdot/easytl-content/raw/main/plugins/SearchPlease/translations/searchplease_ru.toml"], ["searchplease_ua.toml", "https://github.com/ftdot/easytl-content/raw/main/plugins/SearchPlease/translations/searchplease_ua.toml"]]
+#   update_link = "https://github.com/ftdot/EasyTl/raw/master/plugins/SearchPlease.plugin.py"
+#   lang_links = [ ["searchplease_en.toml", "https://github.com/ftdot/EasyTl/raw/master/lang/searchplease_en.toml"], ["searchplease_ru.toml", "https://github.com/ftdot/EasyTl/raw/master/lang/searchplease_ru.toml"], ["searchplease_uk.toml", "https://github.com/ftdot/EasyTl/raw/master/lang/searchplease_uk.toml"] ]
 #   requirements = [ "google" ]
 #   author = "ftdot (https://github.com/ftdot)"
 #   changelog = [ "Added auto-update support" ]

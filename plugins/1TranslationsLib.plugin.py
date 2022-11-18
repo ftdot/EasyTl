@@ -4,7 +4,7 @@
 #   etl_version_min = [ 1, 3, 0 ]
 #   etl_version_max = [ 1, 4, "*" ]
 #   version = "1.0"
-#   update_link = "no link"
+#   update_link = "https://github.com/ftdot/EasyTl/raw/master/plugins/1TranslationsLib.plugin.py"
 #   lang_links = "no link"
 #   requirements = [ "googletrans==4.0.0-rc1" ]
 #   author = "ftdot (https://github.com/ftdot)"
