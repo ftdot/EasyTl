@@ -114,8 +114,8 @@ At the moment it is unstable and not have full documentation and functional, tha
 You can see my plugins for EasyTl [here](https://github.com/ftdot/easytl-content/tree/main/plugins)
 
 ## What is planning in this project?
-* Easy PluginAPI (already do, but it unstable)
-* Easy utilities as: configs, translations, plugin auto-update (Translations and auto-update already do)
+* Easy PluginAPI (already do)
+* Easy utilities as: configs, translations, plugin auto-update (already do)
 * Full, easy to read, documentation
 * Easy to use, cool GUI
 * Cross-platform (including Android)
