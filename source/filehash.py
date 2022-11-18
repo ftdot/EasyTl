@@ -15,7 +15,7 @@ def get_string_hash(string: str | bytes) -> str:
 
 
 def get_file_hash(path: str | bytes) -> str:
-    """Calculates file hash
+    """Calculates the file hash
 
     :param path: Path to the file
     :type path: str | bytes

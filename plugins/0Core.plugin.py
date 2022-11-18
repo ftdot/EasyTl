@@ -30,6 +30,8 @@ cache_dir  = namespace.instance.cache_dir
 
 # list with the temp (cache) files
 namespace.temp_files = []
+# check if namespace.instance_file is set
+namespace.instance_file = namespace.instance_file if 'instance_file' in namespace.values else None
 
 
 # stop the userbot
@@ -48,6 +50,10 @@ async def stop(event, _):
 @this.command(namespace.translations['core']['command']['restart']['names'])
 async def restart(event, _):
     this.logger.info('Restarting the instance')
+
+    if namespace.instance_file is None:
+        this.logger.info('namespace.instance_file not set. Can\'t do restart')
+        return
 
     # notify about the being restart
     await namespace.instance.send(

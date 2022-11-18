@@ -47,7 +47,7 @@ if __name__ == '__main__':
     main_instance.initialize_logging(log_level)
     main_instance.initialize()
 
-    main_instance.namespace.instance_file = os.path.abspath(__file__)
+    main_instance.namespace.values['instance_file'] = os.path.abspath(__file__)
 
     if len(sys.argv) == 2:
         if sys.argv[1] == 'restart':  # check if EasyTl started from the restart command

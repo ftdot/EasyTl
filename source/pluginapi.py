@@ -192,11 +192,14 @@ class Plugin:
             self.namespace.notify_stack.append(
                 self.namespace.translations['core']['pluginapi']['update_notify'].format(self.plugin_name)
             )
-            self.namespace.notify_stack.append(
-                self.namespace.translations['core']['pluginapi']['changelog_notify'].format(
-                    self.info['version'], '\n— '.join(self.info['changelog'])
+
+            # check for changelog info line and add it to notify stack
+            if 'changelog' in self.info:
+                self.namespace.notify_stack.append(
+                    self.namespace.translations['core']['pluginapi']['changelog_notify'].format(
+                        self.info['version'], '\n— '.join(self.info['changelog'])
+                    )
                 )
-            )
 
             # Write new hash
             with open(hash_path, 'w') as f:
