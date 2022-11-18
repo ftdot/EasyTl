@@ -1,8 +1,8 @@
 
 [command.gtranslate]
 names = [ "gtranslate", "gtrans" ]
-translated_message = "Message has been translated:\n- `{0}`"
+translated_message = "Text has been translated:\n- `{0}`"
 
 [command.available_langs]
 names = [ "available-langs", "knownlangs" ]
-message = "Current available languages:\n {0}"
+message = "Available languages (langcode - language):\n {0}"

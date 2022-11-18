@@ -1,0 +1,8 @@
+
+[command.gtranslate]
+names = [ "gtranslate", "gtrans", "перевести" ]
+translated_message = "Текст был переведён:\n- `{0}`"
+
+[command.available_langs]
+names = [ "available-langs", "knownlangs", "доступные-языки", "доступязыки" ]
+message = "Доступные языки (код - название):\n {0}"
