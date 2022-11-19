@@ -22,9 +22,5 @@ EasyTl.session-journal
 # what I want to do you're will not see!
 todo*.txt
 
-# in the progress :)
-README_ru.md
-README_ua.md
-
 # already installed ffmpeg
 ffmpeg/

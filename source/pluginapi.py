@@ -376,11 +376,13 @@ class Plugin:
         self.logger.error('parse_info_v2() : Error! Plugin is using the old v1 format of the info lines')
         self.errored = True
 
-    def command(self, aliases: str | list | None = None):
+    def command(self, aliases: str | list | None = None, static_pname: str | None = None):
         """Decorator, that helps register the new command
 
         :param aliases: Aliases to the command
         :type aliases: str | list | None
+        :param static_pname: Static name in the namespace.pcommands dict
+        :type static_pname: str | None
         """
 
         # check if the aliases is a list or string and type-cast it to the list
@@ -390,16 +392,41 @@ class Plugin:
         self.logger.debug('Register the command ALIASES: ' + ', '.join(aliases))
 
         def deco(func):
+            # pname - name in the permissions list
+            pname = static_pname if static_pname is not None else func.__name__
+
             for a in aliases:  # register all aliases to the command
                 self.namespace.commands[a] = func
 
-            self.logger.debug('Create permissions list for the function ' + func.__name__)
+            self.logger.debug(f'Create permissions list for the function({func.__name__}, pname: {pname}')
 
             # create a function in the commands permissions list
-            self.namespace.pcommands[func.__name__] = [self.namespace.instance.owner_id, ]
+            self.namespace.pcommands[pname] = []+self.namespace.instance.owner_ids
             return func
 
         return deco
+
+    def only(self, platforms: list[str] | str, alt=lambda: None):
+        """Decorator, that helps allow only to concrete platform(s)
+
+        :param platforms: Platforms that support the function
+        :type platforms: list[str] | str
+        :param alt: Alt function, that will return if it isn't support
+        """
+
+        platforms = platform if isinstance(platforms, list) else [platforms]
+
+        def deco(func):
+            if self.namespace.platform in platforms:  # check for the platform
+                return func
+            return alt
+
+        return deco
+
+    @staticmethod
+    async def async_empty():
+        """Empty async function"""
+        pass
 
 
 class PluginsList:

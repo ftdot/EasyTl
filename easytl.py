@@ -22,6 +22,9 @@ lang      = 'en'             # language of userbot
 
 # advanced settings
 
+# List with the ids of other owners. It may be danger, because danger commands be also trusted to it!
+OTHER_OWNERS = []
+
 instance_name       = 'Main Instance'
 enable_auto_update  = True  # enable the auto-update feature?
 
@@ -44,7 +47,7 @@ if os.path.exists('test_creds.py'):
 
 # do not change the code below. It may cause problems!
 if __name__ == '__main__':
-    main_instance = Instance(API_ID, API_HASH, MY_ID,
+    main_instance = Instance(API_ID, API_HASH, [MY_ID, ] + OTHER_OWNERS,
                              install_dir, plugins_dir, cache_dir, config_dir, logs_dir,
                              Translator(lang_dir, lang), instance_name)
     main_instance.initialize_logging(log_level)

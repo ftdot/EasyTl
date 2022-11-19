@@ -41,8 +41,14 @@ gsearch_country  = 'ua'          # "gsearch" will search in that country (write 
 search_line = f'{browsers[find_browser]}{search_engines[search_engine]}'
 
 
+async def unsupported_platform(event, _):
+    await namespace.instance.send_unsuccess(event,
+                                            namespace.translations['searchplease']['unsupported_platform'])
+
+
 # opens the browser tab with the query
-@this.command(namespace.translations['searchplease']['command']['search']['names'])
+@this.command(namespace.translations['searchplease']['command']['search']['names'], static_pname='search')
+@this.only('windows', alt=unsupported_platform)
 async def search(event, args):
     if not len(args) > 0:
         return

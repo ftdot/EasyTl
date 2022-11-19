@@ -17,8 +17,8 @@ class Instance:
     :type api_id: int
     :param api_hash: API_HASH from my.telegram.org -> Apps, for the telethon
     :type api_hash: str
-    :param owner_id: Owner of EasyTl
-    :type owner_id: int
+    :param owner_ids: Owners of EasyTl
+    :type owner_ids: list[int]
     :param install_dir: Path to the directory with the instance
     :type install_dir: str
     :param plugins_dir: Path to the directory with the plugins
@@ -48,13 +48,13 @@ class Instance:
     :type stdout_handler: logging.StreamHandler
     """
 
-    def __init__(self, api_id: int, api_hash: str, owner_id: int, install_dir: str = '.',
+    def __init__(self, api_id: int, api_hash: str, owner_ids: list[int], install_dir: str = '.',
                  plugins_dir: str = os.path.join('.', 'plugins'), cache_dir: str = os.path.join('.', 'cache'),
                  config_dir: str = os.path.join('.', 'config'), logs_dir: str = os.path.join('.', 'logs'),
                  translator: Translator = Translator(lang='en'), instance_name: str = 'Instance0'):
 
-        self.api_id, self.api_hash, self.owner_id, self.install_dir, self.plugins_dir, self.cache_dir, \
-            = api_id, api_hash, owner_id, install_dir, plugins_dir, cache_dir
+        self.api_id, self.api_hash, self.owner_ids, self.install_dir, self.plugins_dir, self.cache_dir, \
+            = api_id, api_hash, owner_ids, install_dir, plugins_dir, cache_dir
         self.config_dir, self.logs_dir, self.translator, self.instance_name \
             = config_dir, logs_dir, translator, instance_name
 
