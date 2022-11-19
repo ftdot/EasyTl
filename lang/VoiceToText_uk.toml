@@ -1,7 +1,7 @@
 
 [command.vtt]
-names = [ "voicetotext", "vtt", "totext", "втекст" ]
-no_media_message = "Сообщение не имеет медиа контента"
-isnt_audio_message = "Это не аудио контент!"
+names = [ "voicetotext", "vtt", "totext", "втекст", "дотексту" ]
+no_media_message = "Повідомлення не має медіа контенту!"
+isnt_audio_message = "Це не є аудіо контентом!"
 success_message = "Google STT:\n{0}"
-no_reply_to_message = "Вы должны ответить на аудио сообщение или др. контент!"
+no_reply_to_message = "Ви мали були відповісти на аудіо чи др. контент!"
