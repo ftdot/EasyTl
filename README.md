@@ -11,15 +11,18 @@ Plugins extends the functional of the Telegram, adding to it the user-side comma
 #### EasyTl is the recreated project _ftub_, named also as _tub_.
 
 ## 📘 Navigation
-📖 <a href="#usage">Usage</a>
-- <a href="#clone-repository-to-the-local-directory">Clone repository to the local directory</a>
-- <a href="#enter-to-the-directory">Enter to the directory</a>
-- <a href="#setup">Setup</a>
-- - <a href="#for-the-linux">For the Linux</a>
-- - <a href="#for-the-windows">For the Windows</a>
-- <a href="#set-up-api_id-api_hash-and-my_id-in-easytlpy">Set up API_ID, API_HASH and MY_ID in easytl.py</a>
-- - <a href="#fast-guide">Fast guide</a>
-- <a href="#run-it">Run it</a>
+📖 [Usage](#usage)
+- [Clone repository to the local directory](#clone-repository-to-the-local-directory)
+- [Enter to the directory](#enter-to-the-directory)
+- [Setup](#setup)
+- - [For the Linux](#for-the-linux)
+- - [For the Windows](#for-the-windows)
+- [(Optional) Set up the FFMPEG (Need for STTLib plugin)](#optional-set-up-the-ffmpeg-need-for-sttlib-plugin)
+- - [For the Linux](#for-the-linux-1)
+- - [For the Windows](#for-the-windows-1)
+- [Set up API_ID, API_HASH and MY_ID in easytl.py](#set-up-api_id-api_hash-and-my_id-in-easytlpy)
+- - [Fast guide](#fast-guide)
+- [Run it](#run-it)
 
 ❓ <a href="https://github.com/ftdot/EasyTl/README.md#why-you-shouldnt-use-the-userbot-now">Why you shouldn't use the userbot now?</a>
 
@@ -29,8 +32,9 @@ Plugins extends the functional of the Telegram, adding to it the user-side comma
 Currently, this version is alpha-test, this means that the project is unstable and haven't full documentation.
 Report any bug if you found there - https://github.com/ftdot/EasyTl/issues
 
-#### Clone repository to the local directory
-    # git clone https://github.com/ftdot/easytl
+#### Download the latest version
+Go [there](https://github.com/ftdot/EasyTl/tags) and download the latest version (Source code (zip))
+
 
 #### Enter to the directory
     # cd easytl
@@ -48,6 +52,20 @@ But you can run the installation script, that will do it all work, after that yo
 #### For the Windows:
 
     You must run the install.bat file
+
+### (Optional) Set up the FFMPEG (Need for STTLib plugin)
+STTLib plugin is provides "speech to text" functional. To work, it requires FFMPEG.
+As example, STTLib required for plugin "VoiceToText", that converts the voice messages and other audio content to the text
+
+**WARNING!:** At the moment support only Debian-based linux systems. Also, to install "ffmpeg" package required root privileges
+
+#### For the Linux (Debian):
+
+    # sudo ./install_ffmpeg.sh
+
+#### For the Windows:
+
+    You must run the install_ffmpeg.bat file
 
 ### Set up API_ID, API_HASH and MY_ID in easytl.py
 Open a file ``easytl.py`` by any editor and change these lines:
