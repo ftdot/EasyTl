@@ -149,6 +149,13 @@ class Instance:
             password=self._t_get_password,
             code_callback=self._t_get_code
         )
+
+        if self.get_version()['version']['indev']:
+            self.logger.info('Current version may be unstable, because this version in the development')
+        if self.get_version()['version']['beta']:
+            self.logger.info('This is a beta version. If you have some problems with EasyTl, '
+                             'inform about it there: https://github.com/ftdot/EasyTl/issues')
+
         self.client.run_until_disconnected()
 
     async def command_handler(self, length: int, cmd: list, event):
@@ -173,7 +180,7 @@ class Instance:
             for m in self.namespace.notify_stack:
                 self.logger.debug('Send message from notify stack')
                 await self.send(event, self.f_notify(m))  # send the message to a chat
-            self.namespace.notify_stack = [] # remove the message from the notify stack
+            self.namespace.notify_stack = []  # remove the message from the notify stack
 
         self.logger.debug('Call the command with permissions')
         await self.namespace.call_w_permissions(self.namespace.commands[cmd[0]], event, cmd[1:])

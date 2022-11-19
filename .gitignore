@@ -24,3 +24,5 @@ todo*.txt
 
 # already installed ffmpeg
 ffmpeg/
+
+# in dev
