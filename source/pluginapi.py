@@ -51,6 +51,7 @@ class Plugin:
 
         self.activation_steps = [
             (self.check_for_updates, 'Checking for the plugin updates'),
+            (self.check_platform, 'Checking for the platform requirements'),
             (self.check_compatibility, 'Checking for the plugin version compatibility'),
             (self.check_requirements, 'Checking for the plugin requirements'),
             (self.execute, 'Executing the plugin')
@@ -300,6 +301,22 @@ class Plugin:
                     )
                 )
                 self.errored = True
+
+    def check_platform(self):
+        if not self.namespace.instance.get_platform() in self.info['required_platforms']:
+            self.logger.debug('check_platform() : Doesn\'t support current platform')
+            self.log_exception(e)
+
+            # write notify about the error
+            self.namespace.notify_stack.append(
+                self.namespace.translations['core']['error_notify'].format(
+                    self.namespace.translations['core']['pluginapi']['platform_error'].format(self.plugin_name)
+                )
+            )
+            self.errored = True
+            return
+
+        self.logger.debug('check_platform() : Check passed. Platform is supporting')
 
     def execute(self):
         """Executes the plugin"""
