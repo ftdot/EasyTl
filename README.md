@@ -18,7 +18,7 @@ Plugins extends the functional of the Telegram, adding to it the user-side comma
 - - [For the Linux](#for-the-linux)
 - - [For the Windows](#for-the-windows)
 - [(Optional) Set up the FFMPEG (Need for STTLib plugin)](#optional-set-up-the-ffmpeg-need-for-sttlib-plugin)
-- - [For the Linux](#for-the-linux-1)
+- - [For the Linux (Debian)](#for-the-linux-debian)
 - - [For the Windows](#for-the-windows-1)
 - [Set up API_ID, API_HASH and MY_ID in easytl.py](#set-up-api_id-api_hash-and-my_id-in-easytlpy)
 - - [Fast guide](#fast-guide)
