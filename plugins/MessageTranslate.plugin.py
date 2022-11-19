@@ -33,7 +33,7 @@ async def gtranslate(event, args):
         # find the "reply to" message
         msg = [msg async for msg in namespace.instance.client.iter_messages(event.chat_id, 25)
                         if msg.id == event.reply_to.reply_to_msg_id]
-        text = msg.message
+        text = msg[0].message
     else:
         text = ' '.join(args[1:]) if translate_to else ' '.join(args)
 
