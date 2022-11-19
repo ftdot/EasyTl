@@ -5,5 +5,5 @@ minor = 3
 patch = 4
 list = [ 1, 3, 4 ]
 beta = true
-indev = true
+indev = false
 full_version = "1.3.4-beta"
