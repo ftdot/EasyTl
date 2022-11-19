@@ -36,9 +36,7 @@ async def vtt(event, args):
 
     # check the arguments
     if len(args) > 0:
-        # check if first argument in the language code
-        if args[0] in namespace.translatelib.languages:
-            translate_from = args[0]  # set translate to language ...
+        translate_from = args[0]  # set translate to language ...
 
     # check if the message is "reply to"
     if event.reply_to:

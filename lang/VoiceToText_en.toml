@@ -3,5 +3,5 @@
 names = [ "voicetotext", "vtt", "totext" ]
 no_media_message = "Message doesn't contains a media"
 isnt_audio_message = "This isn't the audio content!"
-success_message = "Google STT:\n{0}"
+success_message = "Google STT:\n`{0}`"
 no_reply_to_message = "You must reply to message with the audio content!"
