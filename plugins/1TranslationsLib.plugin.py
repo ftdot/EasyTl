@@ -3,14 +3,13 @@
 #   required_platforms = [ "windows", "linux", "android" ]
 #   etl_version_min = [ 1, 3, 3 ]
 #   etl_version_max = [ 1, 4, "*" ]
-#   version = "1.1"
+#   version = "1.2"
 #   update_link = "https://github.com/ftdot/EasyTl/raw/master/plugins/1TranslationsLib.plugin.py"
 #   lang_links = "no link"
-#   requirements = [ "googletrans==4.0.0-rc1" ]
+#   requirements = [ [ "googletrans", "googletrans==4.0.0-rc1" ] ]
 #   author = "ftdot (https://github.com/ftdot)"
-#   changelog = [ "Optimize to EasyTl 1.3.3-beta version" ]
+#   changelog = [ "Added `namespace.translatelib.translator`", "requirements fix for the 1.3.3-beta version" ]
 # end info
-
 
 import googletrans
 
@@ -34,7 +33,7 @@ def translate(text: str, to=default_translate_to) -> str:
     :rtype: str
     """
 
-    return translator.translate(text, dest=to).text
+    return namespace.translatelib.translator.translate(text, dest=to).text
 
 
 def detect(text: str) -> str:
@@ -48,11 +47,12 @@ def detect(text: str) -> str:
     :rtype: str
     """
 
-    return translator.detect(text).lang
+    return namespace.translatelib.translator.detect(text).lang
 
 # initializing translatelib namespace
 namespace.values['translatelib'] = namespace.Namespace()
 
 # add functions to translatelib namespace
 namespace.translatelib.translate = translate
+namespace.translatelib.translator = translator
 namespace.translatelib.languages = googletrans.LANGUAGES

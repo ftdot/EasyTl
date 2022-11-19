@@ -22,7 +22,8 @@ lang      = 'en'             # language of userbot
 
 # advanced settings
 
-instance_name = 'Main Instance'
+instance_name       = 'Main Instance'
+enable_auto_update  = True  # enable the auto-update feature?
 
 install_dir  = os.getcwd()
 
@@ -31,6 +32,8 @@ cache_dir    = os.path.join(install_dir, 'cache')
 lang_dir     = os.path.join(install_dir, 'lang')
 config_dir   = os.path.join(install_dir, 'config')
 logs_dir     = os.path.join(install_dir, 'logs')
+
+ffmpeg_dir   = os.path.join(install_dir, 'ffmpeg', 'ffmpeg-master-latest-win64-gpl-shared')
 
 log_level          = logging.DEBUG
 console_log_level  = logging.INFO  # Set this to the logging.DEBUG if you want to see all the debug information
@@ -45,9 +48,13 @@ if __name__ == '__main__':
                              install_dir, plugins_dir, cache_dir, config_dir, logs_dir,
                              Translator(lang_dir, lang), instance_name)
     main_instance.initialize_logging(log_level)
+
+    main_instance.namespace.values['ffmpeg_dir'] = ffmpeg_dir
+
     main_instance.initialize()
 
-    main_instance.namespace.values['instance_file'] = os.path.abspath(__file__)
+    main_instance.namespace.values['instance_file']  = os.path.abspath(__file__)
+    main_instance.namespace.values['auto_update']    = enable_auto_update
 
     if len(sys.argv) == 2:
         if sys.argv[1] == 'restart':  # check if EasyTl started from the restart command

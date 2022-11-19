@@ -3,7 +3,7 @@
 #   required_platforms = [ "windows", "linux", "android" ]
 #   etl_version_min = [ 1, 3, 2 ]
 #   etl_version_max = [ 1, 4, "*" ]
-#   version = "1.0"
+#   version = "1.1"
 #   update_link = "https://github.com/ftdot/EasyTl/raw/master/plugins/MessageTranslate.plugin.py"
 #   lang_links = [ [ "MessageTranslate_en.toml", "https://github.com/ftdot/EasyTl/raw/master/lang/MessageTranslate_en.toml" ], [ "MessageTranslate_ru.toml", "https://github.com/ftdot/EasyTl/raw/master/lang/MessageTranslate_ru.toml" ], [ "MessageTranslate_uk.toml", "https://github.com/ftdot/EasyTl/raw/master/lang/MessageTranslate_uk.toml" ] ]
 #   requirements = "no requirements"
@@ -11,7 +11,7 @@
 # end info
 
 if 'translatelib' not in namespace.values:
-    this.logger.debug('translatelib not found in the namespace!')
+    this.logger.info('translatelib not found in the namespace!')
     this.errored = True
     eee()
 

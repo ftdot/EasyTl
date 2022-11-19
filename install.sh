@@ -6,4 +6,4 @@ then
   echo "Read about it here: https://github.com/ftdot/EasyTl#setup"
   exit 1
 fi
-python3 install.py
+python3 install/install.py

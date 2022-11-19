@@ -26,3 +26,6 @@ todo*.txt
 README_ru.md
 README_ua.md
 documentation/
+
+# already installed ffmpeg
+ffmpeg/

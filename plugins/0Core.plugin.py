@@ -1,14 +1,14 @@
 # begin info
 #   description = "Core plugin | Basic functional"
 #   required_platforms = [ "windows", "linux", "android" ]
-#   etl_version_min = [ 1, 3, 0 ]
+#   etl_version_min = [ 1, 3, 3 ]
 #   etl_version_max = [ 1, 3, "*" ]
-#   version = "1.2"
+#   version = "1.3"
 #   update_link = "no link"
 #   lang_links = "no link"
 #   requirements = "no requirements"
 #   author = "ftdot (https://github.com/ftdot)"
-#   changelog = [ "Support for the new version system", "v2 info lines format" ]
+#   changelog = [ "ffmpeg integration" ]
 # end info
 
 import os
@@ -32,6 +32,18 @@ cache_dir  = namespace.instance.cache_dir
 namespace.temp_files = []
 # check if namespace.instance_file is set
 namespace.instance_file = namespace.instance_file if 'instance_file' in namespace.values else None
+
+# check for the ffmpeg
+namespace.values['ffmpeg']         = False
+
+if sys.platform == 'win32':
+    if os.path.exists(namespace.values['ffmpeg_dir']):
+        namespace.values['ffmpeg'] = True
+        os.environ['PATH'] = os.environ['PATH']+';'+os.path.join(namespace.values['ffmpeg_dir'], 'bin')
+
+elif sys.platform == 'linux':
+    if os.system('dpkg -l ffmpeg') == 0:
+        namespace.values['ffmpeg'] = True
 
 
 # stop the userbot

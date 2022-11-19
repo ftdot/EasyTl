@@ -16,6 +16,6 @@ pause
 exit
 
 :run_install
-python install.py
+python install\install.py
 PAUSE
 exit

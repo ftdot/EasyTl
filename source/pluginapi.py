@@ -112,6 +112,11 @@ class Plugin:
     def check_for_updates(self):
         """Does check for the plugin updates"""
 
+        if 'auto_update' in self.namespace.values:
+            if not self.namespace.auto_update:
+                self.logger.debug('check_for_updates() : Auto-updates is disabled. Skip')
+                return
+
         hash_path = os.path.join(self.namespace.instance.cache_dir, self.plugin_name + '.hash')
 
         self.logger.debug('check_for_updates() : Check for the existing of hash cache of the plugin')
@@ -254,11 +259,22 @@ class Plugin:
             self.logger.debug('check_requirements() : Plugin hasn\'t requirements. Skip')
             return
 
+        requirements_names = []
+        requirements_dict = {}
+
+        # check for the new "install_requirement" feature
+        for value in requirements:
+            if isinstance(value, list):
+                requirements_names.append(value[0])
+                requirements_dict[value[0]] = value[1]
+                continue
+            requirements_dict[value] = value
+
         self.logger.debug('check_requirements() : Requirements are found. Checking it')
         self.logger.debug('check_requirements() : Getting list of the installed packages')
 
         # define missing packages
-        plugin_requirements = set(requirements)
+        plugin_requirements = set(requirements_names)
         installed = {pkg.key for pkg in pkg_resources.working_set}
         missing = plugin_requirements - installed
 
@@ -269,7 +285,10 @@ class Plugin:
             try:
                 self.logger.debug('check_requirements() : Installing missing packages: ' + ', '.join(missing))
                 # run PIP to install the package
-                subprocess.check_call([sys.executable, '-m', 'pip', 'install', *missing], stdout=subprocess.DEVNULL)
+                subprocess.check_call(
+                    [sys.executable, '-m', 'pip', 'install', ] + [cmd for n, cmd in requirements_dict.items() if n in missing],
+                    stdout=subprocess.DEVNULL
+                )
 
             except Exception as e:
                 self.log_exception(e)
