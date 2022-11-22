@@ -1,7 +1,7 @@
 
 [command.gtranslate]
 names = [ "gtranslate", "gtrans", "перевести", "перекласти" ]
-translated_message = "Текст був перекладен:\n- `{0}`"
+translated_message = "Текст був переклан:\n- `{0}`"
 
 [command.available_langs]
 names = [ "available-langs", "knownlangs", "доступные-языки", "доступязыки", "доступні-мови" ]

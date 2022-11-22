@@ -1,7 +1,9 @@
 
 [command.vtt]
 names = [ "voicetotext", "vtt", "totext", "втекст" ]
+offline_mode_names = [ "offline", "off", "офф", "офлайн" ]
 no_media_message = "Сообщение не имеет медиа контента"
 isnt_audio_message = "Это не аудио контент!"
-success_message = "Google STT:\n`{0}`"
+google_success_message = "Google STT:\n`{0}`"
+sphinx_success_message = "Sphinx STT:\n`{0}`"
 no_reply_to_message = "Вы должны ответить на аудио сообщение или др. контент!"

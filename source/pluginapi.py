@@ -266,10 +266,11 @@ class Plugin:
         # check for the new "install_requirement" feature
         for value in requirements:
             if isinstance(value, list):
-                requirements_names.append(value[0])
+                requirements_names.append(value[0].lower())
                 requirements_dict[value[0]] = value[1]
                 continue
-            requirements_dict[value] = value
+            requirements_names.append(value_low := value.lower())
+            requirements_dict[value_low] = value
 
         self.logger.debug('check_requirements() : Requirements are found. Checking it')
         self.logger.debug('check_requirements() : Getting list of the installed packages')

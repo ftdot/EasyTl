@@ -3,11 +3,12 @@
 #   required_platforms = [ "windows", "linux", "android" ]
 #   etl_version_min = [ 1, 3, 2 ]
 #   etl_version_max = [ 1, 4, "*" ]
-#   version = "1.1"
+#   version = "1.2"
 #   update_link = "https://github.com/ftdot/EasyTl/raw/master/plugins/MessageTranslate.plugin.py"
 #   lang_links = [ [ "MessageTranslate_en.toml", "https://github.com/ftdot/EasyTl/raw/master/lang/MessageTranslate_en.toml" ], [ "MessageTranslate_ru.toml", "https://github.com/ftdot/EasyTl/raw/master/lang/MessageTranslate_ru.toml" ], [ "MessageTranslate_uk.toml", "https://github.com/ftdot/EasyTl/raw/master/lang/MessageTranslate_uk.toml" ] ]
 #   requirements = "no requirements"
 #   author = "ftdot (https://github.com/ftdot)"
+#   changelog = [ "Small improvements" ]
 # end info
 
 if 'translatelib' not in namespace.values:
@@ -20,7 +21,7 @@ namespace.translator.initialize('MessageTranslate')
 
 @this.command(namespace.translations['MessageTranslate']['command']['gtranslate']['names'])
 async def gtranslate(event, args):
-    translate_to = None
+    translate_to = namespace.translator.lang
 
     # check the arguments
     if len(args) > 0:
@@ -36,10 +37,6 @@ async def gtranslate(event, args):
         text = msg[0].message
     else:
         text = ' '.join(args[1:]) if translate_to else ' '.join(args)
-
-    # set the language, if it not set
-    if translate_to is None:
-        translate_to = namespace.translator.lang
 
     # send translated message
     await namespace.instance.send_success(

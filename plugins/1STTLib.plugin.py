@@ -3,11 +3,12 @@
 #   required_platforms = [ "windows", "linux", "android" ]
 #   etl_version_min = [ 1, 3, 3 ]
 #   etl_version_max = [ 1, 4, "*" ]
-#   version = "1.0"
+#   version = "1.1"
 #   update_link = "no link"
 #   lang_links = "no link"
-#   requirements = [ "SpeechRecognition", "pydub" ]
+#   requirements = [ "SpeechRecognition", "pydub", "pocketsphinx" ]
 #   author = "ftdot (https://github.com/ftdot)"
+#   changelog = [ "Fixed offline mode" ]
 # end info
 
 import os
@@ -27,12 +28,12 @@ def to_wav(path, output):
     x.export(output, format='wav')
 
 
-def recognize_speech_from_file(path: str, offline: bool = False, language: str = 'en') -> str:
+def recognize_speech_from_file(path: str, offline: bool = False, language: str = 'en-US') -> str:
     """Recognize speech to text from a file by the path
 
     :param path: Path to the audio file
     :type path: str
-    :param offline: Use Sphnix engine isntead of the Google engine
+    :param offline: Use Sphinx engine instead of the Google engine
     :type offline: bool
     :param language: Language (langcode) that be used to recognition
     :type language: str
@@ -49,6 +50,8 @@ def recognize_speech_from_file(path: str, offline: bool = False, language: str =
     except Exception as e:
         this.log_exception(e)
         return '[STTLib] Can\'t recognize the speech! (When converting occurred an error)'
+
+    print(language)
 
     with sr.AudioFile(path) as af:
         audio_data = namespace.sttlib.recognizer.record(af)
