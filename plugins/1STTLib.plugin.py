@@ -51,8 +51,6 @@ def recognize_speech_from_file(path: str, offline: bool = False, language: str =
         this.log_exception(e)
         return '[STTLib] Can\'t recognize the speech! (When converting occurred an error)'
 
-    print(language)
-
     with sr.AudioFile(path) as af:
         audio_data = namespace.sttlib.recognizer.record(af)
 
