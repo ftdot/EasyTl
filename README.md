@@ -3,7 +3,7 @@
 </p>
 
 [![Latest tag](https://img.shields.io/github/v/tag/ftdot/EasyTl?label=LATEST%20TAG&style=for-the-badge)](https://github.com/ftdot/EasyTl/tags)
-[![Project telegram](https://badgen.net/badge/icon/telegram?icon=telegram&label=EASYTL%20CHANNEL&style=for-the-badge&scale=1.4)](https://t.me/easytl)
+[![Project telegram](https://badgen.net/badge/icon/telegram?icon=telegram&label=EASYTL&style=for-the-badge&scale=1.4)](https://t.me/easytl)
 [![Issues](https://img.shields.io/github/issues/ftdot/EasyTl?style=for-the-badge)](https://github.com/ftdot/EasyTl/issues)
 
 # EasyTl
