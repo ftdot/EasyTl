@@ -33,15 +33,15 @@ Plugins extends the functional of the Telegram, adding to it the user-side comma
 ❓ <a href="https://github.com/ftdot/EasyTl/README.md#what-is-planning-in-this-project">What is planning in this project?</a>
 
 ## Usage
-Currently, this version is alpha-test, this means that the project is unstable and haven't full documentation.
-Report any bug if you found there - https://github.com/ftdot/EasyTl/issues
+Currently, this version is +-stable version. But, you may wait to the stable compiled versions of the **EasyTl-GUI** **v1.4.\***.
+Report any bug you found there - https://github.com/ftdot/EasyTl/issues
 
 #### Download the latest version
 Go [there](https://github.com/ftdot/EasyTl/tags) and download the latest version (Source code (zip))
 
-
-#### Enter to the directory
-    # cd easytl
+1. Unpack archive to any directory.
+You can also use the git CLI: `$ git clone --depth 1 --branch <LATEST TAG> https://github.com/ftdot/easytl`
+2. Open terminal in the directory `easytl-cli` (if you at the linux, if your platform is windows, open this directory)
 
 ### Setup 
 To work with the EasyTl you must install required packages and run it by the python 3.11+.
@@ -138,6 +138,6 @@ You can see my plugins for EasyTl [here](https://github.com/ftdot/easytl-content
 ## What is planning in this project?
 * Easy PluginAPI (already do)
 * Easy utilities as: configs, translations, plugin auto-update (already do)
-* Full, easy to read, documentation
+* Full, easy to read documentation
 * Easy to use, cool GUI
 * Cross-platform (including Android)
