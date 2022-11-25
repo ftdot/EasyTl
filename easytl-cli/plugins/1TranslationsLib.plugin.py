@@ -50,7 +50,7 @@ def detect(text: str) -> str:
     return namespace.translatelib.translator.detect(text).lang
 
 # initializing translatelib namespace
-namespace.values['translatelib'] = namespace.Namespace()
+namespace.translatelib = namespace.Namespace()
 
 # add functions to translatelib namespace
 namespace.translatelib.translate = translate

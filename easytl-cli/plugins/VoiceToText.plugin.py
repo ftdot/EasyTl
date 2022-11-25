@@ -12,11 +12,13 @@
 # end info
 
 import os
+from source.exceptions import ImportLibError
 
-if 'sttlib' not in namespace.values:
+if 'sttlib' not in dir(namespace):
     this.logger.info('sttlib not found in the namespace!')
     this.errored = True
-    eee()
+
+    raise ImportLibError(this.plugin_name, 'sttlib')
 
 namespace.translator.initialize('VoiceToText')
 

@@ -14,11 +14,13 @@
 import os
 import speech_recognition as sr
 from pydub import AudioSegment
+from source.exceptions import ImportLibError
 
-if 'ffmpeg' not in namespace.values or not namespace.values['ffmpeg']:
+if 'ffmpeg' not in dir(namespace) or not namespace.ffmpeg:
     this.logger.info('ffmpeg support is not enabled or not found')
     this.errored = True
-    eee()
+
+    raise RequiredError(this.plugin_name, 'ffmpeg')
 
 recognizer = sr.Recognizer()
 
@@ -60,6 +62,6 @@ def recognize_speech_from_file(path: str, offline: bool = False, language: str =
 
 
 # initialize sttlib namespace
-namespace.values['sttlib'] = namespace.Namespace()
+namespace.sttlib = namespace.Namespace()
 namespace.sttlib.recognizer = recognizer
 namespace.sttlib.recognize_speech_from_file = recognize_speech_from_file

@@ -1,7 +1,6 @@
 import os.path
 import tomllib
 import logging
-from .namespace import Namespace
 
 
 class Translator:
@@ -48,7 +47,7 @@ class Translator:
         """(System method) Loads the languages to the current languages dictionary"""
 
         # check for the translations dict in the namespace
-        if 'translations' not in self.namespace.values:
+        if 'translations' not in dir(self.namespace):
             self.namespace.instance.logger.debug('Create translations dict in the namespace')
             self.namespace.translations = {}
 

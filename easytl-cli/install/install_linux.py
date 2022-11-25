@@ -1,3 +1,5 @@
+
+run_script = """
 which python3
 if [ $? == 1 ];
 then
@@ -6,4 +8,8 @@ then
   echo "Read about it here: https://github.com/ftdot/EasyTl#setup"
   exit 1
 fi
-python3 install/install.py
+python3 easytl.py
+"""
+
+with open('run.sh') as f:
+    f.write(run_script)

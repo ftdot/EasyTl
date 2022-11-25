@@ -6,33 +6,36 @@ import tomllib
 from getpass import getpass
 from telethon import TelegramClient, events
 from .namespace import Namespace
-from .translations import Translator
+from .translator import Translator
+from .argument_parser import ArgumentParser
 from . import pluginapi
 
 
 class Instance:
     """Instance object of EasyTl userbot for Telegram
 
+    :param instance_name: Name of the instance
+    :type instance_name: str
     :param api_id: API_ID from my.telegram.org -> Apps, for the telethon
     :type api_id: int
     :param api_hash: API_HASH from my.telegram.org -> Apps, for the telethon
     :type api_hash: str
-    :param owner_ids: Owners of EasyTl
+    :param owner_ids: Owners of Instance
     :type owner_ids: list[int]
+    :param config_file: Path to the file with TOML config of the instance
+    :type config_file: str
+    :param translator: The translator object
+    :type translator: Translator
     :param install_dir: Path to the directory with the instance
     :type install_dir: str
     :param plugins_dir: Path to the directory with the plugins
     :type plugins_dir: str
     :param cache_dir: Path to the directory with the cache
     :type cache_dir: str
-    :param config_dir: Path to the configuration directory
-    :type config_dir: str
     :param logs_dir: Directory with the logs
     :type logs_dir: str
-    :param translator: The translator object
-    :type translator: Translator
-    :param instance_name: Name of the instance
-    :type instance_name: str
+    :param logs_dir: Directory with the logs
+    :type logs_dir: str
 
     :ivar prefixes: List with the EasyTl prefixes, by the default is "easy"
     :type prefixes: list[str]
@@ -48,31 +51,45 @@ class Instance:
     :type stdout_handler: logging.StreamHandler
     """
 
-    def __init__(self, api_id: int, api_hash: str, owner_ids: list[int], install_dir: str = '.',
-                 plugins_dir: str = os.path.join('.', 'plugins'), cache_dir: str = os.path.join('.', 'cache'),
-                 config_dir: str = os.path.join('.', 'config'), logs_dir: str = os.path.join('.', 'logs'),
-                 translator: Translator = Translator(lang='en'), instance_name: str = 'Instance0'):
+    def __init__(self,
+                 instance_name: str,
+                 api_id: int,
+                 api_hash: str,
+                 owner_ids: list[int],
+                 config_file: str,
+                 translator: Translator = Translator(lang='en'),
+                 install_dir: str = '.',
+                 plugins_dir: str = os.path.join('.', 'plugins'),
+                 cache_dir: str = os.path.join('.', 'cache'),
+                 logs_dir: str = os.path.join('.', 'logs')
+        ):
 
-        self.api_id, self.api_hash, self.owner_ids, self.install_dir, self.plugins_dir, self.cache_dir, \
-            = api_id, api_hash, owner_ids, install_dir, plugins_dir, cache_dir
-        self.config_dir, self.logs_dir, self.translator, self.instance_name \
-            = config_dir, logs_dir, translator, instance_name
+        self.api_id, self.api_hash, self.owner_ids, \
+            = api_id, api_hash, owner_ids
+        self.config_file, self.translator, self.instance_name \
+            = config_file, translator, instance_name
+        self.install_dir, self.plugins_dir, self.cache_dir, self.logs_dir \
+            = install_dir, plugins_dir, cache_dir, logs_dir
 
         self.client = None
+        self.config = None
         self.logger = None
         self.stdout_handler = None
 
-        self.prefixes = ['easy']
-        self.namespace = Namespace({'instance': self,
-                                    'pluginapi': pluginapi,
-                                    'Namespace': Namespace,
-                                    'translator': self.translator,
-                                    'commands': {},
-                                    'pcommands': {},
-                                    'notify_stack': []})
-        self.plugins = pluginapi.PluginsList(plugins_dir=self.plugins_dir, namespace=self.namespace)
+        self.prefixes = ['easy', ]
 
-        self.namespace.plugins = self.plugins
+        # initialize working namespace
+        self.namespace               = Namespace()
+        self.namespace.instance      = self
+        self.namespace.pluginapi     = pluginapi
+        self.namespace.Namespace     = Namespace
+        self.namespace.Translator    = Translator
+        self.namespace.translator    = self.translator
+        self.namespace.commands      = {}
+        self.namespace.pcommands     = {}
+        self.namespace.notify_stack  = []
+
+        self.namespace.plugins = pluginapi.PluginsList(plugins_dir=self.plugins_dir, namespace=self.namespace)
 
     def initialize(self):
         """Initializes the working environment for userbot"""
@@ -81,8 +98,16 @@ class Instance:
 
         # init telethon's TelegramClient
         self.client = TelegramClient('EasyTl', self.api_id, self.api_hash)
-        self.namespace.client = self.client
         self.client.add_event_handler(self.messages_handler, events.NewMessage)
+        self.namespace.client = self.client
+
+        self.logger.debug('Loading config for the instance')
+
+        with open(self.config_file, 'rb') as f:
+            self.config = tomllib.load(f)
+
+        self.logger.debug('Checking the config')
+        self.check_config()
 
         self.logger.debug('Loading translator')
 
@@ -94,21 +119,23 @@ class Instance:
 
         # load the plugins
         plugins_list = [pluginapi.Plugin(os.path.basename(f)[:-10], os.path.join(self.plugins_dir, f))
-                        for f in
-                        [f for f in os.listdir(self.plugins_dir) if f.endswith('.plugin.py')]
+                            for f in
+                                [f for f in os.listdir(self.plugins_dir) if f.endswith('.plugin.py')]
                         ]
         plugins_dict = {p.plugin_name: p for p in plugins_list}
 
         self.logger.info('Activating plugins')
 
         # activate all plugins
-        self.plugins.activate_plugins_list(plugins_dict)
+        self.namespace.plugins.activate_plugins_list(plugins_dict)
 
-    def initialize_logging(self, log_level: int):
+    def initialize_logging(self, log_level: int, console_log_level: int):
         """Initializes instance.Logger object
 
         :param log_level: Log level of logger (logging.INFO, logging.DEBUG and etc...)
         :type log_level: int
+        :param console_log_level: Log level of console logging (logging.INFO, logging.DEBUG and etc...)
+        :type console_log_level: int
         """
 
         s_format = '%(name)s | %(asctime)s | [%(levelname)s] : %(message)s'
@@ -123,20 +150,15 @@ class Instance:
         )
 
         # init instance logger
-        self.logger = logging.Logger('EasyTl')
+        self.logger = logging.Logger('EasyTl Instance')
         self.logger.setLevel(log_level)
 
         # init a stream handler for the console output
         self.stdout_handler = logging.StreamHandler(sys.stdout)
-        self.stdout_handler.setLevel(log_level)
+        self.stdout_handler.setLevel(console_log_level)
         self.stdout_handler.setFormatter(formatter)
+
         self.logger.addHandler(self.stdout_handler)
-
-    def partial_run(self):
-        """Only starts the telegram client"""
-
-        self.logger.info('Telegram client run partial')
-        self.client.start()
 
     def run(self):
         """Run the telegram client until disconnected"""
@@ -150,40 +172,47 @@ class Instance:
             code_callback=self._t_get_code
         )
 
-        if self.get_version()['version']['indev']:
+        if self.config['version']['indev']:
             self.logger.info('Current version may be unstable, because this version in the development')
-        if self.get_version()['version']['beta']:
+        if self.config['version']['beta']:
             self.logger.info('This is a beta version. If you have some problems with EasyTl, '
                              'inform about it there: https://github.com/ftdot/EasyTl/issues')
 
         self.client.run_until_disconnected()
 
-    async def command_handler(self, length: int, cmd: list, event):
+    async def command_handler(self, length: int, args: list, event):
         """(System method) Executes the command
 
         :param length: Length of "cmd" list
         :type length: int
-        :param cmd: The command, split by space list
-        :type cmd: list
+        :param args: The args, split by space list
+        :type args: list
         :param event: Telethon's event variable
         """
 
-        self.logger.debug(f'command_handler, LENGTH: {length} CMD: {cmd}')
+        self.logger.debug(f'command_handler, LENGTH: {length} ARGS: {args}')
 
         # check if the command is exists
-        if length < 1 or cmd[0] not in self.namespace.commands:
+        if length < 1 or args[0] not in self.namespace.commands:
             self.logger.debug(f'Command {cmd[0]} not found in instance.namespace.commands')
             return
 
         # check if the notify stack have some messages
-        if len(self.namespace.notify_stack) > 0:
-            for m in self.namespace.notify_stack:
-                self.logger.debug('Send message from notify stack')
-                await self.send(event, self.f_notify(m))  # send the message to a chat
-            self.namespace.notify_stack = []  # remove the message from the notify stack
+        await self.check_notifies_stack(event)
+
+        # get function for the command
+        command_func = self.namespace.commands[cmd[0]]
+
+        # parsing the arguments or use arguments list without prefix
+        # because ArgumentParser is only preview in the v1.4.0 - it always return list without prefix
+        # see v1.4.0 release (notes)
+        if isinstance(command_func.ap, ArgumentParser):
+            p_args = command_func.ap.parse(args)
+        else:
+            p_args = args[1:]
 
         self.logger.debug('Call the command with permissions')
-        await self.namespace.call_w_permissions(self.namespace.commands[cmd[0]], event, cmd[1:])
+        await self.namespace.call_w_permissions(command_func, event, p_args)
 
     async def messages_handler(self, event):
         """(System method) Handles the messages from the Telegram
@@ -199,52 +228,30 @@ class Instance:
         # check if the message is had some prefixes
         if msg_split[0] in self.prefixes:
             self.logger.debug(f'A message with the command has been detected, MSG_SPLIT: {msg_split}')
-            await self.command_handler(l - 1, msg_split[1:], event)
-
-    def get_platform(self) -> str:
-        """Returns the build platform value (reads the "_platform" file in the config directory)
-
-        :returns: Platform (windows or linux or android)
-        :rtype: str
-        """
-
-        with open(os.path.join(self.config_dir, '_platform')) as f:
-            return f.read()
-
-    def get_version(self) -> dict:
-        """Returns the build version dict (reads the "_version" file in the config directory)
-
-        :returns: Version information dict
-        :rtype: dict
-        """
-
-        with open(os.path.join(self.config_dir, 'version.toml'), 'rb') as f:
-            return tomllib.load(f)
-
-    def log_plugins_to_stdout(self) -> bool:
-        """Gets the "log_plugins_to_stdout" value from the config
-
-        :return: Returns True if logging plugins to the stdout is enabled, otherwise False
-        :rtype: bool
-        """
-
-        with open(os.path.join(self.config_dir, '_log_plugins_to_stdout'), 'r') as f:
-            return True if f.read() == '1' else False
+            await self.command_handler(l - 1, msg_split, event)
 
     ####
 
-    @staticmethod
-    def f_notify(message: str) -> str:
-        """Formats the message as notify
+    async def check_notifies_stack(self, event):
+        """Do check for the notifies stack. If any, send to the current chat
 
-        :param message: A message to format
-        :type message: str
-
-        :returns: Formatted message
-        :rtype: str
+        :param event: Telethon's event variable
         """
 
-        return '🔔  ' + message
+        if len(self.namespace.notify_stack) > 0:
+            for m in self.namespace.notify_stack:
+                self.logger.debug(f'Send message from notify stack: {m}')
+                await self.send(event, self.f_notify(m))  # send the message to a chat
+
+            self.namespace.notify_stack = []  # clear the notifies stack
+
+    def check_config(self):
+        """Checks for the config values"""
+
+        if self.config['build_platform'] == '':
+            self.config['build_platform'] = 'windows' if sys.platform == 'win32' else 'linux'
+
+    ####
 
     @staticmethod
     def f_success(message: str) -> str:
@@ -271,6 +278,19 @@ class Instance:
         """
 
         return f'`EasyTl` ❌ {message}'
+
+    @staticmethod
+    def f_notify(message: str) -> str:
+        """Formats the message as notify
+
+        :param message: A message to format
+        :type message: str
+
+        :returns: Formatted message
+        :rtype: str
+        """
+
+        return '`EasyTl` 🔔  ' + message
 
     @staticmethod
     def f_warning(message: str) -> str:
@@ -318,6 +338,28 @@ class Instance:
         """
 
         await self.send(event, self.f_unsuccess(message))
+
+    async def send_notify(self, event, message: str):
+        """Send message to current chat, formatted as notify.
+        Shorthand for Instance.send(event, Instance.f_notify(message))
+
+        :param event: Telethon's event variable
+        :param message: Message that will be formatted as notify and sent
+        :type message: str
+        """
+
+        await self.send(event, self.f_notify(message))
+
+    async def send_warning(self, event, message: str):
+        """Send message to current chat, formatted as warning.
+        Shorthand for Instance.send(event, Instance.f_warning(message))
+
+        :param event: Telethon's event variable
+        :param message: Message that will be formatted as warning and sent
+        :type message: str
+        """
+
+        await self.send(event, self.f_warning(message))
 
     ####
 

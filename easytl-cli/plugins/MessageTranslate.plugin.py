@@ -11,10 +11,13 @@
 #   changelog = [ "Small improvements" ]
 # end info
 
-if 'translatelib' not in namespace.values:
+from source.exceptions import ImportLibError
+
+if 'translatelib' not in dir(namespace):
     this.logger.info('translatelib not found in the namespace!')
     this.errored = True
-    eee()
+
+    raise ImportLibError(this.plugin_name, 'translatelib')
 
 namespace.translator.initialize('MessageTranslate')
 

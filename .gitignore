@@ -1,30 +1,40 @@
-# Byte-compiled
-__pycache__/
-source/__pycache__/
+# byte-compiled
+easytl-cli/__pycache__/
+easytl-cli/source/__pycache__/
+
+easytl-gui/__pycache__/
+easytl-gui/source/__pycache__/
+easytl-gui/source/window/__pycache__/
 
 # PyCharm files
 .idea/
 
+# EasyTl-CLI files
+
 # EasyTl cache folder
-cache/*
-!cache/.gitkeep
+easytl-cli/cache/*
+!easytl-cli/cache/.gitkeep
 
 # EasyTl logs folder
-logs/*
-!logs/.gitkeep
+easytl-cli/logs/*
+!easytl-cli/logs/.gitkeep
 
-# do not use my sessions and cookies for test =)
-test_creds.py
-.google-cookie
-EasyTl.session
-EasyTl.session-journal
+# creds for test
+easytl-cli/test_creds.py
+easytl-cli/EasyTl.session
+easytl-cli/EasyTl.session-journal
 
-# what I want to do you're will not see!
-todo*.txt
+# SearchPlease plugin cache
+easytl-cli/.google-cookie
 
 # already installed ffmpeg
-ffmpeg/
+easytl-cli/ffmpeg/
 
-# in dev
+# EasyTl-GUI files
+
+# no, no, no. No at this day
 easytl-gui/
+
+# other
 build/
+IGNR_*

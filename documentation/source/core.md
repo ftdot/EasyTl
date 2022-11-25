@@ -57,7 +57,10 @@ if __name__ == '__main__':
     main_instance.run()
 ```
 
-#### Parameters:
+#### Parameters + variables:
+
+##### Instance.instance\_name `str`
+Name of the instance.
 
 ##### Instance.api\_id `int`
 API ID value for the telethon. You can get it there: [my.telegram.org](https://my.telegram.org) -> Apps
@@ -67,6 +70,14 @@ API HASH value for the telethon. You can get it there: [my.telegram.org](https:/
 
 ##### Instance.owner\_id `int`
 ID of the owner of the instance. You can get it from the Telegram bot [@myidbot](https://t.me/myidbot)
+
+##### Instance.config_file `str`
+Path to the file with TOML config of the instance.
+Config is static, required values for work the EasyTl
+
+##### Instance.translator `source.translator.Translator`
+The instance of `Translator`.
+By default: `Translator(lang='en')`
 
 ##### Instance.install\_dir `str`
 Path to the directory there installed a EasyTl Instance.
@@ -80,21 +91,9 @@ By default: `os.path.join('.', 'plugins')`
 Path to the directory there will be saved cache of the Instance.
 By default: `os.path.join('.', 'cache')`
 
-##### Instance.config\_dir `str`
-Path to the directory there saved a config of the Instance.
-By default: `os.path.join('.', 'config')`
-
 ##### Instance.logs\_dir `str`
 Path to the directory where save the logs.
 By default: `os.path.join('.', 'plugins')`
-
-##### Instance.translator `source.translations.Translator`
-The Translator instance.
-By default: `Translator(lang='en')`
-
-##### Instance.instance\_name `str`
-Name of the instance.
-By default: `"Instance0"`
 
 #### Variables of the `Instance`:
 
@@ -111,6 +110,7 @@ By default is have there values:
 - `instance` (`source.core.Instance`) - link to the current instance
 - `pluginapi` (`source.pluginapi`) - link to the pluginapi module
 - `Namespace` (`source.namespace.Namespace`) - link to the Namespace class
+- `Translator` (`source.namespace.Translator`) - link to the Namespace class
 - `translator` (`source.translations.Translator`) - link to translator of current instance (`Instance.translator`)
 - `commands` (`dict[str, function]`) - dict with the registered commands
 - `pcommands` (`dict[str, list[str]]`) - dict with the commands(functions) names and permissions for it
@@ -134,19 +134,21 @@ Initializes the working environment for userbot. Takes no argument (only `self`)
 Initializes instance.Logger object. Takes no argument (only `self`)
 
 ##### Instance.partialy\_run()
-Run only `Instance.client`, without the call of `Instance.client.run_until_disconnected()`. Takes no argument (only `self`)
+DELETED in v1.4.0
+
+~~Run only `Instance.client`, without the call of `Instance.client.run_until_disconnected()`. Takes no argument (only `self`)~~
 
 ##### Instance.run()
 Run `Instance.client` until disconnected from the Telegram. Takes no argument (only `self`)
 
-##### Instance.command\_handler()
+##### async Instance.command\_handler()
 (System method) Executes command. Arguments:
 - `self`
 - `length` (`int`) - Length of the splitted (by space) list
-- `cmd` (`list`) - List with the command and arguments
+- `args` (`list`) - List with the command arguments
 - `event` (`telethon.events.newmessage.NewMessage.Event`) - Telethon's event of the NewMessage
 
-##### Instance.message\_handler()
+##### async Instance.message\_handler()
 (System method) Handles the messages from the Telegram. Arguments:
 - `self`
 - `event` (`telethon.events.newmessage.NewMessage.Event`) - Telethon's event of the NewMessage
@@ -154,19 +156,29 @@ Run `Instance.client` until disconnected from the Telegram. Takes no argument (o
 #### Getters for the config values:
 
 ##### Instance.get\_platform() -> `str`
-Reads and return a `\_platform` file value from the directory with configs (`Instance.config\_dir`). Takes no argument (only `self`)
+DELETED IN v1.4.0. Use `Instance.config['platform']` instead of.
+
+~~Reads and return a `\_platform` file value from the directory with configs (`Instance.config\_dir`). Takes no argument (only `self`)~~
 
 ##### Instance.get\_version() -> `dict`
-Reads, parses TOML to dict and return a `version.toml` file value from the directory with configs (`Instance.config_dir`). Takes no argument (only `self`)
+DELETED IN v1.4.0. Use `Instance.config['version']` instead of.
+
+~~Reads, parses TOML to dict and return a `version.toml` file value from the directory with configs (`Instance.config_dir`). Takes no argument (only `self`)~~
 
 ##### Instance.log_plugins_to_stdout() -> `bool`
-Reads, parse from TOML to dict and return a `version.toml` file value from the directory with configs (`Instance.config\_dir`). Takes no argument (only `self`)
+DELETED IN v1.4.0. Use `Instance.config['log_plugins_to_stdout']` instead of.
+
+~~Reads, parse from TOML to dict and return a `version.toml` file value from the directory with configs (`Instance.config\_dir`). Takes no argument (only `self`)~~
 
 #### Static methods, formatters:
 Methods there decorated with `@staticmethod`!
 
 ##### Instance.f\_notify() -> `str`
 Formats a message argument as `🔔  (message)`. Arguments:
+- `message` (`str`) - Message to be formatted
+
+##### Instance.f\_warning() -> `str`
+Formats a message argument as `EasyTl ⚠️ (message)`. Arguments:
 - `message` (`str`) - Message to be formatted
 
 ##### Instance.f\_success() -> `str`
@@ -177,29 +189,37 @@ Formats a message argument as `EasyTl ✅ (message)`. Arguments:
 Formats a message argument as `EasyTl ❌ (message)`. Arguments:
 - `message` (`str`) - Message to be formatted
 
-##### Instance.f\_warning() -> `str`
-Formats a message argument as `EasyTl ⚠️ (message)`. Arguments:
-- `message` (`str`) - Message to be formatted
-
 #### Wrappers to send the text:
 
-##### Instance.send()
+##### async Instance.send()
 Send message to current chat. Shorthand for client.send_message(event.chat_id, ...). Arguments:
 - `self`
 - `event` (`telethon.events.newmessage.NewMessage.Event`)
 - `message` (`str`) - Message to be send
 
-##### Instance.send\_success()
+##### async Instance.send\_success()
 Send message to current chat, formatted as success. Shorthand for Instance.send(event, Instance.f_success(message)). Arguments:
 - `self`
 - `event` (`telethon.events.newmessage.NewMessage.Event`)
-- `message` (`str`) - Message to be formatted and send
+- `message` (`str`) - Message to be formatted and sent
 
-##### Instance.send\_unsuccess()
+##### async Instance.send\_unsuccess()
 Send message to current chat, formatted as success. Shorthand for Instance.send(event, Instance.f_unsuccess(message)). Arguments:
 - `self`
 - `event` (`telethon.events.newmessage.NewMessage.Event`)
-- `message` (`str`) - Message to be formatted and send
+- `message` (`str`) - Message to be formatted and sent
+
+##### async Instance.send\_notify()
+Send message to current chat, formatted as success. Shorthand for Instance.send(event, Instance.f_notify(message)). Arguments:
+- `self`
+- `event` (`telethon.events.newmessage.NewMessage.Event`)
+- `message` (`str`) - Message to be formatted and sent
+
+##### async Instance.send\_warning()
+Send message to current chat, formatted as success. Shorthand for Instance.send(event, Instance.f_warning(message)). Arguments:
+- `self`
+- `event` (`telethon.events.newmessage.NewMessage.Event`)
+- `message` (`str`) - Message to be formatted and sent
 
 #### Wrappers to get translated credentials:
 

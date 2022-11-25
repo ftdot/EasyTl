@@ -66,7 +66,7 @@ class Plugin:
             return
 
         self.logger.info('Trying to enable logging to the stdout')
-        if self.namespace.instance.log_plugins_to_stdout():
+        if self.namespace.instance.config['log_plugins_to_stdout']:
             self.logger.addHandler(self.namespace.instance.stdout_handler)
 
         for step in self.activation_steps:
@@ -80,7 +80,7 @@ class Plugin:
     ####
 
     def check_compatibility(self):
-        current_version = self.namespace.instance.get_version()['version']['list']
+        current_version = self.namespace.instance.config['version']['list']
 
         # get a version min\max support by the format of the info lines
         version_min = self.info['etl_version_min']
@@ -113,10 +113,9 @@ class Plugin:
     def check_for_updates(self):
         """Does check for the plugin updates"""
 
-        if 'auto_update' in self.namespace.values:
-            if not self.namespace.auto_update:
-                self.logger.debug('check_for_updates() : Auto-updates is disabled. Skip')
-                return
+        if not self.namespace.instance.config['plugins_auto_update']:
+            self.logger.debug('check_for_updates() : Auto-updates is disabled. Skip')
+            return
 
         hash_path = os.path.join(self.namespace.instance.cache_dir, self.plugin_name + '.hash')
 
@@ -304,10 +303,9 @@ class Plugin:
                 self.errored = True
 
     def check_platform(self):
-        if not self.namespace.instance.get_platform() in self.info['required_platforms']:
+        if not self.namespace.instance.config['build_platform'] in self.info['required_platforms']:
             self.logger.debug('check_platform() : Doesn\'t support current platform')
-            self.log_exception(e)
-
+            s()
             # write notify about the error
             self.namespace.notify_stack.append(
                 self.namespace.translations['core']['error_notify'].format(

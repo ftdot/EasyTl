@@ -1,6 +1,5 @@
 @ECHO OFF
 setlocal
-;;set "[[=>"#" 2>&1&set/p "&set "]]==<# & del /q # >nul 2>&1" &
 
 python -V >nul
 if not errorlevel 0 goto no_python
@@ -17,5 +16,6 @@ exit
 
 :run_install
 python install\install.py
+python install\install_win.py
 PAUSE
 exit

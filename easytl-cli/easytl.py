@@ -3,7 +3,7 @@ import os
 import sys
 
 from source.core import Instance
-from source.translations import Translator
+from source.translator import Translator
 
 # There is EasyTl usebot default instance
 
@@ -32,8 +32,7 @@ install_dir  = os.getcwd()
 
 plugins_dir  = os.path.join(install_dir, 'plugins')
 cache_dir    = os.path.join(install_dir, 'cache')
-lang_dir     = os.path.join(install_dir, 'lang')
-config_dir   = os.path.join(install_dir, 'config')
+lang_dir     = os.path.join(install_dir, 'translations')
 logs_dir     = os.path.join(install_dir, 'logs')
 
 win_ffmpeg_dir   = os.path.join(install_dir, 'ffmpeg', 'ffmpeg-master-latest-win64-gpl-shared')
@@ -47,17 +46,16 @@ if os.path.exists('test_creds.py'):
 
 # do not change the code below. It may cause problems!
 if __name__ == '__main__':
-    main_instance = Instance(API_ID, API_HASH, [MY_ID, ] + OTHER_OWNERS,
-                             install_dir, plugins_dir, cache_dir, config_dir, logs_dir,
-                             Translator(lang_dir, lang), instance_name)
-    main_instance.initialize_logging(log_level)
+    main_instance = Instance(instance_name,
+                             API_ID, API_HASH, [MY_ID, ] + OTHER_OWNERS,
+                             'config.toml', Translator(lang_dir, lang),
+                             install_dir, plugins_dir, cache_dir, logs_dir)
+    main_instance.initialize_logging(log_level, console_log_level)
 
-    main_instance.namespace.values['ffmpeg_dir'] = win_ffmpeg_dir
+    main_instance.namespace.ffmpeg_dir     = win_ffmpeg_dir
+    main_instance.namespace.instance_file  = os.path.abspath(__file__)
 
     main_instance.initialize()
-
-    main_instance.namespace.values['instance_file']  = os.path.abspath(__file__)
-    main_instance.namespace.values['auto_update']    = enable_auto_update
 
     if len(sys.argv) == 2:
         if sys.argv[1] == 'restart':  # check if EasyTl started from the restart command

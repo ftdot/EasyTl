@@ -3,10 +3,14 @@
 </p>
 
 [![Latest tag](https://img.shields.io/github/v/tag/ftdot/EasyTl?label=LATEST%20TAG&style=for-the-badge)](https://github.com/ftdot/EasyTl/tags)
+[![Project telegram](https://badgen.net/badge/icon/telegram?icon=telegram&label=EASYTL%20CHANNEL&style=for-the-badge&scale=1.4)](https://t.me/easytl)
 [![Issues](https://img.shields.io/github/issues/ftdot/EasyTl?style=for-the-badge)](https://github.com/ftdot/EasyTl/issues)
+
 # EasyTl
-This is a userbot for Telegram, that have very comfortable plugin API, thats allows for the developers easily create the plugins. 
+This is a userbot for Telegram, that have very comfortable plugin API, that allows for the developers easily create the plugins. 
 Plugins extends the functional of the Telegram, adding to it the user-side commands, with that u can do everything u want.
+
+**Our official telegram channel:** [@easytl](https://t.me/easytl)
 
 #### EasyTl is the recreated project _ftub_, named also as _tub_.
 
