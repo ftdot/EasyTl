@@ -27,7 +27,9 @@ easytl-cli/EasyTl.session-journal
 # SearchPlease plugin cache
 easytl-cli/.google-cookie
 
-# already installed ffmpeg
+# already installed
+easytl-cli/run.bat
+easytl-cli/run.sh
 easytl-cli/ffmpeg/
 
 # EasyTl-GUI files

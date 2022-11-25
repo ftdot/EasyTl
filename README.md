@@ -28,9 +28,9 @@ Plugins extends the functional of the Telegram, adding to it the user-side comma
 - - [Fast guide](#fast-guide)
 - [Run it](#run-it)
 
-❓ <a href="https://github.com/ftdot/EasyTl/README.md#why-you-shouldnt-use-the-userbot-now">Why you shouldn't use the userbot now?</a>
+❓ [Why you shouldn't use the userbot now?](#why-you-shouldnt-use-the-userbot-now)
 
-❓ <a href="https://github.com/ftdot/EasyTl/README.md#what-is-planning-in-this-project">What is planning in this project?</a>
+❓ [What is planning in this project?](#what-is-planning-in-this-project)
 
 ## Usage
 Currently, this version is +-stable version. But, you may wait to the stable compiled versions of the **EasyTl-GUI** **v1.4.\***.
@@ -119,14 +119,10 @@ After you configured the userbot, run that.
 
 
 #### For the Linux:
-```
-# python3 easytl.py
-```
+    $ ./run.sh
 
 #### For the Windows:
-```
-python easytl.py
-```
+    Run the "run.bat" file
 
 For first run, the userbot will ask you for the credentials (Number and code). This is required to authorize the userbot
 
