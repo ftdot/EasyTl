@@ -8,7 +8,7 @@
 #   lang_links = [ ["searchplease_en.toml", "https://github.com/ftdot/EasyTl/raw/master/easytl-cli/translations/searchplease_en.toml"], ["searchplease_ru.toml", "https://github.com/ftdot/EasyTl/raw/master/easytl-cli/translations/searchplease_ru.toml"], ["searchplease_uk.toml", "https://github.com/ftdot/EasyTl/raw/master/easytl-cli/translations/searchplease_uk.toml"] ]
 #   requirements = [ "google", "BeautifulSoup4" ]
 #   author = "ftdot (https://github.com/ftdot)"
-#   changelog = [ "Added search images by query", "Added Edge, FireFox, Default browsers support", "Reply search support for the gsearch command" ]
+#   changelog = [ "Added search images by query", "Added Edge, FireFox, Default browsers support", "Reply search support for the gsearch, gimgsearch commands" ]
 # end info
 
 
@@ -94,11 +94,10 @@ def google_search_image_by_query(query: str, count: int = 1, output_dir: str = n
         try:
             request.urlretrieve(img_url, img_path)
             counter += 1
+
         except Exception as e:
             this.logger.log_exception(e)
             this.logger.debug(f'Can\'t download image {img_url}')
-        
-        print(counter)
 
         # check for the downloaded count
         if counter == count:
@@ -125,8 +124,6 @@ namespace.pcommands[search.__name__].append('danger')  # mark this command as da
 # sends the results of search from the Google to the telegram chat
 @this.command(namespace.translations['searchplease']['command']['gsearch']['names'])
 async def gsearch_(event, args):
-    if not len(args) > 1:
-        return
 
     # if first number is numeric - type-cast it into int and use it as number of result
     num = 1
@@ -139,6 +136,9 @@ async def gsearch_(event, args):
                         if msg.id == event.reply_to.reply_to_msg_id]
         text = msg[0].message
     else:
+        if not len(args) > 1:
+            return
+
         text = ' '.join(args[2:]) if num > 1 else ' '.join(args[1:])
 
     # Send query to the Google
@@ -154,8 +154,6 @@ async def gsearch_(event, args):
 
 @this.command(namespace.translations['searchplease']['command']['gimgsearch']['names'])
 async def gimgsearch(event, args):
-    if not len(args) > 1:
-        return
 
     # if first number is numeric - type-cast it into int and use it as number of result
     count = 1
@@ -168,6 +166,9 @@ async def gimgsearch(event, args):
                         if msg.id == event.reply_to.reply_to_msg_id]
         text = msg[0].message
     else:
+        if not len(args) > 1:
+            return
+
         text = ' '.join(args[2:]) if count > 1 else ' '.join(args[1:])
 
     # send message about success results

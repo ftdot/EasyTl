@@ -1,3 +1,0 @@
-telethon
-telethon[cryptg]
-requests
