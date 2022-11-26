@@ -150,7 +150,12 @@ class Plugin:
             if update_link != 'no link':
                 self.logger.debug(f'Link found ({update_link}). Sending request')
                 r = requests.get(update_link)
-                rhash = get_string_hash(r.content)
+
+                if r.status != 200:
+                    self.logger.debug('Update request returned non 200 code')
+                    rhash = fhash
+                else:
+                    rhash = get_string_hash(r.content)
             else:
                 self.logger.debug('Link not setup. Skip the updating')
                 rhash = fhash  # write remote hash as local file hash to skip the update

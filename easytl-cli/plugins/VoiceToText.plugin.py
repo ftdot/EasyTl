@@ -4,8 +4,8 @@
 #   etl_version_min = [ 1, 4, 0 ]
 #   etl_version_max = [ 1, 4, "*" ]
 #   version = "1.2"
-#   update_link = "https://github.com/ftdot/EasyTl/raw/master/plugins/VoiceToText.plugin.py"
-#   lang_links = [ ["VoiceToText_en.toml", "https://github.com/ftdot/EasyTl/raw/master/lang/VoiceToText_en.toml"], ["VoiceToText_ru.toml", "https://github.com/ftdot/EasyTl/raw/master/lang/VoiceToText_ru.toml"], ["VoiceToText_uk.toml", "https://github.com/ftdot/EasyTl/raw/master/lang/VoiceToText_uk.toml"] ]
+#   update_link = "https://github.com/ftdot/EasyTl/raw/master/easytl-cli/plugins/VoiceToText.plugin.py"
+#   lang_links = [ ["VoiceToText_en.toml", "https://github.com/ftdot/EasyTl/raw/master/easytl-cli/translations/VoiceToText_en.toml"], ["VoiceToText_ru.toml", "https://github.com/ftdot/EasyTl/raw/master/easytl-cli/translations/VoiceToText_ru.toml"], ["VoiceToText_uk.toml", "https://github.com/ftdot/EasyTl/raw/master/easytl-cli/translations/VoiceToText_uk.toml"] ]
 #   requirements = "no requirements"
 #   author = "ftdot (https://github.com/ftdot)"
 #   changelog = [ "Support for the 1.4.0 version" ]

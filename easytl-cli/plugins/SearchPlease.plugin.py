@@ -4,8 +4,8 @@
 #   etl_version_min = [ 1, 4, 0 ]
 #   etl_version_max = [ 1, 4, "*" ]
 #   version = "1.4"
-#   update_link = "https://github.com/ftdot/EasyTl/raw/master/plugins/SearchPlease.plugin.py"
-#   lang_links = [ ["searchplease_en.toml", "https://github.com/ftdot/EasyTl/raw/master/lang/searchplease_en.toml"], ["searchplease_ru.toml", "https://github.com/ftdot/EasyTl/raw/master/lang/searchplease_ru.toml"], ["searchplease_uk.toml", "https://github.com/ftdot/EasyTl/raw/master/lang/searchplease_uk.toml"] ]
+#   update_link = "https://github.com/ftdot/EasyTl/raw/master/easytl-cli/plugins/SearchPlease.plugin.py"
+#   lang_links = [ ["searchplease_en.toml", "https://github.com/ftdot/EasyTl/raw/master/easytl-cli/translations/searchplease_en.toml"], ["searchplease_ru.toml", "https://github.com/ftdot/EasyTl/raw/master/easytl-cli/translations/searchplease_ru.toml"], ["searchplease_uk.toml", "https://github.com/ftdot/EasyTl/raw/master/easytl-cli/translations/searchplease_uk.toml"] ]
 #   requirements = [ "google" ]
 #   author = "ftdot (https://github.com/ftdot)"
 #   changelog = [ "Support for the 1.4.0 version" ]

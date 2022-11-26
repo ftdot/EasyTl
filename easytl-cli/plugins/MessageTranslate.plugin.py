@@ -4,8 +4,8 @@
 #   etl_version_min = [ 1, 4, 0 ]
 #   etl_version_max = [ 1, 4, "*" ]
 #   version = "1.3"
-#   update_link = "https://github.com/ftdot/EasyTl/raw/master/plugins/MessageTranslate.plugin.py"
-#   lang_links = [ [ "MessageTranslate_en.toml", "https://github.com/ftdot/EasyTl/raw/master/lang/MessageTranslate_en.toml" ], [ "MessageTranslate_ru.toml", "https://github.com/ftdot/EasyTl/raw/master/lang/MessageTranslate_ru.toml" ], [ "MessageTranslate_uk.toml", "https://github.com/ftdot/EasyTl/raw/master/lang/MessageTranslate_uk.toml" ] ]
+#   update_link = "https://github.com/ftdot/EasyTl/raw/master/easytl-cli/plugins/MessageTranslate.plugin.py"
+#   lang_links = [ [ "MessageTranslate_en.toml", "https://github.com/ftdot/EasyTl/raw/master/easytl-cli/translations/MessageTranslate_en.toml" ], [ "MessageTranslate_ru.toml", "https://github.com/ftdot/EasyTl/raw/master/easytl-cli/translations/MessageTranslate_ru.toml" ], [ "MessageTranslate_uk.toml", "https://github.com/ftdot/EasyTl/raw/master/easytl-cli/translations/MessageTranslate_uk.toml" ] ]
 #   requirements = "no requirements"
 #   author = "ftdot (https://github.com/ftdot)"
 #   changelog = [ "Support for the 1.4.0 version" ]
