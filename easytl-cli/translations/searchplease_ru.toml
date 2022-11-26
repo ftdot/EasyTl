@@ -7,3 +7,7 @@ query_opened = "Запрос был открыт в браузере"
 [command.gsearch]
 names = [ "gsearch", "найти" ]
 link_found = "Ссылка найдена: {0}"
+
+[command.gimgsearch]
+names = [ "gimgsearch", "найтиизображение", "найтикартинку" ]
+results_message = "Вот что нашлось в Google:"
