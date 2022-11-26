@@ -17,10 +17,18 @@ initiator_path  = os.path.join(os.getcwd(), 'easytl-cli', 'build', 'initiator.py
 with open(os.path.join(os.getcwd(), 'easytl-cli', 'config.toml')) as f:
     config_toml = f.read()
 
+# save the Core plugin
+with open(os.path.join(os.getcwd(), 'easytl-cli', 'plugins', '0Core.plugin.py')) as f:
+    core_plugin = f.read()
+
+# save the Permissions plugin
+with open(os.path.join(os.getcwd(), 'easytl-cli', 'plugins', '0Permissions.plugin.py')) as f:
+    perms_plugin = f.read()
+
 # copy the initiator file
 with open(dest_file+'_tmp.py', 'w') as f1:
     with open(initiator_path, 'r') as f2:
-        f1.write(f2.read().replace('{{ CONFIG_TOML }}', config_toml))
+        f1.write(f2.read().replace('{{ CONFIG_TOML }}', config_toml).replace('{{ CORE_PLUGIN }}', core_plugin).replace('{{ PERMS_PLUGIN }}', perms_plugin))
 
 # compile the file
 py_compile.compile(dest_file+'_tmp.py', cfile=dest_file)

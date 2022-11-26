@@ -9,7 +9,7 @@ if not len(sys.argv) > 1:
     raise ValueError('First argument must be path to the destination directory')
 
 dest_dir          = sys.argv[1]
-core_dir          = os.path.join(dest_dir, 'core')
+source_dir        = os.path.join(dest_dir, 'source')
 source_path       = os.path.join(os.getcwd(), 'easytl-cli', 'source')
 
 
@@ -25,11 +25,11 @@ except Exception as e:
 
 # create the core dir
 try:
-    os.mkdir(core_dir)
+    os.mkdir(source_dir)
 except FileExistsError:
     pass
 except Exception as e:
-    print('Cannot create the "core" directory')
+    print('Cannot create the "source" directory')
     raise e
 
 
