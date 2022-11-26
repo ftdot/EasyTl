@@ -2,7 +2,7 @@
 is_gui          = false
 build_platform  = ''
 
-plugins_auto_update    = true
+plugins_auto_update    = false
 log_plugins_to_stdout  = true
 
 [logging]

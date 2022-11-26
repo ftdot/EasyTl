@@ -1,14 +1,14 @@
 # begin info
 #   description = "Library-plugin | Allows to manage the commands permissions"
 #   required_platforms = [ "windows", "linux", "android" ]
-#   etl_version_min = [ 1, 3, 0 ]
+#   etl_version_min = [ 1, 4, 0 ]
 #   etl_version_max = [ 1, 4, "*" ]
-#   version = "1.3"
+#   version = "1.4"
 #   update_link = "no link"
 #   lang_links = "no link"
 #   requirements = "no requirements"
 #   author = "ftdot (https://github.com/ftdot)"
-#   changelog = [ "Support for the new version system", "v2 info lines format" ]
+#   changelog = [ "Support for the new 1.4.0 version" ]
 # end info
 
 namespace.translator.initialize('permissions')
@@ -44,13 +44,13 @@ async def call_w_permissions(func, event, args: list[str]):
 # trusts some command to the user that message was replied
 @this.command(namespace.translations['permissions']['command']['trust']['names'])
 async def trust(event, args: list[str]):
-    if not len(args) > 0:
+    if not len(args) > 1:
         return
 
     # check if first argument is exists in the registered commands
-    if not args[0] in namespace.commands:
+    if not args[1] in namespace.commands:
         return
-    fname = namespace.commands[args[0]].__name__
+    fname = namespace.commands[args[1]].__name__
 
     # check if the command is danger or no
     if 'danger' in namespace.pcommands[fname]:
@@ -67,7 +67,7 @@ async def trust(event, args: list[str]):
     # check if the message is exists
     if not any(msg):
         return
-    if (sender_id := (await msg[0].get_sender()).id) in namespace.pcommands[fname]:
+    if (sender_id := (await msg[1].get_sender()).id) in namespace.pcommands[fname]:
         await namespace.instance.send_success(
             event,
             namespace.translations['permissions']['command']['trust']['already_trusted_message']

@@ -193,15 +193,15 @@ class Instance:
         self.logger.debug(f'command_handler, LENGTH: {length} ARGS: {args}')
 
         # check if the command is exists
-        if length < 1 or args[0] not in self.namespace.commands:
-            self.logger.debug(f'Command {cmd[0]} not found in instance.namespace.commands')
+        if length < 1 or args[1] not in self.namespace.commands:
+            self.logger.debug(f'Command {args[1]} not found in Instance.namespace.commands')
             return
 
         # check if the notify stack have some messages
         await self.check_notifies_stack(event)
 
         # get function for the command
-        command_func = self.namespace.commands[cmd[0]]
+        command_func = self.namespace.commands[args[1]]
 
         # parsing the arguments or use arguments list without prefix
         # because ArgumentParser is only preview in the v1.4.0 - it always return list without prefix

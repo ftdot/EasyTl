@@ -1,14 +1,14 @@
 # begin info
 #   description = "Library-plugin | (Speech To Text Lib) Provides functional to generate text from speech"
 #   required_platforms = [ "windows", "linux", "android" ]
-#   etl_version_min = [ 1, 3, 3 ]
+#   etl_version_min = [ 1, 4, 0 ]
 #   etl_version_max = [ 1, 4, "*" ]
-#   version = "1.1"
+#   version = "1.2"
 #   update_link = "https://github.com/ftdot/EasyTl/raw/master/plugins/VoiceToText.plugin.py"
 #   lang_links = [ ["VoiceToText_en.toml", "https://github.com/ftdot/EasyTl/raw/master/lang/VoiceToText_en.toml"], ["VoiceToText_ru.toml", "https://github.com/ftdot/EasyTl/raw/master/lang/VoiceToText_ru.toml"], ["VoiceToText_uk.toml", "https://github.com/ftdot/EasyTl/raw/master/lang/VoiceToText_uk.toml"] ]
 #   requirements = "no requirements"
 #   author = "ftdot (https://github.com/ftdot)"
-#   changelog = [ "Added offline-translator mode", "Small improvements" ]
+#   changelog = [ "Support for the 1.4.0 version" ]
 # end info
 
 import os
@@ -39,20 +39,20 @@ async def vtt(event, args):
     offline = False
 
     # check the arguments
-    if len(args) > 0:
+    if len(args) > 1:
 
         # check for the offline mode argument
-        if args[0] in namespace.translations['VoiceToText']['command']['vtt']['offline_mode_names']:
+        if args[1] in namespace.translations['VoiceToText']['command']['vtt']['offline_mode_names']:
             offline = True
         else:
-            translate_from = args[0]  # set translate to language ...
+            translate_from = args[1]  # set translate to language ...
 
-    if len(args) > 1:
-        if args[1] in namespace.translations['VoiceToText']['command']['vtt']['offline_mode_names']:
+    if len(args) > 2:
+        if args[2] in namespace.translations['VoiceToText']['command']['vtt']['offline_mode_names']:
             offline = True
 
         # Don't look at this ^)
-        if args[1] == 'whowon':
+        if args[2] == 'whowon':
             await namespace.instance.send_success(event, 'Ukraine is won ^)')
             return
 

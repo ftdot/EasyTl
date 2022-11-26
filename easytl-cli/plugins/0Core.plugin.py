@@ -14,6 +14,8 @@
 import os
 import sys
 
+import math  # for extend the calculator features
+
 # initialize the core translation
 namespace.translator.initialize('core')
 
@@ -108,7 +110,7 @@ async def clear_cache(event, _):
 async def calculate(event, expr):
     await namespace.instance.send_success(
         event,
-        namespace.translations['core']['command']['calc']['cleaned_message'].format(
+        namespace.translations['core']['command']['calc']['output_message'].format(
             eval(expr)
         )
     )
@@ -118,17 +120,17 @@ async def calculate(event, expr):
 @this.command(namespace.translations['core']['command']['calc']['names'])
 async def calc(event, args):
 
-    # find the "replied to" message
-    msg = [msg async for msg in namespace.instance.client.iter_messages(event.chat_id, 25)
-                    if msg.id == event.reply_to.reply_to_msg_id]
+    if event.reply_to:
+        # find the "replied to" message
+        msg = [msg async for msg in namespace.instance.client.iter_messages(event.chat_id, 25)
+                        if msg.id == event.reply_to.reply_to_msg_id]
 
-    # check if the message is exists
-    if any(msg):
         # calculate the "replied to" message text
         await calculate(event, msg[0].message)
+        return
 
     # calculate the arguments
-    await calculate(event, ' '.join(args))
+    await calculate(event, ' '.join(args[1:]))
 
 namespace.pcommands[calc.__name__].append('danger')  # mark this command as danger
 

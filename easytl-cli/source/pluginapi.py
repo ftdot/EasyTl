@@ -7,6 +7,7 @@ import subprocess
 import logging
 import tomllib
 from .namespace import Namespace
+from .argument_parser import ArgumentParser
 from .utils import VersionCheckOperation, check_version_compatibility, parse_plugin_information
 from .filehash import get_file_hash, get_string_hash
 
@@ -114,7 +115,8 @@ class Plugin:
         """Does check for the plugin updates"""
 
         if not self.namespace.instance.config['plugins_auto_update']:
-            self.logger.debug('check_for_updates() : Auto-updates is disabled. Skip')
+            self.logger.debug('check_for_updates() : Auto-updates is disabled. Parse info lines')
+            self.parse_info_v2()
             return
 
         hash_path = os.path.join(self.namespace.instance.cache_dir, self.plugin_name + '.hash')
@@ -375,11 +377,13 @@ class Plugin:
         self.logger.error('parse_info_v2() : Error! Plugin is using the old v1 format of the info lines')
         self.errored = True
 
-    def command(self, aliases: str | list | None = None, static_pname: str | None = None):
+    def command(self, aliases: str | list | None = None, ap: ArgumentParser | None = None, static_pname: str | None = None):
         """Decorator, that helps register the new command
 
         :param aliases: Aliases to the command
         :type aliases: str | list | None
+        :param ap: Argument parser
+        :type ap: ArgumentParser | None
         :param static_pname: Static name in the namespace.pcommands dict
         :type static_pname: str | None
         """
@@ -391,13 +395,16 @@ class Plugin:
         self.logger.debug('Register the command ALIASES: ' + ', '.join(aliases))
 
         def deco(func):
+            func.ap = ap
+
             # pname - name in the permissions list
             pname = static_pname if static_pname is not None else func.__name__
 
-            for a in aliases:  # register all aliases to the command
+            # register all aliases to the command
+            for a in aliases:
                 self.namespace.commands[a] = func
 
-            self.logger.debug(f'Create permissions list for the function({func.__name__}, pname: {pname}')
+            self.logger.debug(f'Create permissions list for the function {func.__name__}(), pname: {pname}')
 
             # create a function in the commands permissions list
             self.namespace.pcommands[pname] = []+self.namespace.instance.owner_ids
@@ -405,7 +412,7 @@ class Plugin:
 
         return deco
 
-    def only(self, platforms: list[str] | str, alt=lambda: None):
+    def only(self, platforms: list[str] | str, alt: ... = lambda: None):
         """Decorator, that helps allow only to concrete platform(s)
 
         :param platforms: Platforms that support the function
