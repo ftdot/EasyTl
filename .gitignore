@@ -38,5 +38,5 @@ easytl-cli/ffmpeg/
 easytl-gui/
 
 # other
-build/
+test/
 IGNR_*
