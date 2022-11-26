@@ -22,5 +22,5 @@ PAUSE
 exit
 """
 
-with open('run.bat') as f:
+with open('run.bat', 'w') as f:
     f.write(run_script)
