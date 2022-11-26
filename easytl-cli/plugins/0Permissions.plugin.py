@@ -4,8 +4,8 @@
 #   etl_version_min = [ 1, 4, 0 ]
 #   etl_version_max = [ 1, 4, "*" ]
 #   version = "1.4"
-#   update_link = "no link"
-#   lang_links = "no link"
+#   update_link = "https://github.com/ftdot/EasyTl/raw/master/easytl-cli/plugins/0Permissions.plugin.py"
+#   lang_links = [ [ "permissions_en.toml", "https://github.com/ftdot/EasyTl/raw/master/easytl-cli/translations/permissions_en.toml" ], [ "permissions_ru.toml", "https://github.com/ftdot/EasyTl/raw/master/easytl-cli/translations/permissions_ru.toml" ], [ "permissions_uk.toml", "https://github.com/ftdot/EasyTl/raw/master/easytl-cli/translations/permissions_uk.toml" ] ]
 #   requirements = "no requirements"
 #   author = "ftdot (https://github.com/ftdot)"
 #   changelog = [ "Support for the new 1.4.0 version" ]

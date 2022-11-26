@@ -4,8 +4,8 @@
 #   etl_version_min = [ 1, 4, 0 ]
 #   etl_version_max = [ 1, 4, "*" ]
 #   version = "1.4"
-#   update_link = "no link"
-#   lang_links = "no link"
+#   update_link = "https://github.com/ftdot/EasyTl/raw/master/easytl-cli/plugins/0Core.plugin.py"
+#   lang_links = [ [ "core_en.toml", "https://github.com/ftdot/EasyTl/raw/master/easytl-cli/translations/core_en.toml" ], [ "core_ru.toml", "https://github.com/ftdot/EasyTl/raw/master/easytl-cli/translations/core_ru.toml" ], [ "core_uk.toml", "https://github.com/ftdot/EasyTl/raw/master/easytl-cli/translations/core_uk.toml" ] ]
 #   requirements = "no requirements"
 #   author = "ftdot (https://github.com/ftdot)"
 #   changelog = [ "1.4.0 update" ]

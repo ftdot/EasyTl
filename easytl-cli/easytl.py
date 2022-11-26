@@ -25,8 +25,8 @@ lang      = 'en'             # language of userbot
 # List with the ids of other owners. It may be danger, because danger commands be also trusted to it!
 OTHER_OWNERS = []
 
-instance_name       = 'Main Instance'
-enable_auto_update  = True  # enable the auto-update feature?
+instance_name               = 'Main Instance'
+enable_plugins_auto_update  = True  # enable the plugins auto-update feature?
 
 install_dir  = os.getcwd()
 
@@ -52,8 +52,9 @@ if __name__ == '__main__':
                              install_dir, plugins_dir, cache_dir, logs_dir)
     main_instance.initialize_logging(log_level, console_log_level)
 
-    main_instance.namespace.ffmpeg_dir     = win_ffmpeg_dir
-    main_instance.namespace.instance_file  = os.path.abspath(__file__)
+    main_instance.namespace.enable_plugins_auto_update  = enable_plugins_auto_update
+    main_instance.namespace.ffmpeg_dir                  = win_ffmpeg_dir
+    main_instance.namespace.instance_file               = os.path.abspath(__file__)
 
     main_instance.initialize()
 

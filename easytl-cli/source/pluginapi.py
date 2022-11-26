@@ -114,7 +114,9 @@ class Plugin:
     def check_for_updates(self):
         """Does check for the plugin updates"""
 
-        if not self.namespace.instance.config['plugins_auto_update']:
+        if 'enable_plugins_auto_update' not in dir(self.namespace) or \
+                ('enable_plugins_auto_update' in dir(self.namespace) and not self.namespace.enable_plugins_auto_update):
+
             self.logger.debug('check_for_updates() : Auto-updates is disabled. Parse info lines')
             self.parse_info_v2()
             return
@@ -294,7 +296,8 @@ class Plugin:
                 self.logger.debug('check_requirements() : Installing missing packages: ' + ', '.join(missing))
                 # run PIP to install the package
                 subprocess.check_call(
-                    [sys.executable, '-m', 'pip', 'install', ] + [cmd for n, cmd in requirements_dict.items() if n in missing],
+                    [sys.executable, '-m', 'pip', 'install', ] + [cmd for n, cmd in requirements_dict.items() if
+                                                                  n in missing],
                     stdout=subprocess.DEVNULL
                 )
 
@@ -382,7 +385,8 @@ class Plugin:
         self.logger.error('parse_info_v2() : Error! Plugin is using the old v1 format of the info lines')
         self.errored = True
 
-    def command(self, aliases: str | list | None = None, ap: ArgumentParser | None = None, static_pname: str | None = None):
+    def command(self, aliases: str | list | None = None, ap: ArgumentParser | None = None,
+                static_pname: str | None = None):
         """Decorator, that helps register the new command
 
         :param aliases: Aliases to the command
@@ -412,7 +416,7 @@ class Plugin:
             self.logger.debug(f'Create permissions list for the function {func.__name__}(), pname: {pname}')
 
             # create a function in the commands permissions list
-            self.namespace.pcommands[pname] = []+self.namespace.instance.owner_ids
+            self.namespace.pcommands[pname] = [] + self.namespace.instance.owner_ids
             return func
 
         return deco
