@@ -13,6 +13,8 @@ core_plugin   = r'''{{ CORE_PLUGIN }}
 # MUST BE UPDATED'''
 perms_plugin  = r'''{{ PERMS_PLUGIN }}
 # MUST BE UPDATED'''
+gui_plugin    = r'''{{ GUI_PLUGIN }}
+# MUST BE UPDATED'''
 
 
 # creates required directories in instance directory
@@ -33,3 +35,5 @@ def create_main_plugins(plugins_dir):
         f.write(core_plugin)
     with open(os.path.join(plugins_dir, '0Permissions.plugin.py'), 'w') as f:
         f.write(perms_plugin)
+    with open(os.path.join(plugins_dir, '0GUI.plugin.py'), 'w') as f:
+        f.write(gui_plugin)

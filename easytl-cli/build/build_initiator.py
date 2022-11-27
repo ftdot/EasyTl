@@ -25,10 +25,20 @@ with open(os.path.join(os.getcwd(), 'easytl-cli', 'plugins', '0Core.plugin.py'))
 with open(os.path.join(os.getcwd(), 'easytl-cli', 'plugins', '0Permissions.plugin.py')) as f:
     perms_plugin = f.read()
 
+# save the GUI plugin
+with open(os.path.join(os.getcwd(), 'easytl-cli', 'plugins', '0GUI.plugin.py')) as f:
+    gui_plugin = f.read()
+
 # copy the initiator file
 with open(dest_file+'_tmp.py', 'w') as f1:
     with open(initiator_path, 'r') as f2:
-        f1.write(f2.read().replace('{{ CONFIG_TOML }}', config_toml).replace('{{ CORE_PLUGIN }}', core_plugin).replace('{{ PERMS_PLUGIN }}', perms_plugin))
+        f1.write(
+            f2.read()
+                .replace('{{ CONFIG_TOML }}', config_toml)
+                .replace('{{ CORE_PLUGIN }}', core_plugin)
+                .replace('{{ PERMS_PLUGIN }}', perms_plugin)
+                .replace('{{ GUI_PLUGIN }}', gui_plugin)
+        )
 
 # compile the file
 py_compile.compile(dest_file+'_tmp.py', cfile=dest_file)
