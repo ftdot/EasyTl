@@ -144,14 +144,23 @@ class Instance:
         logging.basicConfig(
             format=s_format, datefmt='%H:%M:%S',
             filename=os.path.join(self.logs_dir,
-                                  self.instance_name +
-                                  f'-{time.strftime("%Y-%m-%d_%H-%M", time.localtime())}-log.txt'),
+                                  f'{time.strftime("%Y-%m-%d_%H-%M", time.localtime())}-log.txt'),
             level=log_level
         )
+
+        # init a stream handler for the file
+        file_handler = logging.FileHandler(
+            os.path.join(self.logs_dir,
+                         self.instance_name +
+                         f'-{time.strftime("%Y-%m-%d_%H-%M", time.localtime())}-log.txt')
+        )
+        file_handler.setLevel(log_level)
+        file_handler.setFormatter(formatter)
 
         # init instance logger
         self.logger = logging.Logger('EasyTl Instance')
         self.logger.setLevel(log_level)
+        self.logger.addHandler(file_handler)
 
         # init a stream handler for the console output
         self.stdout_handler = logging.StreamHandler(sys.stdout)

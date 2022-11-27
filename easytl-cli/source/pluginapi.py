@@ -153,7 +153,7 @@ class Plugin:
                 self.logger.debug(f'Link found ({update_link}). Sending request')
                 r = requests.get(update_link)
 
-                if r.status != 200:
+                if r.status_code != 200:
                     self.logger.debug('Update request returned non 200 code')
                     rhash = fhash
                 else:

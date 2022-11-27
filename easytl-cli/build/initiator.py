@@ -23,7 +23,7 @@ def create_required_dirs(instance_dir):
 
 # creates config file
 def create_config_file(path):
-    with open(path, 'w') as f:
+    with open(os.path.join(path, 'config.toml'), 'w') as f:
         f.write(config_toml)
 
 
