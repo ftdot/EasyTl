@@ -243,6 +243,7 @@ class Plugin:
 
                 r = requests.get(llink)
 
+                print(os.path.join(self.namespace.instance.translator.lang_dir, lname))
                 with open(os.path.join(self.namespace.instance.translator.lang_dir, lname), 'wb') as f:
                     f.write(r.content)
 

@@ -32,6 +32,11 @@ def run_script(script_path: str, args: list):
         traceback.print_exception(e)
         exit('Build script returned error')
 
+####
+
+print('NOTE: You must manually set "is_gui = true" in easytl-cli/config.toml file!')
+print('To continue press ENTER')
+input()
 
 for s in scripts:
     print('Run script', s[0])
