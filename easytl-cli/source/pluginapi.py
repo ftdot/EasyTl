@@ -44,6 +44,7 @@ class Plugin:
         self.plugin_path = plugin_path
 
         self.active = False
+        self.partially_active = False
         self.namespace = None
         self.info = None
 
@@ -59,12 +60,15 @@ class Plugin:
         ]
 
     def activate(self):
-        """Activates the plugin. Calls the Plugin.check_for_updates(), Plugin.check_requirements(), Plugin.execute()"""
+        """Activates the plugin. Calls the functions from Plugin.activation_steps list"""
 
         self.logger.debug('Try to activate the plugin')
 
         if self.errored or self.active:
             return
+
+        if self.partially_active:
+            self.logger.debug('Plugin is partially activate. Run the plugin')
 
         self.logger.info('Trying to enable logging to the stdout')
         if self.namespace.instance.config['log_plugins_to_stdout']:
@@ -76,6 +80,26 @@ class Plugin:
 
             if self.errored:
                 self.logger.debug('activate() : Error detected, exit from activation_steps cycle')
+                return
+
+    def do_update_only(self):
+        """Updates the plugin. Calls all steps without last"""
+
+        self.logger.debug('Try to update the plugin')
+
+        if self.errored or self.active:
+            return
+
+        self.logger.info('Trying to enable logging to the stdout')
+        if self.namespace.instance.config['log_plugins_to_stdout']:
+            self.logger.addHandler(self.namespace.instance.stdout_handler)
+
+        for step in self.activation_steps[:-1]:
+            self.logger.debug('do_update_only() : ' + step[1])
+            step[0]()
+
+            if self.errored:
+                self.logger.debug('do_update_only() : Error detected, exit from activation_steps cycle')
                 return
 
     ####
@@ -480,11 +504,14 @@ class PluginsList:
             return self.plugins[plugin_name].active
         return False
 
-    def activate_plugin(self, plugin_name: str) -> bool:
+    def activate_plugin(self, plugin_name: str, only_update: bool = False) -> bool:
         """Activates the plugin
 
         :param plugin_name: Name of the plugin
         :type plugin_name: str
+        :param only_update: Only update the plugin
+        :type only_update: bool
+
         :returns: True if plugin is successfully activated
         :rtype: bool
         """
@@ -507,15 +534,31 @@ class PluginsList:
             return True
         return False
 
+    ####
+    def initialize_logger(self):
+        """(System) Initializes the logger to stdout output"""
+        self.logger.info('Enabling logging to the stdout')
+        self.logger.addHandler(self.namespace.instance.stdout_handler)
+
+    def update_the_plugins(self):
+        self.logger.info('Updating the plugins')
+
+        for n, p in self.plugins.items():
+            self.logger.info(f'Updating the plugin {n}')
+
+            self.activate_plugin(n, True)
+            if p.errored or not p.active:
+                self.logger.info(f'Plugin {n} doesn\'t updated')
+                continue
+
+            self.logger.info(f'Plugin {n} successfully updated!')
+
     def activate_plugins_list(self, plugins: dict[str, Plugin] | None = None):
         """Activates current plugin list
 
         :param plugins: Dict of the plugins, that will be added to the current list
         :type plugins: dict[str, Plugin]
         """
-
-        self.logger.info('Enabling logging to the stdout')
-        self.logger.addHandler(self.namespace.instance.stdout_handler)
 
         self.logger.info(f'Activating all plugins in the list')
 

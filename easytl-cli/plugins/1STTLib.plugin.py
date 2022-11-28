@@ -1,14 +1,14 @@
 # begin info
 #   description = "Library-plugin | (Speech To Text Lib) Provides functional to generate text from speech"
 #   required_platforms = [ "windows", "linux", "android" ]
-#   etl_version_min = [ 1, 3, 3 ]
+#   etl_version_min = [ 1, 4, 0 ]
 #   etl_version_max = [ 1, 4, "*" ]
-#   version = "1.1"
+#   version = "1.2"
 #   update_link = "https://github.com/ftdot/EasyTl/raw/master/easytl-cli/plugins/1STTLib.plugin.py"
 #   lang_links = "no link"
 #   requirements = [ "SpeechRecognition", "pydub", "pocketsphinx" ]
 #   author = "ftdot (https://github.com/ftdot)"
-#   changelog = [ "Fixed offline mode" ]
+#   changelog = [ "Support for the 1.4.0 version" ]
 # end info
 
 import os

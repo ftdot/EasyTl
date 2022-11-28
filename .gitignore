@@ -1,4 +1,6 @@
 # byte-compiled
+build/__pycache__/
+
 easytl-cli/__pycache__/
 easytl-cli/source/__pycache__/
 
@@ -23,6 +25,8 @@ easytl-cli/logs/*
 easytl-cli/test_creds.py
 easytl-cli/EasyTl.session
 easytl-cli/EasyTl.session-journal
+easytl-cli/EasyTl-TestInstance.session
+easytl-cli/EasyTl-TestInstance.session-journa
 
 # SearchPlease plugin cache
 easytl-cli/.google-cookie
@@ -34,9 +38,19 @@ easytl-cli/ffmpeg/
 
 # EasyTl-GUI files
 
-# no, no, no. No at this day
-easytl-gui/
+# builded files
+easytl-gui/bin/*
+!easytl-gui/bin/.gitkeep
+easytl-gui/logs/*
+!easytl-gui/logs/.gitkeep
+easytl-gui/instances/*
+!easytl-gui/instances/list.toml
+
+# my creds
+easytl-gui/*.session
+easytl-gui/*.session-journal
 
 # other
+easytl-build/
 test/
 IGNR_*

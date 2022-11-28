@@ -88,8 +88,18 @@ class Instance:
         self.namespace.commands      = {}
         self.namespace.pcommands     = {}
         self.namespace.notify_stack  = []
+        self.namespace.on_run        = lambda: None
 
-        self.namespace.plugins = pluginapi.PluginsList(plugins_dir=self.plugins_dir, namespace=self.namespace)
+        # load the plugins
+        plugins_list = [pluginapi.Plugin(os.path.basename(f)[:-10], os.path.join(self.plugins_dir, f))
+                        for f in
+                        [f for f in os.listdir(self.plugins_dir) if f.endswith('.plugin.py')]
+                        ]
+        plugins_dict = {p.plugin_name: p for p in plugins_list}
+
+        self.namespace.plugins = pluginapi.PluginsList(plugins_dict,
+                                                       plugins_dir=self.plugins_dir,
+                                                       namespace=self.namespace)
 
     def initialize(self):
         """Initializes the working environment for userbot"""
@@ -97,7 +107,7 @@ class Instance:
         self.logger.debug('Creating instance of TelegramClient in instance.client')
 
         # init telethon's TelegramClient
-        self.client = TelegramClient('EasyTl', self.api_id, self.api_hash)
+        self.client = TelegramClient('EasyTl-'+self.instance_name, self.api_id, self.api_hash)
         self.client.add_event_handler(self.messages_handler, events.NewMessage)
         self.namespace.client = self.client
 
@@ -117,17 +127,10 @@ class Instance:
 
         self.logger.debug('Loading plugins list')
 
-        # load the plugins
-        plugins_list = [pluginapi.Plugin(os.path.basename(f)[:-10], os.path.join(self.plugins_dir, f))
-                            for f in
-                                [f for f in os.listdir(self.plugins_dir) if f.endswith('.plugin.py')]
-                        ]
-        plugins_dict = {p.plugin_name: p for p in plugins_list}
-
+        # activate the plugins
         self.logger.info('Activating plugins')
 
-        # activate all plugins
-        self.namespace.plugins.activate_plugins_list(plugins_dict)
+        self.namespace.plugins.activate_plugins_list()
 
     def initialize_logging(self, log_level: int, console_log_level: int):
         """Initializes instance.Logger object
@@ -148,19 +151,9 @@ class Instance:
             level=log_level
         )
 
-        # init a stream handler for the file
-        file_handler = logging.FileHandler(
-            os.path.join(self.logs_dir,
-                         self.instance_name +
-                         f'-{time.strftime("%Y-%m-%d_%H-%M", time.localtime())}-log.txt')
-        )
-        file_handler.setLevel(log_level)
-        file_handler.setFormatter(formatter)
-
         # init instance logger
         self.logger = logging.Logger('EasyTl Instance')
         self.logger.setLevel(log_level)
-        self.logger.addHandler(file_handler)
 
         # init a stream handler for the console output
         self.stdout_handler = logging.StreamHandler(sys.stdout)
@@ -169,7 +162,10 @@ class Instance:
 
         self.logger.addHandler(self.stdout_handler)
 
-    def run(self):
+        # initializing the PluginsList logger
+        self.namespace.plugins.initialize_logger()
+
+    def run(self, run_until_disconnected: bool = True):
         """Run the telegram client until disconnected"""
 
         self.logger.info('Run Telegram client')
@@ -187,7 +183,10 @@ class Instance:
             self.logger.info('This is a beta version. If you have some problems with EasyTl, '
                              'inform about it there: https://github.com/ftdot/EasyTl/issues')
 
-        self.client.run_until_disconnected()
+        self.namespace.on_run()
+        
+        if run_until_disconnected:
+            self.client.run_until_disconnected()
 
     async def command_handler(self, length: int, args: list, event):
         """(System method) Executes the command

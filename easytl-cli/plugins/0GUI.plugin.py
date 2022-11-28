@@ -3,7 +3,7 @@
 #   required_platforms = [ "windows", "linux", "android" ]
 #   etl_version_min = [ 1, 4, 0 ]
 #   etl_version_max = [ 1, 4, "*" ]
-#   version = "1.4"
+#   version = "1.0"
 #   update_link = "https://github.com/ftdot/EasyTl/raw/master/easytl-cli/plugins/0GUI.plugin.py"
 #   lang_links = [ [ "gui_en.toml", "https://github.com/ftdot/EasyTl/raw/master/easytl-cli/translations/gui_en.toml" ], [ "gui_ru.toml", "https://github.com/ftdot/EasyTl/raw/master/easytl-cli/translations/gui_ru.toml" ], [ "gui_uk.toml", "https://github.com/ftdot/EasyTl/raw/master/easytl-cli/translations/gui_uk.toml" ] ]
 #   requirements = "no requirements"

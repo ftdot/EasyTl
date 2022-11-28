@@ -35,5 +35,6 @@ except Exception as e:
 
 # compile the EasyTl-CLI core files
 for f in os.listdir(source_path):
+    print('Compile file:', f)
     fpath = os.path.join(source_path, f)
     py_compile.compile(fpath, cfile=os.path.join(source_dir, os.path.basename(fpath)+'c'))

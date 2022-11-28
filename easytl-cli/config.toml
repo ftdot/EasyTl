@@ -5,15 +5,11 @@ build_platform  = ''
 plugins_auto_update    = false
 log_plugins_to_stdout  = true
 
-[logging]
-log_level          = 'INFO'
-console_log_level  = 'As log level'
-
 [version]
 major         = 1
 minor         = 4
 patch         = 0
 list          = [ 1, 4, 0 ]
-beta          = false
+beta          = true
 indev         = true
 full_version  = "1.4.0"
