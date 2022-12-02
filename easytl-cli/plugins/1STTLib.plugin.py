@@ -1,6 +1,7 @@
 # begin info
 #   description = "Library-plugin | (Speech To Text Lib) Provides functional to generate text from speech"
 #   required_platforms = [ "windows", "linux", "android" ]
+#   required_plugins = "no requirements"
 #   etl_version_min = [ 1, 4, 0 ]
 #   etl_version_max = [ 1, 4, "*" ]
 #   version = "1.2"

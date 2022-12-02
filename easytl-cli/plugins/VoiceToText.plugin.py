@@ -1,9 +1,10 @@
 # begin info
 #   description = "Library-plugin | (Speech To Text Lib) Provides functional to generate text from speech"
 #   required_platforms = [ "windows", "linux", "android" ]
+#   required_plugins = [ "1STTLib" ]
 #   etl_version_min = [ 1, 4, 0 ]
 #   etl_version_max = [ 1, 4, "*" ]
-#   version = "1.2"
+#   version = "1.2.0"
 #   update_link = "https://github.com/ftdot/EasyTl/raw/master/easytl-cli/plugins/VoiceToText.plugin.py"
 #   lang_links = [ ["VoiceToText_en.toml", "https://github.com/ftdot/EasyTl/raw/master/easytl-cli/translations/VoiceToText_en.toml"], ["VoiceToText_ru.toml", "https://github.com/ftdot/EasyTl/raw/master/easytl-cli/translations/VoiceToText_ru.toml"], ["VoiceToText_uk.toml", "https://github.com/ftdot/EasyTl/raw/master/easytl-cli/translations/VoiceToText_uk.toml"] ]
 #   requirements = "no requirements"

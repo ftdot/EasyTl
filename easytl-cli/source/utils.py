@@ -10,9 +10,9 @@ easytl_logger = logging.getLogger('EasyTl')
 
 
 class VersionCheckOperation(Enum):
-    EQUALS = 1
-    LESS_THAN = 2
-    GREATER_THAN = 3
+    EQUALS = 'equals'
+    LESS_THAN = 'less than'
+    GREATER_THAN = 'greater than'
 
 
 def _compare_values_is_equals(value1, value2):
@@ -71,7 +71,7 @@ def _check_types(value1: int | str, value2: int | str) -> (bool, str | int, str 
 def check_version_compatibility(
         version1: tuple[int | str, int | str, int | str] | list[int | str, int | str, int | str],
         version2: tuple[int | str, int | str, int | str] | list[int | str, int | str, int | str],
-        operation: VersionCheckOperation = VersionCheckOperation.EQUALS) -> bool:
+        operation: VersionCheckOperation | str = VersionCheckOperation.EQUALS) -> bool:
     """Compares the two versions
 
     :param version1: A first version example
@@ -79,7 +79,7 @@ def check_version_compatibility(
     :param version2: The second version example
     :type version2: tuple[int | str, int | str, int | str] | list[int | str, int | str, int | str]
     :param operation: An operations, that be applied to these versions instance
-    :type operation: VersionCheckOperation
+    :type operation: VersionCheckOperation | str
 
     :return: True if the expression is right, otherwise False
     :rtype: bool

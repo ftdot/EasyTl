@@ -1,9 +1,10 @@
 # begin info
 #   description = "Adds functional to translate the messages"
 #   required_platforms = [ "windows", "linux", "android" ]
+#   required_plugins = [ [ "1TranslationsLib", "=", [ 1, 3, 0 ] ] ]
 #   etl_version_min = [ 1, 4, 0 ]
 #   etl_version_max = [ 1, 4, "*" ]
-#   version = "1.3"
+#   version = "1.3.0"
 #   update_link = "https://github.com/ftdot/EasyTl/raw/master/easytl-cli/plugins/MessageTranslate.plugin.py"
 #   lang_links = [ [ "MessageTranslate_en.toml", "https://github.com/ftdot/EasyTl/raw/master/easytl-cli/translations/MessageTranslate_en.toml" ], [ "MessageTranslate_ru.toml", "https://github.com/ftdot/EasyTl/raw/master/easytl-cli/translations/MessageTranslate_ru.toml" ], [ "MessageTranslate_uk.toml", "https://github.com/ftdot/EasyTl/raw/master/easytl-cli/translations/MessageTranslate_uk.toml" ] ]
 #   requirements = "no requirements"

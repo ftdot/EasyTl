@@ -8,9 +8,10 @@ download_languages_error = "while dowloading the plugin languages {0}"
 requirements_error = "while installing the requirements for plugin {0}"
 plugin_execution_error = "while executing plugin {0}"
 platform_error = "while checking plugin platform requirements. Plugin {0} doesn't support current platform"
-unsupported_version = "while checking plugin version. Plugin {0} doesn't support this version of the EasyTl"
+required_plugin_error = "while checking required plugins for the plugin {0}"
+unsupported_version_error = "while checking plugin version. Plugin {0} doesn't support this version of the EasyTl"
 
-update_notify = "Plugin {0} has been updated!"
+update_notify = "Plugin {0} has been updated"
 changelog_notify = "v{0} changelog:\n\n{1}"
 
 [instance]
@@ -22,16 +23,17 @@ telegram_get_password = "Enter your password to access the account: "
 
 [command.stop]
 names = [ "stop" ]
-stop_notify = "userbot is being stop"
+stop_notify = "Userbot is being stop"
 
 [command.restart]
 names = [ "restart" ]
-restart_notify = "userbot is being restart"
-restarted_notify = "userbot is restarted!"
+cant_restart_notify = "Can't restart the userbot"
+restart_notify = "Userbot is being restart"
+restarted_notify = "Userbot is restarted"
 
 [command.clear-cache]
 names = [ "clearcache", "clrcache" ]
-cleaned_message = "Cache has been cleaned!"
+cleaned_message = "Cache has been cleaned"
 
 [command.calc]
 names = [ "calculator", "calc" ]

@@ -1,9 +1,10 @@
 # begin info
 #   description = "Library-plugin | Allows to manage the commands permissions"
 #   required_platforms = [ "windows", "linux", "android" ]
+#   required_plugins = "no requirements"
 #   etl_version_min = [ 1, 4, 0 ]
 #   etl_version_max = [ 1, 4, "*" ]
-#   version = "1.5"
+#   version = "1.5.0"
 #   update_link = "https://github.com/ftdot/EasyTl/raw/master/easytl-cli/plugins/SearchPlease.plugin.py"
 #   lang_links = [ ["searchplease_en.toml", "https://github.com/ftdot/EasyTl/raw/master/easytl-cli/translations/searchplease_en.toml"], ["searchplease_ru.toml", "https://github.com/ftdot/EasyTl/raw/master/easytl-cli/translations/searchplease_ru.toml"], ["searchplease_uk.toml", "https://github.com/ftdot/EasyTl/raw/master/easytl-cli/translations/searchplease_uk.toml"] ]
 #   requirements = [ "google", "BeautifulSoup4" ]

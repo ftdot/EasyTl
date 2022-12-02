@@ -11,9 +11,9 @@ from .argument_parser import ArgumentParser
 from .utils import VersionCheckOperation, check_version_compatibility, parse_plugin_information
 from .filehash import get_file_hash, get_string_hash
 
-required_info_lines = {'description', 'required_platforms', 'etl_version',
-                       'version', 'update_link', 'lang_links',
-                       'requirements', 'author'}
+required_info_lines = {'description', 'required_platforms', 'required_plugins',
+                       'etl_version_min', 'etl_version_max', 'version', 'update_link',
+                       'lang_links', 'requirements', 'author'}
 
 
 class Plugin:
@@ -26,6 +26,8 @@ class Plugin:
 
     :ivar active: Is plugin active
     :type active: bool
+    :ivar partially_active: Is plugin partially active
+    :type partially_active: bool
     :ivar namespace: The global namespace
     :type namespace: Namespace
     :ivar info: Namespace object with the information about the plugin (deprecated version).
@@ -55,6 +57,7 @@ class Plugin:
             (self.check_for_updates, 'Checking for the plugin updates'),
             (self.check_platform, 'Checking for the platform requirements'),
             (self.check_compatibility, 'Checking for the plugin version compatibility'),
+            (self.check_required_plugins, 'Checking for the required plugins'),
             (self.check_requirements, 'Checking for the plugin requirements'),
             (self.execute, 'Executing the plugin')
         ]
@@ -104,36 +107,72 @@ class Plugin:
 
     ####
 
-    def check_compatibility(self):
-        current_version = self.namespace.instance.config['version']['list']
+    def download_languages(self):
+        """Does check for the plugin languages files and download it"""
 
-        # get a version min\max support by the format of the info lines
-        version_min = self.info['etl_version_min']
-        version_max = self.info['etl_version_max']
+        languages_link = self.info['lang_links']
 
-        if not ((check_version_compatibility(current_version,
-                                             version_min,
-                                             VersionCheckOperation.GREATER_THAN)
-                 or check_version_compatibility(version_min,
-                                                current_version,
-                                                VersionCheckOperation.EQUALS))
-                and (check_version_compatibility(version_max,
-                                                 current_version,
-                                                 VersionCheckOperation.GREATER_THAN)
-                     or check_version_compatibility(version_max,
-                                                    current_version,
-                                                    VersionCheckOperation.EQUALS))):
-            self.logger.error('check_compatibility() : Doesn\'t support this version of the EasyTl')
-            self.errored = True
+        if languages_link == "no link":
+            self.logger.debug('download_languages() : No links to the languages')
+            return
 
-            # write notify about the unsupported version
+        try:
+            self.logger.debug('download_languages() : Try to download the languages')
+
+            # check for update link and save the remote file hash
+            for ll in languages_link:
+                lname = ll[0]
+                llink = ll[1]
+                self.logger.debug(f'download_languages() : Downloading the language "{lname}" ({llink})')
+
+                r = requests.get(llink)
+
+                with open(os.path.join(self.namespace.instance.translator.lang_dir, lname), 'wb') as f:
+                    f.write(r.content)
+
+        except Exception as e:
+            self.log_exception(e)
+
+            # write notify about the error
             self.namespace.notify_stack.append(
                 self.namespace.translations['core']['error_notify'].format(
-                    self.namespace.translations['core']['pluginapi']['unsupported_version'].format(self.plugin_name)
+                    self.namespace.translations['core']['pluginapi']['download_languages_error'].format(
+                        self.plugin_name)
                 )
             )
+            self.errored = True
             return
-        self.logger.debug('check_compatibility() : Passed the version check')
+
+    def _convert_operator(self, char: str) -> VersionCheckOperation | None:
+        """Converts chas =, >, < to VersionCheckOperator
+
+        :param char: Character to be converted
+        :type char: str
+
+        :returns: VersionCheckOperation if convertion is success, otherwise None
+        :rtype: VersionCheckOperation | None
+        """
+
+        match char:
+            case '=':
+                return VersionCheckOperation.EQUALS
+            case '>':
+                return VersionCheckOperation.GREATER_THAN
+            case '<':
+                return VersionCheckOperation.LESS_THAN
+            case _:
+                self.logger.debug(f'_convert_operator() : Incorrect operator "{char}"')
+                # write notify about the error
+                self.namespace.notify_stack.append(
+                    self.namespace.translations['core']['error_notify'].format(
+                        self.namespace.translations['core']['pluginapi']['required_plugin_error'].format(
+                            self.plugin_name)
+                    )
+                )
+                self.errored = True
+                return None
+
+    ####
 
     def check_for_updates(self):
         """Does check for the plugin updates"""
@@ -175,13 +214,19 @@ class Plugin:
             # check for update link and save the remote file hash
             if update_link != 'no link':
                 self.logger.debug(f'Link found ({update_link}). Sending request')
-                r = requests.get(update_link)
+                try:
+                    r = requests.get(update_link)
 
-                if r.status_code != 200:
-                    self.logger.debug('Update request returned non 200 code')
+                    if r.status_code != 200:
+                        self.logger.debug('Update request returned non 200 code')
+                        rhash = fhash
+                    else:
+                        rhash = get_string_hash(r.content)
+                except Exception as e:
+                    self.log_exception(e)
+
+                    self.logger.info('check_for_updates() : Can\'t connect to the update link. Skip the update')
                     rhash = fhash
-                else:
-                    rhash = get_string_hash(r.content)
             else:
                 self.logger.debug('Link not setup. Skip the updating')
                 rhash = fhash  # write remote hash as local file hash to skip the update
@@ -247,41 +292,115 @@ class Plugin:
 
         self.logger.debug('check_for_updates() : No updates')
 
-    def download_languages(self):
-        """Does check for the plugin languages files"""
-
-        languages_link = self.info['lang_links']
-
-        if languages_link == "no link":
-            self.logger.debug('download_languages() : No links to the languages')
-            return
-
-        try:
-            self.logger.debug('download_languages() : Try to download the languages')
-
-            # check for update link and save the remote file hash
-            for ll in languages_link:
-                lname = ll[0]
-                llink = ll[1]
-                self.logger.debug(f'download_languages() : Downloading the language "{lname}" ({llink})')
-
-                r = requests.get(llink)
-
-                with open(os.path.join(self.namespace.instance.translator.lang_dir, lname), 'wb') as f:
-                    f.write(r.content)
-
-        except Exception as e:
-            self.log_exception(e)
-
+    def check_platform(self):
+        if not self.namespace.instance.config['build_platform'] in self.info['required_platforms']:
+            self.logger.debug('check_platform() : Doesn\'t support current platform')
+            s()
             # write notify about the error
             self.namespace.notify_stack.append(
                 self.namespace.translations['core']['error_notify'].format(
-                    self.namespace.translations['core']['pluginapi']['download_languages_error'].format(
-                        self.plugin_name)
+                    self.namespace.translations['core']['pluginapi']['platform_error'].format(self.plugin_name)
                 )
             )
             self.errored = True
             return
+
+        self.logger.debug('check_platform() : Check passed. Platform is supporting')
+
+    def check_compatibility(self):
+        current_version = self.namespace.instance.config['version']['list']
+
+        # get a version min\max support by the format of the info lines
+        version_min = self.info['etl_version_min']
+        version_max = self.info['etl_version_max']
+
+        if not ((check_version_compatibility(current_version,
+                                             version_min,
+                                             VersionCheckOperation.GREATER_THAN)
+                 or check_version_compatibility(version_min,
+                                                current_version,
+                                                VersionCheckOperation.EQUALS))
+                and (check_version_compatibility(version_max,
+                                                 current_version,
+                                                 VersionCheckOperation.GREATER_THAN)
+                     or check_version_compatibility(version_max,
+                                                    current_version,
+                                                    VersionCheckOperation.EQUALS))):
+            self.logger.error('check_compatibility() : Doesn\'t support this version of the EasyTl')
+            self.errored = True
+
+            # write notify about the unsupported version
+            self.namespace.notify_stack.append(
+                self.namespace.translations['core']['error_notify'].format(
+                    self.namespace.translations['core']['pluginapi']['unsupported_version_error'].format(
+                        self.plugin_name)
+                )
+            )
+            return
+        self.logger.debug('check_compatibility() : Passed the version check')
+
+    def check_required_plugins(self):
+        required_plugins = self.info['required_plugins']
+        if required_plugins == 'no requirements':
+            self.logger.debug(f'check_required_plugins() : Plugin hasn\'t requirement for the others plugins')
+            return
+
+        current_plugins_list = [p for p in self.namespace.plugins.plugins if self.namespace.plugins.plugins[p].active]
+
+        for rp in required_plugins:
+            if isinstance(rp, str):
+                if rp not in current_plugins_list:
+                    # write notify about the error
+                    self.namespace.notify_stack.append(
+                        self.namespace.translations['core']['error_notify'].format(
+                            self.namespace.translations['core']['pluginapi']['required_plugin_error'].format(
+                                self.plugin_name)
+                        )
+                    )
+                    self.errored = True
+                    return
+
+            elif isinstance(rp, list):
+                rp_name = rp[0]
+                rp_operations = [self._convert_operator(c) for c in rp[1]]
+                rp_version_list = rp[2]
+
+                if self.errored:
+                    return
+
+                if rp_name not in current_plugins_list:
+                    self.logger.info(f'Plugin "{self.plugin_name}" requires plugin "{rp_name}"')
+                    # write notify about the error
+                    self.namespace.notify_stack.append(
+                        self.namespace.translations['core']['error_notify'].format(
+                            self.namespace.translations['core']['pluginapi']['required_plugin_error'].format(
+                                self.plugin_name)
+                        )
+                    )
+                    self.errored = True
+                    return
+
+                result = False
+
+                for op in rp_operations:
+                    if check_version_compatibility(self.namespace.plugins.plugins[rp_name].info["version"].split('.'),
+                                                       rp_version_list,
+                                                       op):
+                        result = True
+
+                if not result:
+                    self.logger.info(f'Plugin "{self.plugin_name}" requires plugin with version {rp[1]} '
+                                     f'"{".".join([str(v) for v in rp_version_list])}"')
+                    # write notify about the error
+                    self.namespace.notify_stack.append(
+                        self.namespace.translations['core']['error_notify'].format(
+                            self.namespace.translations['core']['pluginapi']['required_plugin_error'].format(
+                                self.plugin_name)
+                        )
+                    )
+                    self.errored = True
+
+        self.logger.debug(f'check_required_plugins() : Plugin passed check for the required plugins')
 
     def check_requirements(self):
         """Checks the plugin requirements"""
@@ -336,21 +455,6 @@ class Plugin:
                 )
                 self.errored = True
 
-    def check_platform(self):
-        if not self.namespace.instance.config['build_platform'] in self.info['required_platforms']:
-            self.logger.debug('check_platform() : Doesn\'t support current platform')
-            s()
-            # write notify about the error
-            self.namespace.notify_stack.append(
-                self.namespace.translations['core']['error_notify'].format(
-                    self.namespace.translations['core']['pluginapi']['platform_error'].format(self.plugin_name)
-                )
-            )
-            self.errored = True
-            return
-
-        self.logger.debug('check_platform() : Check passed. Platform is supporting')
-
     def execute(self):
         """Executes the plugin"""
 
@@ -395,19 +499,24 @@ class Plugin:
         self.logger.debug('#' * 25)
 
     def parse_info_v2(self):
-        """Parses the information about the plugin, or executes old format parsing"""
+        """Parses the information about the plugin"""
 
         with open(self.plugin_path) as f:
             lines = f.read().splitlines()
 
         is_v2, info = parse_plugin_information(lines)
 
-        if is_v2:
-            self.info = info
+        if not is_v2:
+            self.logger.error('parse_info_v2() : Error! Plugin is using the old v1 format of the info lines')
+            self.errored = True
             return
 
-        self.logger.error('parse_info_v2() : Error! Plugin is using the old v1 format of the info lines')
-        self.errored = True
+        self.info = info
+
+        missing = required_info_lines - set(self.info.keys())
+        if len(missing) != 0:
+            self.logger.error('parse_info_v2() : Plugin is passed required info lines: '+' '.join(list(missing)))
+            self.errored = True
 
     def command(self, aliases: str | list | None = None, ap: ArgumentParser | None = None,
                 static_pname: str | None = None):
@@ -535,6 +644,7 @@ class PluginsList:
         return False
 
     ####
+
     def initialize_logger(self):
         """(System) Initializes the logger to stdout output"""
         self.logger.info('Enabling logging to the stdout')

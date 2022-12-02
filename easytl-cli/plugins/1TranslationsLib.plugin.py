@@ -1,9 +1,10 @@
 # begin info
 #   description = "Library-plugin | Allows to other plugins use translating"
 #   required_platforms = [ "windows", "linux", "android" ]
+#   required_plugins = "no requirements"
 #   etl_version_min = [ 1, 4, 0 ]
 #   etl_version_max = [ 1, 4, "*" ]
-#   version = "1.3"
+#   version = "1.3.0"
 #   update_link = "https://github.com/ftdot/EasyTl/raw/master/easytl-cli/plugins/1TranslationsLib.plugin.py"
 #   lang_links = "no link"
 #   requirements = [ [ "googletrans", "googletrans==4.0.0-rc1" ] ]

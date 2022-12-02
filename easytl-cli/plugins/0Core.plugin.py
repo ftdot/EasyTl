@@ -1,9 +1,10 @@
 # begin info
 #   description = "Core plugin | Basic functional"
 #   required_platforms = [ "windows", "linux", "android" ]
+#   required_plugins = "no requirements"
 #   etl_version_min = [ 1, 4, 0 ]
 #   etl_version_max = [ 1, 4, "*" ]
-#   version = "1.4"
+#   version = "1.4.0"
 #   update_link = "https://github.com/ftdot/EasyTl/raw/master/easytl-cli/plugins/0Core.plugin.py"
 #   lang_links = [ [ "core_en.toml", "https://github.com/ftdot/EasyTl/raw/master/easytl-cli/translations/core_en.toml" ], [ "core_ru.toml", "https://github.com/ftdot/EasyTl/raw/master/easytl-cli/translations/core_ru.toml" ], [ "core_uk.toml", "https://github.com/ftdot/EasyTl/raw/master/easytl-cli/translations/core_uk.toml" ] ]
 #   requirements = "no requirements"
@@ -68,6 +69,10 @@ async def restart(event, _):
 
     if namespace.instance_file is None:
         this.logger.info('namespace.instance_file not set. Can\'t do restart')
+        await namespace.instance.send(
+            event,
+            namespace.instance.f_warning(namespace.translations['core']['command']['restart']['cant_restart_notify'])
+        )
         return
 
     # notify about the being restart
