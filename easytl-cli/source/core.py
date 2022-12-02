@@ -47,8 +47,8 @@ class Instance:
     :type plugins: pluginapi.PluginsList
     :ivar logger: An Logger object
     :type logger: logging.Logger
-    :ivar stdout_handler: An stream handler for the console output
-    :type stdout_handler: logging.StreamHandler
+    :ivar addition_handlers: The addition handlers for the logging
+    :type addition_handlers: list[logging.StreamHandler]
     """
 
     def __init__(self,
@@ -71,10 +71,10 @@ class Instance:
         self.install_dir, self.plugins_dir, self.cache_dir, self.logs_dir \
             = install_dir, plugins_dir, cache_dir, logs_dir
 
-        self.client = None
-        self.config = None
-        self.logger = None
-        self.stdout_handler = None
+        self.client             = None
+        self.config             = None
+        self.logger             = None
+        self.addition_handlers  = []
 
         self.prefixes = ['easy', ]
 
@@ -156,11 +156,14 @@ class Instance:
         self.logger.setLevel(log_level)
 
         # init a stream handler for the console output
-        self.stdout_handler = logging.StreamHandler(sys.stdout)
-        self.stdout_handler.setLevel(console_log_level)
-        self.stdout_handler.setFormatter(formatter)
+        stdout_handler = logging.StreamHandler(sys.stdout)
+        stdout_handler.setLevel(console_log_level)
+        stdout_handler.setFormatter(formatter)
 
-        self.logger.addHandler(self.stdout_handler)
+        self.addition_handlers.append(stdout_handler)
+
+        for ah in self.addition_handlers:
+            self.logger.addHandler(ah)
 
         # initializing the PluginsList logger
         self.namespace.plugins.initialize_logger()
@@ -187,6 +190,8 @@ class Instance:
         
         if run_until_disconnected:
             self.client.run_until_disconnected()
+
+    ####
 
     async def command_handler(self, length: int, args: list, event):
         """(System method) Executes the command

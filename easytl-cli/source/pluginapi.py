@@ -107,6 +107,41 @@ class Plugin:
 
     ####
 
+    def log_exception(self, e: Exception):
+        """Logs the exception to the logger
+
+        :param e: Exception to be logged
+        :type e: Exception
+        """
+
+        self.logger.debug('#' * 25)
+
+        self.logger.error('Exception has been generated, while executing the plugin')
+        for line in traceback.format_exception(e):
+            self.logger.debug(line.removesuffix('\n'))
+
+        self.logger.debug('#' * 25)
+
+    def parse_info_v2(self):
+        """Parses the information about the plugin"""
+
+        with open(self.plugin_path) as f:
+            lines = f.read().splitlines()
+
+        is_v2, info = parse_plugin_information(lines)
+
+        if not is_v2:
+            self.logger.error('parse_info_v2() : Error! Plugin is using the old v1 format of the info lines')
+            self.errored = True
+            return
+
+        self.info = info
+
+        missing = required_info_lines - set(self.info.keys())
+        if len(missing) != 0:
+            self.logger.error('parse_info_v2() : Plugin is passed required info lines: '+' '.join(list(missing)))
+            self.errored = True
+
     def download_languages(self):
         """Does check for the plugin languages files and download it"""
 
@@ -483,41 +518,6 @@ class Plugin:
 
     ####
 
-    def log_exception(self, e: Exception):
-        """Logs the exception to the logger
-
-        :param e: Exception to be logged
-        :type e: Exception
-        """
-
-        self.logger.debug('#' * 25)
-
-        self.logger.error('Exception has been generated, while executing the plugin')
-        for line in traceback.format_exception(e):
-            self.logger.debug(line.removesuffix('\n'))
-
-        self.logger.debug('#' * 25)
-
-    def parse_info_v2(self):
-        """Parses the information about the plugin"""
-
-        with open(self.plugin_path) as f:
-            lines = f.read().splitlines()
-
-        is_v2, info = parse_plugin_information(lines)
-
-        if not is_v2:
-            self.logger.error('parse_info_v2() : Error! Plugin is using the old v1 format of the info lines')
-            self.errored = True
-            return
-
-        self.info = info
-
-        missing = required_info_lines - set(self.info.keys())
-        if len(missing) != 0:
-            self.logger.error('parse_info_v2() : Plugin is passed required info lines: '+' '.join(list(missing)))
-            self.errored = True
-
     def command(self, aliases: str | list | None = None, ap: ArgumentParser | None = None,
                 static_pname: str | None = None):
         """Decorator, that helps register the new command
@@ -648,7 +648,8 @@ class PluginsList:
     def initialize_logger(self):
         """(System) Initializes the logger to stdout output"""
         self.logger.info('Enabling logging to the stdout')
-        self.logger.addHandler(self.namespace.instance.stdout_handler)
+        for ah in self.namespace.instance.addition_handlers:
+            self.logger.addHandler(ah)
 
     def update_the_plugins(self):
         self.logger.info('Updating the plugins')
