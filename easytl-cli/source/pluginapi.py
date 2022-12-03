@@ -74,8 +74,8 @@ class Plugin:
             self.logger.debug('Plugin is partially activate. Run the plugin')
 
         self.logger.info('Trying to enable logging to the stdout')
-        if self.namespace.instance.config['log_plugins_to_stdout']:
-            self.logger.addHandler(self.namespace.instance.stdout_handler)
+        for ah in self.namespace.instance.addition_handlers:
+            self.logger.addHandler(ah)
 
         for step in self.activation_steps:
             self.logger.debug('activate() : ' + step[1])
