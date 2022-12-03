@@ -1,188 +1,238 @@
 import os
-import tomllib
 import logging
 import threading
-import traceback
-import asyncio
+
 from PyQt5 import QtWidgets
+from PyQt5 import QtCore
+
 from .window.instanceRollingWidget import Ui_instanceRollingWidget
 from settings import *
 
-from bin.source.core import Instance
-from bin.source.translator import Translator
+from sourcegui.texteditlogging import TextEditHandler
+from sourcegui.working_instance import WorkingInstance
+from sourcegui.utils import QuickMessageBox, load_instances_list
 
-# set up the UI
-InstanceRollingWidget = QtWidgets.QWidget()
-
-ui = Ui_instanceRollingWidget()
-ui.setupUi(InstanceRollingWidget)
-
-# FUNCTIONAL
-
-instance_dir     = None
-instance_name    = None
-instance_config  = None
-work_instance    = None
-loop             = None
-
-is_begin_run     = False
-is_run           = False
-
-# can't initialize instance working environment
-env_create_error_msgbox = QtWidgets.QMessageBox(InstanceRollingWidget)
-env_create_error_msgbox.setIcon(QtWidgets.QMessageBox.Critical)
-env_create_error_msgbox.setText('')
-env_create_error_msgbox.setWindowTitle('Can\'t initialize environment')
-env_create_error_msgbox.setStandardButtons(QtWidgets.QMessageBox.Ok)
-
-####
-
-# Wrappers for the telethon
+from bin import initiator
 
 
-def get_phone_number():
-    while 1:
-        number, success = QtWidgets.QInputDialog.getText(
-            InstanceRollingWidget,
-            work_instance.namespace.translations['gui']['get_phone_number']['title'],
-            work_instance.namespace.translations['gui']['get_phone_number']['prompt']
-        )
+class InstanceRollingWidget(QtWidgets.QWidget):
+    """Functional defines for Instance Rolling UI
 
-        if success:
-            break
+    :ivar instances: Dict with the instances
+    :type instances: dict[str, Any]
+    :ivar working_instance: Current working instance
+    :type working_instance: WorkingInstance
+    :ivar instance_thread: Thread for the EasyTl instance
+    :type instance_thread: QtCore.QThread
+    :ivar ui: Ui_instanceRollingWidget instance
+    :type ui: Ui_instanceRollingWidget
+    :ivar logsEditStatus_handler: TextEditHandler instance for ui.logsEditStatus
+    :type logsEditStatus_handler: TextEditHandler
+    :ivar logsEditDebug_handler: TextEditHandler instance for ui.logsEditStatus
+    :type logsEditDebug_handler: TextEditHandler
+    :ivar is_run: Indicates if instance is running
+    :type is_run: bool
+    :ivar critical_qmsgbox: QuickMessageBox instance with Critical icon and Ok button
+    :type critical_qmsgbox: QuickMessageBox
+    """
 
-    return number
+    def __init__(self, parent: QtCore.QObject):
+        """
+        :param parent: Parent of the widget
+        :type parent: QtCore.QObject
+        """
+        super().__init__(parent)
 
+        self.logger = logging.getLogger('EasyTl-GUI : InstanceRollingWidget')
 
-async def get_code():
-    while 1:
-        code, success = QtWidgets.QInputDialog.getText(
-            InstanceRollingWidget,
-            work_instance.namespace.translations['gui']['get_code']['title'],
-            work_instance.namespace.translations['gui']['get_code']['prompt']
-        )
+        self.instances         = {}
+        self.working_instance  = None
+        self.instance_thread   = QtCore.QThread()
 
-        if success:
-            break
+        self.ui                      = None
+        self.logsEditStatus_handler  = None
+        self.logsEditDebug_handler   = None
 
-    return code
+        self.is_run = False
 
+        self.critical_qmsgbox = QuickMessageBox(self, QtWidgets.QMessageBox.Critical, QtWidgets.QMessageBox.Ok)
 
-# wrapper for the "on_run" event
-def on_run_wrapper():
-    global is_run
-    is_run = True
-    ui.runningRatio.setChecked(is_run)
+    def initialize(self):
+        """Initializes the widget"""
 
-####
+        self.logger.debug('Initializing the UI')
 
+        # set up UI
+        self.ui = Ui_instanceRollingWidget()
+        self.ui.setupUi(self)
 
-# initialize the instance
-def initialize_instance(i_instance_name):
-    global instance_dir, instance_name, instance_config, work_instance, loop
+        self.logger.debug('Initializing the buttons')
 
-    print('initialize instance start')
-    instance_name  = i_instance_name
-    instance_dir   = os.path.join(INSTANCES_DIR, instance_name)
+        # initialize the buttons
+        self.ui.startBtn.setProperty('class', 'success')
+        self.ui.stopBtn.setProperty('class', 'danger')
+        self.ui.restartBtn.setProperty('class', 'warning')
 
-    print('check directory')
-    # check for the instance directory
-    if not os.path.exists(instance_dir):
-        try:
-            print('creating instance directory')
-            # create instance directory and initializing it
-            os.mkdir(instance_dir)
+        self.logger.debug('Initializing the connections')
 
-            from bin import initiator
+        # initialize connections
+        self.ui.runningRatio.toggled.connect(lambda: self.ui.runningRatio.setChecked(self.is_run))
+        self.ui.startBtn.clicked.connect(self.run_working_instance)
 
-            initiator.create_required_dirs(instance_dir)
-            initiator.create_config_file(instance_dir)
-            initiator.create_main_plugins(os.path.join(instance_dir, 'plugins'))
+    ####
 
-        except Exception as e:
-            # message about the error
-            env_create_error_msgbox.setText('Can\'t create environment for the instance. '
-                                            f'Exception: {e}. '
-                                            'Contact with the developer!')
-            env_create_error_msgbox.exec_()
-            return
+    def get_phone_number(self) -> str:
+        """(For EasyTl instance) Gets the phone number prompt from user
 
-    print('load instances')
+        :returns: The phone number, entered by user
+        :rtype: str
+        """
 
-    # load the instances list
-    if os.path.exists(ALT_INSTANCES_LIST_PATH):
-        with open(ALT_INSTANCES_LIST_PATH, 'rb') as f:
-            instances = tomllib.load(f)
-    else:
-        with open(INSTANCES_LIST_PATH, 'rb') as f:
-            instances = tomllib.load(f)
+        self.logger.debug('Getting the phone number')
 
-    # get config of the instance
-    instance_config = instances[instance_name]
+        while 1:
+            number, success = QtWidgets.QInputDialog.getText(
+                self,
+                self.working_instance.namespace.translations['gui']['get_phone_number']['title'],
+                self.working_instance.namespace.translations['gui']['get_phone_number']['prompt']
+            )
 
-    # create instance
-    work_instance = Instance(
-        instance_name,
-        instance_config['api_id'],
-        instance_config['api_hash'],
-        [int(instance_config['owner_id']), ],
-        os.path.join(instance_dir, 'config.toml'),
-        Translator(os.path.join(instance_dir, 'translations')),
-        instance_dir,
-        os.path.join(instance_dir, 'plugins'),
-        os.path.join(instance_dir, 'cache'),
-        os.path.join(instance_dir, 'logs')
-    )
+            if success:
+                break
 
-    print('initialize logging')
+        return number
 
-    # initialize logging
-    log_level = getattr(logging, instance_config['logging_level'])
+    async def get_code(self) -> str:
+        """(For EasyTl instance) Gets the auth code prompt from user
 
-    work_instance.initialize_logging(
-        log_level,
-        log_level if instance_config['console_logging_level'] == 'As logging level'
-        else getattr(logging, instance_config['console_logging_level'])
-    )
+        :returns: The auth code, entered by user
+        :rtype: str
+        """
 
-    # set up namespace variables
-    work_instance.namespace.ffmpeg_dir = os.path.join(os.getcwd(), 'ffmpeg', 'ffmpeg-master-latest-win64-gpl-shared')
-    work_instance.namespace.instance_file = os.path.abspath(__file__)
-    work_instance.namespace.enable_plugins_auto_update = instance_config['enable_pl_auto_update']
+        self.logger.debug('Getting the auth code')
 
-    # set up wrappers to get values to authorize
-    work_instance._t_get_phone = get_phone_number
-    work_instance._t_get_code = get_code
+        while 1:
+            code, success = QtWidgets.QInputDialog.getText(
+                self,
+                self.working_instance.namespace.translations['gui']['get_code']['title'],
+                self.working_instance.namespace.translations['gui']['get_code']['prompt']
+            )
 
-    # set up on_run event
-    work_instance.namespace.on_run = on_run_wrapper
+            if success:
+                break
 
-    ui.groupBox.setTitle(instance_name)
+        return code
 
+    def on_run_wrapper(self):
+        """(System) Calls it when instance is run"""
+        self.is_run = True
+        self.ui.runningRatio.setChecked(self.is_run)
 
-def run_work_instance():
-    global is_begin_run
+    ####
 
-    if work_instance is None or is_begin_run:
-        return
+    def check_environment(self, instance_dir: str):
+        """Checks/Create the environment in the instance directory
 
-    is_begin_run = True
+        :param instance_dir: Path to the instance environment directory
+        :type instance_dir: str
+        """
 
-    try:
-        def run_instance():
-            global loop
+        if not os.path.exists(instance_dir):
+            try:
+                # create instance directory and initializing it
+                os.mkdir(instance_dir)
 
-            loop = asyncio.new_event_loop()
-            asyncio.set_event_loop(loop)
+                self.logger.debug('Create the required directories')
+                initiator.create_required_dirs(instance_dir)
 
-            # initialize the instance and run it
-            work_instance.initialize()
-            work_instance.run()
+                self.logger.debug('Create the config file')
+                initiator.create_config_file(instance_dir)
 
-        threading.Thread(target=run_instance).start()
-    except Exception as e:
-        traceback.print_exception(e)
+                self.logger.debug('Create the main plugins')
+                initiator.create_main_plugins(os.path.join(instance_dir, 'plugins'))
 
+            except Exception as e:
+                # TODO: pluginapi.Plugin.log_exception -> utils.log_exception
 
-ui.runningRatio.toggled.connect(lambda: ui.runningRatio.setChecked(is_run))
-ui.startBtn.clicked.connect(run_work_instance)
+                # message about the error
+                self.critical_qmsgbox.show('Environment checking error',
+                                           'While checking\\creating the environment for the instance')
+    ####
+
+    def initialize_instance(self, instance_name: str):
+        """Initializes the instance
+
+        :param instance_name: Name of the instance (must be in instances_dir/list.toml file)
+        :type instance_name: str
+        """
+
+        self.logger.debug(f'Initializing instance "{instance_name}"')
+
+        instance_dir     = os.path.join(INSTANCES_DIR, instance_name)
+        instance_config  = load_instances_list()[instance_name]
+
+        self.check_environment(instance_dir)
+
+        self.logger.debug('Creating WorkingInstance')
+        self.working_instance = WorkingInstance(self, instance_name, instance_dir, instance_config)
+
+        self.logger.debug('Initializing WorkingInstance')
+        self.working_instance.initialize(os.path.join(os.getcwd(), 'ffmpeg', 'ffmpeg-master-latest-win64-gpl-shared'))
+        self.working_instance.work_instance.namespace.on_run = self.on_run_wrapper
+
+        self.ui.groupBox.setTitle(instance_name)
+
+        self.logger.debug('Initialized success')
+
+        # set up the logsEditStatus handler
+        self.logger.debug('Creating TextEditHandler for the logsEditStatus')
+        self.logsEditStatus_handler = TextEditHandler()
+        self.logsEditStatus_handler.initialize(self.working_instance.instance_config['logging_level'])
+        self.logsEditStatus_handler.flush_signal.connect(self.write_buffer_logsEditStatus)
+
+        # set up the logsEditDebug handler
+        self.logger.debug('Creating TextEditHandler for the logsEditDebug')
+        self.logsEditDebug_handler = TextEditHandler()
+        self.logsEditDebug_handler.initialize(logging.DEBUG)
+        self.logsEditDebug_handler.flush_signal.connect(self.write_buffer_logsEditDebug)
+
+        # move to the thread these
+        self.logger.debug('Initializing the instance thread')
+        self.logsEditStatus_handler.moveToThread(self.instance_thread)
+        self.logsEditDebug_handler.moveToThread(self.instance_thread)
+        self.working_instance.moveToThread(self.instance_thread)
+
+        # add the thread started connections
+        self.instance_thread.started.connect(self.working_instance.run)
+
+        # initialize logging
+        self.logger.debug('Initializing WorkingInstance logging')
+        self.working_instance.initialize_logging(self.logsEditStatus_handler, self.logsEditDebug_handler)
+
+        self.logger.debug('Instance initializing done')
+
+    def run_working_instance(self):
+        """Runs the current WorkingInstance"""
+
+        self.logger.info('Run the instance')
+
+        self.logger.debug('Run the instance thread')
+
+        # run thread
+        self.instance_thread.start()
+
+    ####
+
+    @QtCore.pyqtSlot()
+    def write_buffer_logsEditStatus(self):
+        """(System) Writes the handler buffer to logsEditStatus"""
+        self.logger.debug('Write logsEditStatus buffer')
+        self.ui.logsEditStatus.setText(self.ui.logsEditStatus.toPlainText() + self.logsEditStatus_handler.buffer)
+        self.logsEditStatus_handler.clear_signal.emit()
+
+    @QtCore.pyqtSlot()
+    def write_buffer_logsEditDebug(self):
+        """(System) Writes the handler buffer to logsEditDebug"""
+        self.logger.debug('Write logsEditDebug buffer')
+        self.ui.logsEditDebug.setText(self.ui.logsEditDebug.toPlainText() + self.logsEditDebug_handler.buffer)
+        self.logsEditDebug_handler.clear_signal.emit()

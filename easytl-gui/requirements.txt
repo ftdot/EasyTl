@@ -1,4 +1,3 @@
-toml
 pyqt5
-PyQt5Designer
 qt-material
+PyQt5Designer

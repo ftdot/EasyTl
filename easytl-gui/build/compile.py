@@ -13,6 +13,7 @@ files_to_compile = [
     os.path.join('gui', 'instance_rolling_widget.py'),
     os.path.join('gui', 'window', 'instanceSettingsWidget.py'),
     os.path.join('gui', 'window', 'instanceRollingWidget.py'),
+    os.path.join('sourcegui', 'texteditlogging.py'),
     os.path.join('main.py'),
     os.path.join('run.py'),
     os.path.join('settings.py')
@@ -27,7 +28,8 @@ dirs_to_create = [
     os.path.join(dest_dir, 'gui'),
     os.path.join(dest_dir, 'gui', 'window'),
     os.path.join(dest_dir, 'instances'),
-    os.path.join(dest_dir, 'resources')
+    os.path.join(dest_dir, 'resources'),
+    os.path.join(dest_dir, 'sourcegui')
 ]
 
 

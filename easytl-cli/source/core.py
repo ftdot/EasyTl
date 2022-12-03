@@ -158,15 +158,17 @@ class Instance:
         # init a stream handler for the console output
         stdout_handler = logging.StreamHandler(sys.stdout)
         stdout_handler.setLevel(console_log_level)
-        stdout_handler.setFormatter(formatter)
 
         self.addition_handlers.append(stdout_handler)
 
         for ah in self.addition_handlers:
+            ah.setFormatter(formatter)
             self.logger.addHandler(ah)
 
         # initializing the PluginsList logger
         self.namespace.plugins.initialize_logger()
+
+        self.logger.info('Logging is initialized')
 
     def run(self, run_until_disconnected: bool = True):
         """Run the telegram client until disconnected"""
