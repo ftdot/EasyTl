@@ -2,6 +2,9 @@
 prefixes = [ "easy", "ez" ]                    # Prefixes of the EasyTl
 error_notify = "⚠️⛔️ Error was occurred {0}"  # Any error will formatted to this string
 
+# Other
+unsupported = "This command and\\or operation is unsupported"
+
 [pluginapi]
 send_request_error = "while sending a check request of plugin {0}"
 download_languages_error = "while dowloading the plugin languages {0}"

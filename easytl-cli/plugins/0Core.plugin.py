@@ -39,6 +39,9 @@ namespace.instance_file = namespace.instance_file if 'instance_file' in dir(name
 # check for the ffmpeg
 namespace.ffmpeg = False
 
+# is instance running indicator
+namespace.is_run = True
+
 if sys.platform == 'win32':
     if os.path.exists(namespace.ffmpeg_dir):
         namespace.ffmpeg = True
@@ -58,6 +61,8 @@ async def stop(event, _):
         event,
         namespace.instance.f_warning(namespace.translations['core']['command']['stop']['stop_notify'])
     )
+
+    namespace.is_run = False
     await namespace.instance.client.disconnect()  # Disconnect from the telegram
     exit()
 
@@ -66,6 +71,14 @@ async def stop(event, _):
 @this.command(namespace.translations['core']['command']['restart']['names'])
 async def restart(event, _):
     this.logger.info('Restarting the instance')
+
+    if namespace.gui_enabled:
+        this.logger.info('Operation unsupported')
+        await namespace.instance.send(
+            event,
+            namespace.instance.f_warning(namespace.translations['core']['unsupported'])
+        )
+        return
 
     if namespace.instance_file is None:
         this.logger.info('namespace.instance_file not set. Can\'t do restart')
