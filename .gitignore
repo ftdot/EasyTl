@@ -7,6 +7,7 @@ easytl-cli/source/__pycache__/
 easytl-gui/__pycache__/
 easytl-gui/gui/__pycache__/
 easytl-gui/window/__pycache__/
+easytl-gui/sourcegui/__pycache__/
 
 # PyCharm files
 .idea/
