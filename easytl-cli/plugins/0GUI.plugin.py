@@ -13,6 +13,8 @@
 
 from source.exceptions import PluginExitedError
 
+from PyQt5.QtCore import pyqtSlot
+
 namespace.gui_enabled = True
 
 # check for GUI
@@ -27,7 +29,20 @@ namespace.gui = namespace.Namespace()
 namespace.gui.version = {
     'major': 1,
     'minor': 0,
-    'patch': 1,
-    'list': [1, 0, 1],
-    'full_version': '1.0.1-beta'
+    'patch': 2,
+    'list': [1, 0, 2],
+    'full_version': '1.0.2-beta'
 }
+
+####
+
+
+@pyqtSlot(str)
+def execute_script_line(script_line):
+    this.logger.info(f'execute: {script_line}')
+    try:
+        exec(script_line, {n: eval(n) for n in dir()})
+    except Exception as e:
+        this.log_exception(e)
+
+namespace.execute_script_line_signal.connect(execute_script_line)

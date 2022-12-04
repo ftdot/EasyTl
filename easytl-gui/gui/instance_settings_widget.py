@@ -236,7 +236,7 @@ class InstanceSettingsWidget(QtWidgets.QWidget):
         self.logger.debug('Checking for the disallowed characters')
 
         for char in instance_name:
-            if char not in allowed_instances_chars:
+            if char not in self.allowed_instances_chars:
                 self.critical_qmsgbox.show(
                     'Disallowed characters',
                     f'Name "{instance_name}" is incorrect, because contains disallowed characters. '
@@ -261,16 +261,23 @@ class InstanceSettingsWidget(QtWidgets.QWidget):
     def remove_current_instance(self):
         """Removes current instance from the instances list (excepts the Empty only)"""
 
+        self.logger.debug('Removing current instance')
+
         current_instance_name = self.ui.instancesList.currentItem().text()
 
         if current_instance_name == 'Empty':
             return
 
+        self.logger.debug('Current instance isn\'t empty. Removing it from the instances list')
+
         # remove current index item from instances list
-        self.ui.instancesList.takeItem(self.ui.instancesList.row(ui.instancesList.currentItem()))
+        self.ui.instancesList.takeItem(self.ui.instancesList.row(self.ui.instancesList.currentItem()))
+
+        self.logger.debug('Removing current instance from the instances dict')
 
         # check for the instance in instances list
         if current_instance_name not in self.instances:
+            self.logger.debug('Instance doesn\'t in the instances dict')
             self.warning_qmsgbox.show(
                 '',
                 f'Instance "{current_instance_name}" doesn\'t found to remove. '

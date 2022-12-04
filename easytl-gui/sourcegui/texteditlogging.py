@@ -1,32 +1,35 @@
 import logging
-from PyQt5.QtCore import QObject, pyqtSignal
+from PyQt5.QtCore import QObject, pyqtSignal, pyqtSlot
 
 
 class TextEditHandler(QObject):
-    flush_signal = pyqtSignal()
-    clear_signal = pyqtSignal()
-    buffer = ''
-    handler = None
+    """Object that helps to use the logging from one thread to the TextEdit from other thread
 
-    def initialize(self, log_level: int | str):
+    :ivar flush_signal: Signals that emits then TextEditHandler.flush() method is called
+    :type flush_signal: pyqtSignal
+    :ivar buffer: Temporary buffer of the handler
+    :type buffer: str
+    """
+
+    flush_signal = pyqtSignal(str)
+
+    def __init__(self, log_level: int | str):
+        """
+        :param log_level: Log level of the logger handler
+        :type log_level: int | str
+        """
+        super().__init__()
+
+        self.buffer = ''
+
         self.handler = logging.StreamHandler(self)
         self.handler.setLevel(log_level)
 
-        self.clear_signal.connect(self.clear_buffer)
-
+    @pyqtSlot()
     def write(self, data):
-        try:
-            self.buffer += data
-        except Exception as e:
-            import traceback
-            traceback.print_exception(e)
+        self.buffer += data
 
+    @pyqtSlot()
     def flush(self):
-        try:
-            self.flush_signal.emit()
-        except Exception as e:
-            import traceback
-            traceback.print_exception(e)
-
-    def clear_buffer(self):
+        self.flush_signal.emit(str(self.buffer))
         self.buffer = ''

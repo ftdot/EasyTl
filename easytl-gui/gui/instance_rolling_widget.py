@@ -18,12 +18,12 @@ from bin import initiator
 class InstanceRollingWidget(QtWidgets.QWidget):
     """Functional defines for Instance Rolling UI
 
+    :ivar logger: Logger of the widget
+    :type logger: logging.Logger
     :ivar instances: Dict with the instances
     :type instances: dict[str, Any]
     :ivar working_instance: Current working instance
     :type working_instance: WorkingInstance
-    :ivar instance_thread: Thread for the EasyTl instance
-    :type instance_thread: QtCore.QThread
     :ivar ui: Ui_instanceRollingWidget instance
     :type ui: Ui_instanceRollingWidget
     :ivar logsEditStatus_handler: TextEditHandler instance for ui.logsEditStatus
@@ -47,7 +47,6 @@ class InstanceRollingWidget(QtWidgets.QWidget):
 
         self.instances         = {}
         self.working_instance  = None
-        self.instance_thread   = QtCore.QThread()
 
         self.ui                      = None
         self.logsEditStatus_handler  = None
@@ -77,6 +76,8 @@ class InstanceRollingWidget(QtWidgets.QWidget):
 
         # initialize connections
         self.ui.runningRatio.toggled.connect(lambda: self.ui.runningRatio.setChecked(self.is_run))
+
+        self.ui.runCodeBtn.clicked.connect(self.runCodeBtn_clicked)
         self.ui.startBtn.clicked.connect(self.run_working_instance)
 
     ####
@@ -125,6 +126,7 @@ class InstanceRollingWidget(QtWidgets.QWidget):
 
     def on_run_wrapper(self):
         """(System) Calls it when instance is run"""
+
         self.is_run = True
         self.ui.runningRatio.setChecked(self.is_run)
 
@@ -174,15 +176,11 @@ class InstanceRollingWidget(QtWidgets.QWidget):
         self.check_environment(instance_dir)
 
         self.logger.debug('Creating WorkingInstance')
-        self.working_instance = WorkingInstance(self, instance_name, instance_dir, instance_config)
-
-        self.logger.debug('Initializing WorkingInstance')
-        self.working_instance.initialize(os.path.join(os.getcwd(), 'ffmpeg', 'ffmpeg-master-latest-win64-gpl-shared'))
-        self.working_instance.work_instance.namespace.on_run = self.on_run_wrapper
+        self.working_instance = WorkingInstance(instance_name, instance_dir, instance_config)
 
         self.ui.groupBox.setTitle(instance_name)
 
-        self.logger.debug('Initialized success')
+        self.logger.debug('WorkingInstance created')
 
         # set up the logsEditStatus handler
         self.logger.debug('Creating TextEditHandler for the logsEditStatus')
@@ -196,43 +194,35 @@ class InstanceRollingWidget(QtWidgets.QWidget):
         self.logsEditDebug_handler.initialize(logging.DEBUG)
         self.logsEditDebug_handler.flush_signal.connect(self.write_buffer_logsEditDebug)
 
-        # move to the thread these
-        self.logger.debug('Initializing the instance thread')
-        self.logsEditStatus_handler.moveToThread(self.instance_thread)
-        self.logsEditDebug_handler.moveToThread(self.instance_thread)
-        self.working_instance.moveToThread(self.instance_thread)
-
-        # add the thread started connections
-        self.instance_thread.started.connect(self.working_instance.run)
-
-        # initialize logging
-        self.logger.debug('Initializing WorkingInstance logging')
-        self.working_instance.initialize_logging(self.logsEditStatus_handler, self.logsEditDebug_handler)
+        self.logger.debug('Initializing WorkingInstance')
+        self.working_instance.initialize(
+            os.path.join(os.getcwd(), 'ffmpeg', 'ffmpeg-master-latest-win64-gpl-shared'),
+            [self.logsEditStatus_handler, self.logsEditDebug_handler]
+        )
+        self.working_instance.work_instance.namespace.on_run = self.on_run_wrapper
 
         self.logger.debug('Instance initializing done')
 
     def run_working_instance(self):
         """Runs the current WorkingInstance"""
 
-        self.logger.info('Run the instance')
-
-        self.logger.debug('Run the instance thread')
+        self.logger.debug('Try to run the working instance')
 
         # run thread
-        self.instance_thread.start()
+        self.working_instance.run()
 
     ####
 
-    @QtCore.pyqtSlot()
-    def write_buffer_logsEditStatus(self):
+    def write_buffer_logsEditStatus(self, buf):
         """(System) Writes the handler buffer to logsEditStatus"""
-        self.logger.debug('Write logsEditStatus buffer')
-        self.ui.logsEditStatus.setText(self.ui.logsEditStatus.toPlainText() + self.logsEditStatus_handler.buffer)
-        self.logsEditStatus_handler.clear_signal.emit()
+        self.ui.logsEditStatus.setText(self.ui.logsEditStatus.toPlainText() + buf)
 
-    @QtCore.pyqtSlot()
-    def write_buffer_logsEditDebug(self):
+    def write_buffer_logsEditDebug(self, buf):
         """(System) Writes the handler buffer to logsEditDebug"""
-        self.logger.debug('Write logsEditDebug buffer')
-        self.ui.logsEditDebug.setText(self.ui.logsEditDebug.toPlainText() + self.logsEditDebug_handler.buffer)
-        self.logsEditDebug_handler.clear_signal.emit()
+        self.ui.logsEditDebug.setText(self.ui.logsEditDebug.toPlainText() + buf)
+
+    ####
+
+    def runCodeBtn_clicked(self):
+        """(System) This method calls on RUN (DEBUG tab) button clicked"""
+        self.working_instance.work_instance.namespace.execute_script_line_signal.emit(self.ui.codeLine.text())
