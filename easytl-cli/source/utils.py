@@ -1,9 +1,10 @@
 import logging
 import tomllib
+import traceback
 from enum import Enum
 
-PLUGIN_INFO_PREFIX = "# "
-easytl_logger = logging.getLogger('EasyTl')
+PLUGIN_INFO_PREFIX = '# '
+utils_logger = logging.getLogger('EasyTl : Utils')
 
 
 #####
@@ -54,7 +55,7 @@ def _check_types(value1: int | str, value2: int | str) -> (bool, str | int, str 
         elif isinstance(value, str) and value.isnumeric():
             return int(value)
         else:
-            easytl_logger.debug('_check_types._check_type() : '
+            utils_logger.debug('_check_types._check_type() : '
                                 'First value is can\'t be type-casted. Return with the error')
             return None
 
@@ -89,7 +90,7 @@ def check_version_compatibility(
     err, version1, version2 = _check_types(version1, version2)
 
     if err:
-        easytl_logger.debug('function utils.check_version_compatibility() : _check_types() returned error')
+        utils_logger.debug('function utils.check_version_compatibility() : _check_types() returned error')
         return False
 
     match operation:
@@ -132,9 +133,12 @@ def check_version_compatibility(
                 return False
 
         case _:
-            easytl_logger.debug('function utils.check_version_compatibility() : Incorrect operation was set')
+            utils_logger.debug('function utils.check_version_compatibility() : Incorrect operation was set')
+            return False
 
     return True
+
+####
 
 
 def parse_plugin_information(file_lines: list[str]) -> (bool, dict):
@@ -148,7 +152,7 @@ def parse_plugin_information(file_lines: list[str]) -> (bool, dict):
     :rtype: (bool, dict)
     """
 
-    easytl_logger.debug('utils.parse_plugin_information() : '
+    utils_logger.debug('utils.parse_plugin_information() : '
                         'Start parsing the info lines')
 
     v2_format = False
@@ -161,25 +165,47 @@ def parse_plugin_information(file_lines: list[str]) -> (bool, dict):
             v2_format = True
             begin = True
 
-            easytl_logger.debug('utils.parse_plugin_information() : '
+            utils_logger.debug('utils.parse_plugin_information() : '
                                 'Found a begin of info line')
 
         elif line.startswith(PLUGIN_INFO_PREFIX + 'end info'):
             begin = False
 
-            easytl_logger.debug('utils.parse_plugin_information() : '
+            utils_logger.debug('utils.parse_plugin_information() : '
                                 'Found the end of info line')
         else:
             if begin:
-                easytl_logger.debug('utils.parse_plugin_information() : '
-                                    'Add TOML line : ' + (toml_line := line.removeprefix(PLUGIN_INFO_PREFIX)))
+                utils_logger.debug('utils.parse_plugin_information() : '
+                                    'Add TOML line : ' + (toml_line := line.removeprefix(PLUGIN_INFO_PREFIX + ' ')))
                 toml_lines += toml_line + '\n'
 
-    easytl_logger.debug('utils.parse_plugin_information() : '
+    utils_logger.debug('utils.parse_plugin_information() : '
                         'Plugin is v2_format? : ' + 'yes' if v2_format else 'no')
 
     for line in toml_lines.split('\n'):
-        easytl_logger.debug('utils.parse_plugin_information() : '
+        utils_logger.debug('utils.parse_plugin_information() : '
                             'TOML LINES : ' + line)
 
     return v2_format, tomllib.loads(toml_lines)
+
+####
+
+error_splitter = '#' * 25
+
+
+def log_exception(logger: logging.Logger, e: Exception):
+    """Logs the exception to the logger
+
+    :param logger: Logger instance
+    :type logger: logging.Logger
+    :param e: Exception to be logged
+    :type e: Exception
+    """
+
+    logger.debug(error_splitter)
+
+    logger.error('Exception has been generated, while executing the plugin')
+    for line in traceback.format_exception(e):
+        logger.debug(line.removesuffix('\n'))
+
+    logger.debug(error_splitter)

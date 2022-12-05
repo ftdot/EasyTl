@@ -12,13 +12,13 @@
 #   changelog = [ "Support for the 1.4.0 version" ]
 # end info
 
-from source.exceptions import ImportLibError
+from source.exceptions import PluginRequiresError
 
 if 'translatelib' not in dir(namespace):
     this.logger.info('translatelib not found in the namespace!')
     this.errored = True
 
-    raise ImportLibError(this.plugin_name, 'translatelib')
+    raise PluginRequiresError(this.plugin_name, 'library: translatelib (1TranslationsLib plugin)')
 
 namespace.translator.initialize('MessageTranslate')
 

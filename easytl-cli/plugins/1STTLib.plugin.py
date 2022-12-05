@@ -15,13 +15,13 @@
 import os
 import speech_recognition as sr
 from pydub import AudioSegment
-from source.exceptions import ImportLibError
+from source.exceptions import PluginRequiresError
 
 if 'ffmpeg' not in dir(namespace) or not namespace.ffmpeg:
     this.logger.info('ffmpeg support is not enabled or not found')
     this.errored = True
 
-    raise RequiredError(this.plugin_name, 'ffmpeg')
+    raise PluginRequiresError(this.plugin_name, 'bin: ffmpeg')
 
 recognizer = sr.Recognizer()
 

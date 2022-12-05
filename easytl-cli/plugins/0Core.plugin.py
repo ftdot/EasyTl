@@ -17,6 +17,8 @@ import sys
 
 import math  # for extend the calculator features
 
+from source.utils import log_exception
+
 # initialize the core translation
 namespace.translator.initialize('core')
 
@@ -33,14 +35,15 @@ cache_dir  = namespace.instance.cache_dir
 
 # list with the temp (cache) files
 namespace.temp_files = []
+
+# is instance running indicator
+namespace.is_run = True
+
 # check if namespace.instance_file is set
 namespace.instance_file = namespace.instance_file if 'instance_file' in dir(namespace) else None
 
 # check for the ffmpeg
 namespace.ffmpeg = False
-
-# is instance running indicator
-namespace.is_run = True
 
 if sys.platform == 'win32':
     if os.path.exists(namespace.ffmpeg_dir):
@@ -117,7 +120,7 @@ async def clear_cache(event, _):
             os.remove(f)
         except Exception as e:
             this.logger.debug(f'Can\'t delete file "{f}"')
-            this.log_exception(e)
+            log_exception(this.logger, e)
 
     namespace.temp_files = []
 

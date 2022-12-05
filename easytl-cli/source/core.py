@@ -7,40 +7,41 @@ from getpass import getpass
 from telethon import TelegramClient, events
 from .namespace import Namespace
 from .translator import Translator
-from .argument_parser import ArgumentParser
+from .argumentparser import ArgumentParser
 from . import pluginapi
 
 
 class Instance:
     """Instance object of EasyTl userbot for Telegram
 
-    :param instance_name: Name of the instance
+    :ivar instance_name: Name of the instance
     :type instance_name: str
-    :param api_id: API_ID from my.telegram.org -> Apps, for the telethon
+    :ivar api_id: API_ID from my.telegram.org -> Apps, for the telethon
     :type api_id: int
-    :param api_hash: API_HASH from my.telegram.org -> Apps, for the telethon
+    :ivar api_hash: API_HASH from my.telegram.org -> Apps, for the telethon
     :type api_hash: str
-    :param owner_ids: Owners of Instance
+    :ivar owner_ids: Owners of Instance
     :type owner_ids: list[int]
-    :param config_file: Path to the file with TOML config of the instance
+    :ivar config_file: Path to the file with TOML config of the instance
     :type config_file: str
-    :param translator: The translator object
+    :ivar translator: The translator object
     :type translator: Translator
-    :param install_dir: Path to the directory with the instance
+    :ivar install_dir: Path to the directory with the instance
     :type install_dir: str
-    :param plugins_dir: Path to the directory with the plugins
+    :ivar plugins_dir: Path to the directory with the plugins
     :type plugins_dir: str
-    :param cache_dir: Path to the directory with the cache
+    :ivar cache_dir: Path to the directory with the cache
     :type cache_dir: str
-    :param logs_dir: Directory with the logs
+    :ivar logs_dir: Directory with the logs
     :type logs_dir: str
-    :param logs_dir: Directory with the logs
+    :ivar logs_dir: Directory with the logs
     :type logs_dir: str
-
     :ivar prefixes: List with the EasyTl prefixes, by the default is "easy"
     :type prefixes: list[str]
     :ivar client: Telethon TelegramClient instance
     :type client: TelegramClient
+    :ivar config: System configuration of the EasyTl-CLI
+    :type config: dict[str, Any]
     :ivar namespace: Instance of the Namespace
     :type namespace: Namespace
     :ivar plugins: List with the plugins (Instance of PluginsList)
@@ -62,7 +63,31 @@ class Instance:
                  plugins_dir: str = os.path.join('.', 'plugins'),
                  cache_dir: str = os.path.join('.', 'cache'),
                  logs_dir: str = os.path.join('.', 'logs')
-        ):
+                 ):
+        """
+        :param instance_name: Name of the instance
+        :type instance_name: str
+        :param api_id: API_ID from my.telegram.org -> Apps, for the telethon
+        :type api_id: int
+        :param api_hash: API_HASH from my.telegram.org -> Apps, for the telethon
+        :type api_hash: str
+        :param owner_ids: Owners of Instance
+        :type owner_ids: list[int]
+        :param config_file: Path to the file with TOML config of the instance
+        :type config_file: str
+        :param translator: The translator object
+        :type translator: Translator
+        :param install_dir: Path to the directory with the instance
+        :type install_dir: str
+        :param plugins_dir: Path to the directory with the plugins
+        :type plugins_dir: str
+        :param cache_dir: Path to the directory with the cache
+        :type cache_dir: str
+        :param logs_dir: Directory with the logs
+        :type logs_dir: str
+        :param logs_dir: Directory with the logs
+        :type logs_dir: str
+        """
 
         self.api_id, self.api_hash, self.owner_ids, \
             = api_id, api_hash, owner_ids
@@ -132,46 +157,67 @@ class Instance:
 
         self.namespace.plugins.activate_plugins_list()
 
-    def initialize_logging(self, log_level: int, console_log_level: int):
-        """Initializes instance.Logger object
+    def initialize_logging(self,
+                           auto_config: bool = False,
+                           log_level: str | int = logging.DEBUG,
+                           console_log_level: str | int = logging.INFO,
+                           disable_telethon_loggers: bool = True):
+        """Initializes the logging system
 
+        :param auto_config: Auto configure the logging
+        :type auto_config: bool
         :param log_level: Log level of logger (logging.INFO, logging.DEBUG and etc...)
         :type log_level: int
-        :param console_log_level: Log level of console logging (logging.INFO, logging.DEBUG and etc...)
+        :param console_log_level: Log level of console logging (logging.INFO, logging.DEBUG and etc...) (DEFAULT: logging.INFO)
         :type console_log_level: int
+        :param disable_telethon_loggers: Set the telethon loggers log level to logging.ERROR level
+        :type disable_telethon_loggers: bool
         """
 
-        s_format = '%(name)s | %(asctime)s | [%(levelname)s] : %(message)s'
-        formatter = logging.Formatter(s_format)
+        if auto_config:
+            s_format = '%(name)s | %(asctime)s | [%(levelname)s] : %(message)s'
+            formatter = logging.Formatter(s_format)
 
-        logging.basicConfig(
-            format=s_format, datefmt='%H:%M:%S',
-            filename=os.path.join(self.logs_dir,
-                                  f'{time.strftime("%Y-%m-%d_%H-%M", time.localtime())}-log.txt'),
-            level=log_level
-        )
+            # init a stream handler for the console output
+            stdout_handler = logging.StreamHandler(sys.stdout)
+            stdout_handler.setFormatter(formatter)
+            stdout_handler.setLevel(console_log_level)
+
+            # init a stream handler for the file
+            file_handler = logging.FileHandler(
+                os.path.join(self.logs_dir, f'{time.strftime("%Y-%m-%d_%H-%M", time.localtime())}-log.txt'),
+                'w',
+                'utf8'
+            )
+            file_handler.setFormatter(formatter)
+            file_handler.setLevel(logging.DEBUG)
+
+            # add handlers to the list with it
+            self.addition_handlers.append(stdout_handler)
+            self.addition_handlers.append(file_handler)
+
+            # configure the logger
+            logging.basicConfig(
+                format=s_format, datefmt='%H:%M:%S',
+                handlers=self.addition_handlers,
+                level=log_level
+            )
+
+        if disable_telethon_loggers:
+            logging.getLogger('telethon.extensions.messagepacker').setLevel(logging.CRITICAL)
+            logging.getLogger('telethon.network.mtprotosender').setLevel(logging.CRITICAL)
 
         # init instance logger
-        self.logger = logging.Logger('EasyTl Instance')
-        self.logger.setLevel(log_level)
-
-        # init a stream handler for the console output
-        stdout_handler = logging.StreamHandler(sys.stdout)
-        stdout_handler.setLevel(console_log_level)
-
-        self.addition_handlers.append(stdout_handler)
-
-        for ah in self.addition_handlers:
-            ah.setFormatter(formatter)
-            self.logger.addHandler(ah)
-
-        # initializing the PluginsList logger
-        self.namespace.plugins.initialize_logger()
+        self.logger = logging.getLogger('EasyTl : Instance')
 
         self.logger.info('Logging is initialized')
 
     def run(self, run_until_disconnected: bool = True):
-        """Run the telegram client until disconnected"""
+        """Run the telegram client until disconnected
+
+        :param run_until_disconnected: Call the telethon client method "run_until_disconnected()" (Default: True)
+        :type run_until_disconnected: bool
+        """
 
         self.logger.info('Run Telegram client')
 

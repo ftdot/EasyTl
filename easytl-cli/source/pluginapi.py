@@ -1,14 +1,14 @@
 import os
 import sys
-import traceback
 import requests
 import pkg_resources
 import subprocess
 import logging
-import tomllib
+import time
 from .namespace import Namespace
-from .argument_parser import ArgumentParser
-from .utils import VersionCheckOperation, check_version_compatibility, parse_plugin_information
+from .argumentparser import ArgumentParser
+from .utils import VersionCheckOperation, check_version_compatibility, parse_plugin_information, log_exception
+
 from .filehash import get_file_hash, get_string_hash
 
 required_info_lines = {'description', 'required_platforms', 'required_plugins',
@@ -19,11 +19,10 @@ required_info_lines = {'description', 'required_platforms', 'required_plugins',
 class Plugin:
     """Base class for the plugins
 
-    :param plugin_name: Name of the plugin
+    :ivar plugin_name: Name of the plugin
     :type plugin_name: str
-    :param plugin_path: Path to the plugin
+    :ivar plugin_path: Path to the plugin file
     :type plugin_path: str
-
     :ivar active: Is plugin active
     :type active: bool
     :ivar partially_active: Is plugin partially active
@@ -42,6 +41,13 @@ class Plugin:
     """
 
     def __init__(self, plugin_name: str, plugin_path: str):
+        """
+        :param plugin_name: Name of the plugin
+        :type plugin_name: str
+        :param plugin_path: Path to the plugin
+        :type plugin_path: str
+        """
+
         self.plugin_name = plugin_name
         self.plugin_path = plugin_path
 
@@ -51,7 +57,7 @@ class Plugin:
         self.info = None
 
         self.errored = False
-        self.logger = logging.Logger(f'EasyTl : Plugin {self.plugin_name}')
+        self.logger = logging.getLogger(f'EasyTl : Plugin {self.plugin_name}')
 
         self.activation_steps = [
             (self.check_for_updates, 'Checking for the plugin updates'),
@@ -72,10 +78,6 @@ class Plugin:
 
         if self.partially_active:
             self.logger.debug('Plugin is partially activate. Run the plugin')
-
-        self.logger.info('Trying to enable logging to the stdout')
-        for ah in self.namespace.instance.addition_handlers:
-            self.logger.addHandler(ah)
 
         for step in self.activation_steps:
             self.logger.debug('activate() : ' + step[1])
@@ -107,21 +109,6 @@ class Plugin:
 
     ####
 
-    def log_exception(self, e: Exception):
-        """Logs the exception to the logger
-
-        :param e: Exception to be logged
-        :type e: Exception
-        """
-
-        self.logger.debug('#' * 25)
-
-        self.logger.error('Exception has been generated, while executing the plugin')
-        for line in traceback.format_exception(e):
-            self.logger.debug(line.removesuffix('\n'))
-
-        self.logger.debug('#' * 25)
-
     def parse_info_v2(self):
         """Parses the information about the plugin"""
 
@@ -139,7 +126,7 @@ class Plugin:
 
         missing = required_info_lines - set(self.info.keys())
         if len(missing) != 0:
-            self.logger.error('parse_info_v2() : Plugin is passed required info lines: '+' '.join(list(missing)))
+            self.logger.error('parse_info_v2() : Plugin is passed required info lines: ' + ' '.join(list(missing)))
             self.errored = True
 
     def download_languages(self):
@@ -160,7 +147,21 @@ class Plugin:
                 llink = ll[1]
                 self.logger.debug(f'download_languages() : Downloading the language "{lname}" ({llink})')
 
+                # get request
                 r = requests.get(llink)
+
+                # check for the status code
+                if not r.status_code != 200:
+                    self.logger.debug('download_languages() : Request returned non 200 code')
+
+                    self.namespace.notify_stack.append(
+                        self.namespace.translations['core']['error_notify'].format(
+                            self.namespace.translations['core']['pluginapi']['send_request_error'].format(
+                                self.plugin_name)
+                        )
+                    )
+                    self.errored = True
+                    return
 
                 with open(os.path.join(self.namespace.instance.translator.lang_dir, lname), 'wb') as f:
                     f.write(r.content)
@@ -197,6 +198,7 @@ class Plugin:
                 return VersionCheckOperation.LESS_THAN
             case _:
                 self.logger.debug(f'_convert_operator() : Incorrect operator "{char}"')
+
                 # write notify about the error
                 self.namespace.notify_stack.append(
                     self.namespace.translations['core']['error_notify'].format(
@@ -205,7 +207,7 @@ class Plugin:
                     )
                 )
                 self.errored = True
-                return None
+                return
 
     ####
 
@@ -214,7 +216,6 @@ class Plugin:
 
         if 'enable_plugins_auto_update' not in dir(self.namespace) or \
                 ('enable_plugins_auto_update' in dir(self.namespace) and not self.namespace.enable_plugins_auto_update):
-
             self.logger.debug('check_for_updates() : Auto-updates is disabled. Parse info lines')
             self.parse_info_v2()
             return
@@ -252,13 +253,14 @@ class Plugin:
                 try:
                     r = requests.get(update_link)
 
+                    # check for the success
                     if r.status_code != 200:
                         self.logger.debug('Update request returned non 200 code')
                         rhash = fhash
                     else:
                         rhash = get_string_hash(r.content)
                 except Exception as e:
-                    self.log_exception(e)
+                    log_exception(self.logger, e)
 
                     self.logger.info('check_for_updates() : Can\'t connect to the update link. Skip the update')
                     rhash = fhash
@@ -267,7 +269,7 @@ class Plugin:
                 rhash = fhash  # write remote hash as local file hash to skip the update
 
         except Exception as e:
-            self.log_exception(e)
+            log_exception(self.logger, e)
 
             # write notify about the error
             self.namespace.notify_stack.append(
@@ -306,18 +308,23 @@ class Plugin:
 
             self.logger.debug('check_for_updates() : Add notifies about the update')
 
-            # write notify about updated plugin
-            self.namespace.notify_stack.append(
-                self.namespace.translations['core']['pluginapi']['update_notify'].format(self.plugin_name)
-            )
-
-            # check for changelog info line and add it to notify stack
-            if 'changelog' in self.info:
+            try:
+                # write notify about the update of plugin
                 self.namespace.notify_stack.append(
-                    self.namespace.translations['core']['pluginapi']['changelog_notify'].format(
-                        self.info['version'], '\n— '.join(self.info['changelog'])
-                    )
+                    self.namespace.translations['core']['pluginapi']['update_notify'].format(self.plugin_name)
                 )
+
+                # check for the changelog info line and add it to the notify stack
+                if 'changelog' in self.info:
+                    self.namespace.notify_stack.append(
+                        self.namespace.translations['core']['pluginapi']['changelog_notify'].format(
+                            self.info['version'], '\n— '.join(self.info['changelog'])
+                        )
+                    )
+            except Exception as e:
+                self.logger.warning('Can\'t write a notify about the update')
+
+                log_exception(self.logger, e)
 
             # Write new hash
             with open(hash_path, 'w') as f:
@@ -330,7 +337,7 @@ class Plugin:
     def check_platform(self):
         if not self.namespace.instance.config['build_platform'] in self.info['required_platforms']:
             self.logger.debug('check_platform() : Doesn\'t support current platform')
-            s()
+
             # write notify about the error
             self.namespace.notify_stack.append(
                 self.namespace.translations['core']['error_notify'].format(
@@ -419,8 +426,8 @@ class Plugin:
 
                 for op in rp_operations:
                     if check_version_compatibility(self.namespace.plugins.plugins[rp_name].info["version"].split('.'),
-                                                       rp_version_list,
-                                                       op):
+                                                   rp_version_list,
+                                                   op):
                         result = True
 
                 if not result:
@@ -472,15 +479,22 @@ class Plugin:
 
             try:
                 self.logger.debug('check_requirements() : Installing missing packages: ' + ', '.join(missing))
+
+                l_f = open(os.path.join(self.namespace.instance.logs_dir,
+                                        f'pip-{time.strftime("%Y-%m-%d_%H-%M", time.localtime())}-log.txt'),
+                           'w')
+
                 # run PIP to install the package
                 subprocess.check_call(
                     [sys.executable, '-m', 'pip', 'install', ] + [cmd for n, cmd in requirements_dict.items() if
                                                                   n in missing],
-                    stdout=subprocess.DEVNULL
+                    stdout=l_f
                 )
 
+                l_f.close()
+
             except Exception as e:
-                self.log_exception(e)
+                log_exception(self.logger, e)
 
                 # write notify about the error
                 self.namespace.notify_stack.append(
@@ -506,7 +520,7 @@ class Plugin:
             c = exec(compile(code, self.plugin_path, 'exec'), {'namespace': self.namespace, 'this': self})
             self.active = True
         except Exception as e:
-            self.log_exception(e)
+            log_exception(self.logger, e)
 
             # notify about the error
             self.namespace.notify_stack.append(
@@ -580,24 +594,32 @@ class Plugin:
 class PluginsList:
     """Helps work with the plugins list
 
-    :param plugins: Dict with the plugins
+    :ivar plugins: Dict with the plugins
     :type plugins: dict[str, Plugin] | None
-    :param plugins_dir: Path to the directory with the plugins
+    :ivar plugins_dir: Path to the directory with the plugins
     :type plugins_dir: str
-    :param namespace: The namespace instance
+    :ivar namespace: The namespace instance
     :type namespace: Namespace
-
     :ivar logger: Logger instance
     :type logger: logging.Logger
     """
 
     def __init__(self, plugins: dict[str, Plugin] | None = None, plugins_dir: str = os.path.join('.', 'plugins'),
                  namespace: Namespace | None = None):
+        """
+        :param plugins: Dict with the plugins
+        :type plugins: dict[str, Plugin] | None
+        :param plugins_dir: Path to the directory with the plugins
+        :type plugins_dir: str
+        :param namespace: The namespace instance
+        :type namespace: Namespace
+        """
+
         self.plugins = plugins if plugins is not None else {}
         self.plugins_dir = plugins_dir
         self.namespace = namespace if namespace is not None else Namespace()
 
-        self.logger = logging.Logger('EasyTl : PluginsList')
+        self.logger = logging.getLogger('EasyTl : PluginsList')
 
     def plugin_is_active(self, plugin_name: str) -> bool:
         """Checks if plugin is active
@@ -632,12 +654,6 @@ class PluginsList:
             # check if plugin has error
             if p.errored:
                 self.logger.error(f'Plugin {plugin_name} return an exception while executing it')
-
-                self.namespace.notify_stack.append(
-                    self.namespace.translations['core']['error_notify'].format(
-                        self.namespace.translations['core']['pluginapi']['plugin_execution_error'].format('')
-                    )
-                )
                 return False
 
             return True
@@ -645,19 +661,17 @@ class PluginsList:
 
     ####
 
-    def initialize_logger(self):
-        """(System) Initializes the logger to stdout output"""
-        self.logger.info('Enabling logging to the stdout')
-        for ah in self.namespace.instance.addition_handlers:
-            self.logger.addHandler(ah)
-
     def update_the_plugins(self):
+        """Updates the plugins"""
+
         self.logger.info('Updating the plugins')
 
+        # iterate the plugins
         for n, p in self.plugins.items():
             self.logger.info(f'Updating the plugin {n}')
 
-            self.activate_plugin(n, True)
+            # do only update
+            self.activate_plugin(n, only_update=True)
             if p.errored or not p.active:
                 self.logger.info(f'Plugin {n} doesn\'t updated')
                 continue

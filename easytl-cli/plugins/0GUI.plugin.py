@@ -7,13 +7,17 @@
 #   version = "1.0"
 #   update_link = "https://github.com/ftdot/EasyTl/raw/master/easytl-cli/plugins/0GUI.plugin.py"
 #   lang_links = [ [ "gui_en.toml", "https://github.com/ftdot/EasyTl/raw/master/easytl-cli/translations/gui_en.toml" ], [ "gui_ru.toml", "https://github.com/ftdot/EasyTl/raw/master/easytl-cli/translations/gui_ru.toml" ], [ "gui_uk.toml", "https://github.com/ftdot/EasyTl/raw/master/easytl-cli/translations/gui_uk.toml" ] ]
-#   requirements = "no requirements"
+#   requirements = [ [ "nest-asyncio", "nest_asyncio" ]  ]
 #   author = "ftdot (https://github.com/ftdot)"
 # end info
 
-from source.exceptions import PluginExitedError
+import nest_asyncio
+import asyncio
 
+from source.exceptions import PluginExitedError
 from PyQt5.QtCore import pyqtSlot
+
+nest_asyncio.apply()
 
 namespace.gui_enabled = True
 
@@ -40,9 +44,18 @@ namespace.gui.version = {
 @pyqtSlot(str)
 def execute_script_line(script_line):
     this.logger.info(f'execute: {script_line}')
+
     try:
         exec(script_line, {n: eval(n) for n in dir()})
     except Exception as e:
         this.log_exception(e)
+
+
+@pyqtSlot()
+def stop():
+    this.logger.info('Get stop signal from the GUI. Stopping the client')
+
+    asyncio.get_running_loop().run_until_complete(namespace.instance.client.disconnect())
+
 
 namespace.execute_script_line_signal.connect(execute_script_line)

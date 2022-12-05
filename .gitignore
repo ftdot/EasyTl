@@ -27,7 +27,7 @@ easytl-cli/test_creds.py
 easytl-cli/EasyTl.session
 easytl-cli/EasyTl.session-journal
 easytl-cli/EasyTl-TestInstance.session
-easytl-cli/EasyTl-TestInstance.session-journa
+easytl-cli/EasyTl-TestInstance.session-journal
 
 # SearchPlease plugin cache
 easytl-cli/.google-cookie
