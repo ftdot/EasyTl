@@ -8,6 +8,7 @@ import time
 from .namespace import Namespace
 from .argumentparser import ArgumentParser
 from .utils import VersionCheckOperation, check_version_compatibility, parse_plugin_information, log_exception
+from .exceptions import PluginExitedError
 
 from .filehash import get_file_hash, get_string_hash
 
@@ -519,6 +520,8 @@ class Plugin:
             # Execute a plugin
             c = exec(compile(code, self.plugin_path, 'exec'), {'namespace': self.namespace, 'this': self})
             self.active = True
+        except PluginExitedError:
+            pass
         except Exception as e:
             log_exception(self.logger, e)
 
