@@ -18,6 +18,7 @@ import sys
 import math  # for extend the calculator features
 
 from source.utils import log_exception
+from source.argumentparser import ArgumentParser, Argument, Cast
 
 # initialize the core translation
 namespace.translator.initialize('core')

@@ -27,3 +27,14 @@ class PluginExitedError(PluginError):
 
     def __init__(self, plugin_name, *args):
         super().__init__(plugin_name, 'is exited', *args)
+
+
+class ArgumentTypeCastingError(Exception):
+
+    def __init__(self, description, *args):
+        super().__init__(*args)
+
+        self.description = description
+
+    def __str__(self):
+        return self.description

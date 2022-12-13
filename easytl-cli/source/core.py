@@ -7,7 +7,7 @@ from getpass import getpass
 from telethon import TelegramClient, events
 from .namespace import Namespace
 from .translator import Translator
-from .argumentparser import ArgumentParser
+from .argumentparser import ArgumentParser, ArgumentParseError
 from . import pluginapi
 
 
@@ -268,7 +268,30 @@ class Instance:
         # because ArgumentParser is only preview in the v1.4.0 - it always return list without prefix
         # see v1.4.0 release (notes)
         if isinstance(command_func.ap, ArgumentParser):
-            p_args = command_func.ap.parse(args)
+            error, result = await command_func.ap.parse(args)
+            if error:
+                match result:
+                    case ArgumentParseError.TooLittleArguments:
+                        await self.send_unsuccess(
+                            event,
+                            self.namespace.translations['core']['argumentparser']['too_little_arguments']
+                        )
+
+                    case ArgumentParseError.TooMuchArguments:
+                        await self.send_unsuccess(
+                            event,
+                            self.namespace.translations['core']['argumentparser']['too_much_arguments']
+                        )
+
+                    case ArgumentParseError.IncorrectType:
+                        await self.send_unsuccess(
+                            event,
+                            self.namespace.translations['core']['argumentparser']['incorrect_type']
+                        )
+                return
+
+            p_args = result
+
         else:
             p_args = args[1:]
 

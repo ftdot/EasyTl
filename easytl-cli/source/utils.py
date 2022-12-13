@@ -10,7 +10,7 @@ utils_logger = logging.getLogger('EasyTl : Utils')
 #####
 
 
-class VersionCheckOperation(Enum):
+class VersionCheckOperation(str, Enum):
     EQUALS = 'equals'
     LESS_THAN = 'less than'
     GREATER_THAN = 'greater than'
