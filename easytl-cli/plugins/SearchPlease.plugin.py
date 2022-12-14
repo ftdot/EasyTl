@@ -68,7 +68,7 @@ def google_search_image_by_query(query: str, count: int = 1, output_dir: str = n
     page = request.urlopen(r)
     html = page.read().decode('utf-8')
 
-    # initalize BeautifulSoup
+    # initialize BeautifulSoup
     soup = BeautifulSoup(html, 'html.parser')
 
     # get elements
@@ -119,7 +119,8 @@ async def search(event, args):
     await namespace.instance.send_success(event,
                                           namespace.translations['searchplease']['command']['search']['query_opened'])
 
-namespace.pcommands[search.__name__].append('danger')  # mark this command as danger
+if search is not unsupported_platform:
+    namespace.pcommands[search.__name__].append('danger')  # mark this command as danger
 
 
 # sends the results of search from the Google to the telegram chat

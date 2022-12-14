@@ -68,7 +68,7 @@ async def trust(event, args: list[str]):
     # check if the message is exists
     if not any(msg):
         return
-    if (sender_id := (await msg[1].get_sender()).id) in namespace.pcommands[fname]:
+    if (sender_id := (await msg[0].get_sender()).id) in namespace.pcommands[fname]:
         await namespace.instance.send_success(
             event,
             namespace.translations['permissions']['command']['trust']['already_trusted_message']

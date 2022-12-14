@@ -1,13 +1,12 @@
 import os
 import sys
 import requests
-import pkg_resources
 import subprocess
 import logging
 import time
 from .namespace import Namespace
 from .argumentparser import ArgumentParser
-from .utils import VersionCheckOperation, check_version_compatibility, parse_plugin_information, log_exception
+from .utils import VersionCheckOperation, check_version_compatibility, parse_plugin_information, log_exception, install_requirements
 from .exceptions import PluginExitedError
 
 from .filehash import get_file_hash, get_string_hash
@@ -454,56 +453,18 @@ class Plugin:
             self.logger.debug('check_requirements() : Plugin hasn\'t requirements. Skip')
             return
 
-        requirements_names = []
-        requirements_dict = {}
+        try:
+            install_requirements(requirements, self.namespace.instance.logs_dir)
+        except Exception as e:
+            log_exception(self.logger, e)
 
-        # check for the new "install_requirement" feature
-        for value in requirements:
-            if isinstance(value, list):
-                requirements_names.append(value[0].lower())
-                requirements_dict[value[0]] = value[1]
-                continue
-            requirements_names.append(value_low := value.lower())
-            requirements_dict[value_low] = value
-
-        self.logger.debug('check_requirements() : Requirements are found. Checking it')
-        self.logger.debug('check_requirements() : Getting list of the installed packages')
-
-        # define missing packages
-        plugin_requirements = set(requirements_names)
-        installed = {pkg.key for pkg in pkg_resources.working_set}
-        missing = plugin_requirements - installed
-
-        # check if missing
-        if missing:
-            self.logger.debug('check_requirements() : Missing are found. Installing it')
-
-            try:
-                self.logger.debug('check_requirements() : Installing missing packages: ' + ', '.join(missing))
-
-                l_f = open(os.path.join(self.namespace.instance.logs_dir,
-                                        f'pip-{time.strftime("%Y-%m-%d_%H-%M", time.localtime())}-log.txt'),
-                           'w')
-
-                # run PIP to install the package
-                subprocess.check_call(
-                    [sys.executable, '-m', 'pip', 'install', ] + [cmd for n, cmd in requirements_dict.items() if
-                                                                  n in missing],
-                    stdout=l_f
+            # write notify about the error
+            self.namespace.notify_stack.append(
+                self.namespace.translations['core']['error_notify'].format(
+                    self.namespace.translations['core']['pluginapi']['requirements_error'].format(self.plugin_name)
                 )
-
-                l_f.close()
-
-            except Exception as e:
-                log_exception(self.logger, e)
-
-                # write notify about the error
-                self.namespace.notify_stack.append(
-                    self.namespace.translations['core']['error_notify'].format(
-                        self.namespace.translations['core']['pluginapi']['requirements_error'].format(self.plugin_name)
-                    )
-                )
-                self.errored = True
+            )
+            self.errored = True
 
     def execute(self):
         """Executes the plugin"""

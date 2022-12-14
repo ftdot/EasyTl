@@ -11,13 +11,7 @@
 #   author = "ftdot (https://github.com/ftdot)"
 # end info
 
-import nest_asyncio
-import asyncio
-
 from source.exceptions import PluginExitedError
-from PyQt5.QtCore import pyqtSlot
-
-nest_asyncio.apply()
 
 namespace.gui_enabled = True
 
@@ -26,6 +20,14 @@ if not namespace.instance.config['is_gui']:
     namespace.gui_enabled = False
     this.logger.info('GUI plugin core is disabled, because instance isn\'t GUI instance')
     raise PluginExitedError(this.plugin_name)
+
+# imports
+import nest_asyncio
+import asyncio
+
+nest_asyncio.apply()
+
+from PyQt5.QtCore import pyqtSlot
 
 namespace.translator.initialize('gui')
 
@@ -41,6 +43,7 @@ namespace.gui.version = {
 ####
 
 
+# executes script line from GUI Debug tab
 @pyqtSlot(str)
 def execute_script_line(script_line):
     this.logger.info(f'execute: {script_line}')
@@ -51,6 +54,7 @@ def execute_script_line(script_line):
         this.log_exception(e)
 
 
+# stops the instance from GUI
 @pyqtSlot()
 def stop():
     this.logger.info('Get stop signal from the GUI. Stopping the client')

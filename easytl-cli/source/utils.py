@@ -1,13 +1,18 @@
 import logging
 import tomllib
 import traceback
+import pkg_resources
+import time
+import os
+import sys
+import subprocess
 from enum import Enum
 
 PLUGIN_INFO_PREFIX = '# '
 utils_logger = logging.getLogger('EasyTl : Utils')
 
 
-#####
+####
 
 
 class VersionCheckOperation(str, Enum):
@@ -66,7 +71,7 @@ def _check_types(value1: int | str, value2: int | str) -> (bool, str | int, str 
         else (True, None, None)
 
 
-#####
+####
 
 
 def check_version_compatibility(
@@ -90,7 +95,7 @@ def check_version_compatibility(
     err, version1, version2 = _check_types(version1, version2)
 
     if err:
-        utils_logger.debug('function utils.check_version_compatibility() : _check_types() returned error')
+        utils_logger.debug('function check_version_compatibility() : _check_types() returned error')
         return False
 
     match operation:
@@ -133,7 +138,7 @@ def check_version_compatibility(
                 return False
 
         case _:
-            utils_logger.debug('function utils.check_version_compatibility() : Incorrect operation was set')
+            utils_logger.debug('function check_version_compatibility() : Incorrect operation was set')
             return False
 
     return True
@@ -152,7 +157,7 @@ def parse_plugin_information(file_lines: list[str]) -> (bool, dict):
     :rtype: (bool, dict)
     """
 
-    utils_logger.debug('utils.parse_plugin_information() : '
+    utils_logger.debug('parse_plugin_information() : '
                         'Start parsing the info lines')
 
     v2_format = False
@@ -165,25 +170,25 @@ def parse_plugin_information(file_lines: list[str]) -> (bool, dict):
             v2_format = True
             begin = True
 
-            utils_logger.debug('utils.parse_plugin_information() : '
+            utils_logger.debug('parse_plugin_information() : '
                                 'Found a begin of info line')
 
         elif line.startswith(PLUGIN_INFO_PREFIX + 'end info'):
             begin = False
 
-            utils_logger.debug('utils.parse_plugin_information() : '
+            utils_logger.debug('parse_plugin_information() : '
                                 'Found the end of info line')
         else:
             if begin:
-                utils_logger.debug('utils.parse_plugin_information() : '
+                utils_logger.debug('parse_plugin_information() : '
                                     'Add TOML line : ' + (toml_line := line.removeprefix(PLUGIN_INFO_PREFIX + ' ')))
                 toml_lines += toml_line + '\n'
 
-    utils_logger.debug('utils.parse_plugin_information() : '
+    utils_logger.debug('parse_plugin_information() : '
                         'Plugin is v2_format? : ' + 'yes' if v2_format else 'no')
 
     for line in toml_lines.split('\n'):
-        utils_logger.debug('utils.parse_plugin_information() : '
+        utils_logger.debug('parse_plugin_information() : '
                             'TOML LINES : ' + line)
 
     return v2_format, tomllib.loads(toml_lines)
@@ -209,3 +214,43 @@ def log_exception(logger: logging.Logger, e: Exception):
         logger.debug(line.removesuffix('\n'))
 
     logger.debug(error_splitter)
+
+
+####
+
+
+def install_requirements(requirements: list[str | list[str, str]], pip_logs_dir: str):
+    requirements_names = []
+    requirements_dict = dict()
+
+    # check for the new "install_requirement" feature
+    for value in requirements:
+        if isinstance(value, list):
+            requirements_names.append(value[0].lower())
+            requirements_dict[value[0]] = value[1]
+            continue
+        requirements_names.append(value_low := value.lower())
+        requirements_dict[value_low] = value
+
+    utils_logger.debug('check_requirements() : Requirements are found. Checking it')
+    utils_logger.debug('check_requirements() : Getting list of the installed packages')
+    
+    # define missing packages
+    plugin_requirements = set(requirements_names)
+    installed = {pkg.key for pkg in pkg_resources.working_set}
+    missing = plugin_requirements - installed
+        
+    if missing:
+        utils_logger.debug('check_requirements() : Installing missing packages: ' + ', '.join(missing))
+
+        l_f = open(os.path.join(pip_logs_dir,
+                                f'pip-{time.strftime("%Y-%m-%d_%H-%M", time.localtime())}-log.txt'),
+                   'w')
+
+        # run PIP to install the package
+        subprocess.check_call(
+            [sys.executable, '-m', 'pip', 'install', ] + [cmd for n, cmd in requirements_dict.items() if n in missing],
+	    stdout=l_f
+        )
+
+        l_f.close()
