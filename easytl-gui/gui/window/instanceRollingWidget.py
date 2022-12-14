@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'I:\Projects\Python\EasyTl\easytl-gui\ui\instanceRollingWidget.ui'
+# Form implementation generated from reading ui file 'J:\Projects\Python\EasyTl\easytl-gui\ui\instanceRollingWidget.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.7
 #

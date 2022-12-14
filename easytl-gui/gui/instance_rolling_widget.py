@@ -182,16 +182,19 @@ class InstanceRollingWidget(QtWidgets.QWidget):
 
         self.logger.debug('WorkingInstance created')
 
-        # set up the logsEditStatus handler
-        self.logger.debug('Creating TextEditHandler for the logsEditStatus')
-        self.logsEditStatus_handler = TextEditHandler()
-        self.logsEditStatus_handler.initialize(self.working_instance.instance_config['logging_level'])
-        self.logsEditStatus_handler.flush_signal.connect(self.write_buffer_logsEditStatus)
+        try:
+
+            # set up the logsEditStatus handler
+            self.logger.debug('Creating TextEditHandler for the logsEditStatus')
+            self.logsEditStatus_handler = TextEditHandler(self.working_instance.instance_config['logging_level'])
+            self.logsEditStatus_handler.flush_signal.connect(self.write_buffer_logsEditStatus)
+
+        except Exception as e:
+            __import__('traceback').print_exception(e)
 
         # set up the logsEditDebug handler
         self.logger.debug('Creating TextEditHandler for the logsEditDebug')
-        self.logsEditDebug_handler = TextEditHandler()
-        self.logsEditDebug_handler.initialize(logging.DEBUG)
+        self.logsEditDebug_handler = TextEditHandler(logging.DEBUG)
         self.logsEditDebug_handler.flush_signal.connect(self.write_buffer_logsEditDebug)
 
         self.logger.debug('Initializing WorkingInstance')
@@ -225,4 +228,4 @@ class InstanceRollingWidget(QtWidgets.QWidget):
 
     def runCodeBtn_clicked(self):
         """(System) This method calls on RUN (DEBUG tab) button clicked"""
-        self.working_instance.work_instance.namespace.execute_script_line_signal.emit(self.ui.codeLine.text())
+        self.working_instance.execute_script_line_signal.emit(self.ui.codeLine.text())
