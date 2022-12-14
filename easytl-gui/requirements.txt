@@ -1,4 +1,0 @@
-toml
-pyqt5
-qt-material
-PyQt5Designer

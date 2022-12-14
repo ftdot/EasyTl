@@ -1,13 +1,6 @@
 # byte-compiled
-build/__pycache__/
-
-easytl-cli/__pycache__/
-easytl-cli/source/__pycache__/
-
-easytl-gui/__pycache__/
-easytl-gui/gui/__pycache__/
-easytl-gui/gui/window/__pycache__/
-easytl-gui/sourcegui/__pycache__/
+etlconsole/__pycache__/
+etlconsole/source/__pycache__/
 
 # PyCharm files
 .idea/
@@ -15,43 +8,27 @@ easytl-gui/sourcegui/__pycache__/
 # EasyTl-CLI files
 
 # EasyTl cache folder
-easytl-cli/cache/*
-!easytl-cli/cache/.gitkeep
+etlconsole/cache/*
+!etlconsole/cache/.gitkeep
 
 # EasyTl logs folder
-easytl-cli/logs/*
-!easytl-cli/logs/.gitkeep
+etlconsole/logs/*
+!etlconsole/logs/.gitkeep
 
 # creds for test
-easytl-cli/test_creds.py
-easytl-cli/EasyTl.session
-easytl-cli/EasyTl.session-journal
-easytl-cli/EasyTl-TestInstance.session
-easytl-cli/EasyTl-TestInstance.session-journal
+etlconsole/test_creds.py
+etlconsole/EasyTl.session
+etlconsole/EasyTl.session-journal
+etlconsole/EasyTl-TestInstance.session
+etlconsole/EasyTl-TestInstance.session-journal
 
 # SearchPlease plugin cache
-easytl-cli/.google-cookie
+etlconsole/.google-cookie
 
 # already installed
-easytl-cli/run.bat
-easytl-cli/run.sh
-easytl-cli/ffmpeg/
+etlconsole/run.bat
+etlconsole/run.sh
+etlconsole/ffmpeg/
 
-# EasyTl-GUI files
-
-# builded files
-easytl-gui/bin/*
-!easytl-gui/bin/.gitkeep
-easytl-gui/logs/*
-!easytl-gui/logs/.gitkeep
-easytl-gui/instances/*
-!easytl-gui/instances/list.toml
-
-# my creds
-easytl-gui/*.session
-easytl-gui/*.session-journal
-
-# other
-easytl-build/
 test/
 IGNR_*
