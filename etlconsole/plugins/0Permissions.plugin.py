@@ -12,6 +12,8 @@
 #   changelog = [ "Support for the new 1.4.0 version" ]
 # end info
 
+from source.argumentparser import ArgumentParser, Argument
+
 namespace.translator.initialize('permissions')
 
 
@@ -43,15 +45,14 @@ async def call_w_permissions(func, event, args: list[str]):
 
 
 # trusts some command to the user that message was replied
-@this.command(namespace.translations['permissions']['command']['trust']['names'])
-async def trust(event, args: list[str]):
-    if not len(args) > 1:
-        return
-
+@this.command(namespace.translations['permissions']['command']['trust']['names'],
+              ap=ArgumentParser(this, [Argument('command_name'), ])
+              )
+async def trust(event, args):
     # check if first argument is exists in the registered commands
-    if not args[1] in namespace.commands:
+    if args.command_name not in namespace.commands:
         return
-    fname = namespace.commands[args[1]].__name__
+    fname = namespace.commands[args.command_name].__name__
 
     # check if the command is danger or no
     if 'danger' in namespace.pcommands[fname]:
@@ -61,13 +62,13 @@ async def trust(event, args: list[str]):
         )
         return
 
+    if not event.reply_to:
+        return
+
     # find the message that was replied to
     msg = [msg async for msg in namespace.instance.client.iter_messages(event.chat_id, 25)
                     if msg.id == event.reply_to.reply_to_msg_id]
 
-    # check if the message is exists
-    if not any(msg):
-        return
     if (sender_id := (await msg[0].get_sender()).id) in namespace.pcommands[fname]:
         await namespace.instance.send_success(
             event,

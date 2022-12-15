@@ -10,6 +10,9 @@ too_little_arguments = "Too little arguments are passed in to the command"
 too_much_arguments = "Too much arguments are passed in to the command"
 incorrect_type = "Incorrect argument type passed in to the command"
 
+boolcast_true_list = ['yes', 'yea', '+', 'true']
+boolcast_false_list = ['no', 'nop', '-', 'false']
+
 [pluginapi]
 send_request_error = "while sending a check request of plugin {0}"
 download_languages_error = "while dowloading the plugin languages {0}"

@@ -20,17 +20,18 @@ from urllib.parse import quote
 from googlesearch import search as gsearch
 from asyncio import sleep as async_sleep
 from bs4 import BeautifulSoup
+from source.argumentparser import ArgumentParser, Argument, Cast
 
 # initialize the searchplease translations
 namespace.translator.initialize('searchplease')
 
 # the commandline to open new tab in the browser
 browsers = {
-    'Chrome': 'start chrome.exe ',
-    'Opera': 'start "C:\\Program Files (x86)\\Opera\\launcher.exe" --ran-launcher --remote ',
-    'OperaGX': f'start "C:\\Users\\{os.getlogin()}\\AppData\\Local\\Programs\\Opera GX\\launcher.exe" --ran-launcher --remote ',
-    'Edge': 'start microsoft-edge:',
-    'FireFox': 'start firefox.exe -new-tab',
+    'Chrome': 'chrome.exe ',
+    'Opera': '"C:\\Program Files (x86)\\Opera\\launcher.exe" --ran-launcher --remote ',
+    'OperaGX': f'"C:\\Users\\{os.getlogin()}\\AppData\\Local\\Programs\\Opera GX\\launcher.exe" --ran-launcher --remote ',
+    'Edge': 'microsoft-edge:',
+    'FireFox': 'firefox.exe -new-tab',
     'Default': 'start '
 }
 # search engines links
@@ -51,6 +52,9 @@ search_line = f'{browsers[find_browser]}{search_engines[search_engine]}'
 
 # headers for the google_search_image_by_query
 gsibq_headers = {'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:47.0) Gecko/20100101 Firefox/47.0', }
+
+
+####
 
 
 async def unsupported_platform(event, _):
@@ -106,16 +110,17 @@ def google_search_image_by_query(query: str, count: int = 1, output_dir: str = n
 
     return counter, images_downloaded
 
+####
+
 
 # opens the browser tab with the query
-@this.command(namespace.translations['searchplease']['command']['search']['names'], static_pname='search')
+@this.command(namespace.translations['searchplease']['command']['search']['names'],
+              ap=ArgumentParser(this, [Argument('search_string'), ]),
+              static_pname='search')
 @this.only('windows', alt=unsupported_platform)
 async def search(event, args):
-    if not len(args) > 1:
-        return
-
     # Execute the commandline to open the query in the browser
-    os.system(search_line + quote(' '.join(args)))
+    os.system(search_line + quote(args.search_string))
     await namespace.instance.send_success(event,
                                           namespace.translations['searchplease']['command']['search']['query_opened'])
 
@@ -124,27 +129,25 @@ if search is not unsupported_platform:
 
 
 # sends the results of search from the Google to the telegram chat
-@this.command(namespace.translations['searchplease']['command']['gsearch']['names'])
+@this.command(namespace.translations['searchplease']['command']['gsearch']['names'],
+              ap=ArgumentParser(this, [Argument('search_string', default='<<reply_to>>'),
+                                       Argument('number', Cast.IntCast, 1)])
+              )
 async def gsearch_(event, args):
 
-    # if first number is numeric - type-cast it into int and use it as number of result
-    num = 1
-    if args[1].isnumeric():
-        num = int(args[1])
+    if args.search_string == '<<reply_to>>':
+        if not event.reply_to:
+            return
 
-    if event.reply_to:
         # find the "reply to" message
         msg = [msg async for msg in namespace.instance.client.iter_messages(event.chat_id, 25)
                         if msg.id == event.reply_to.reply_to_msg_id]
         text = msg[0].message
     else:
-        if not len(args) > 1:
-            return
-
-        text = ' '.join(args[2:]) if num > 1 else ' '.join(args[1:])
+        text = args.search_string
 
     # Send query to the Google
-    for url in gsearch(text, stop=num, num=num):
+    for url in gsearch(text, stop=args.number, num=args.number):
         await namespace.instance.send_success(
             event,
             namespace.translations['searchplease']['command']['gsearch']['link_found'].format(url)
@@ -154,24 +157,22 @@ async def gsearch_(event, args):
     namespace.temp_files.append(os.path.join(namespace.instance.install_dir, '.google-cookie'))
 
 
-@this.command(namespace.translations['searchplease']['command']['gimgsearch']['names'])
+@this.command(namespace.translations['searchplease']['command']['gimgsearch']['names'],
+              ap=ArgumentParser(this, [Argument('search_string', default='<<reply_to>>'),
+                                       Argument('number', Cast.IntCast, 1)])
+              )
 async def gimgsearch(event, args):
 
-    # if first number is numeric - type-cast it into int and use it as number of result
-    count = 1
-    if args[1].isnumeric():
-        count = int(args[1])
+    if args.search_string == '<<reply_to>>':
+        if not event.reply_to:
+            return
 
-    if event.reply_to:
         # find the "reply to" message
         msg = [msg async for msg in namespace.instance.client.iter_messages(event.chat_id, 25)
                         if msg.id == event.reply_to.reply_to_msg_id]
         text = msg[0].message
     else:
-        if not len(args) > 1:
-            return
-
-        text = ' '.join(args[2:]) if count > 1 else ' '.join(args[1:])
+        text = args.search_string
 
     # send message about success results
     await namespace.instance.send_success(
@@ -180,7 +181,7 @@ async def gimgsearch(event, args):
     )
 
     # send founded images
-    for path in google_search_image_by_query(text, count)[1]:
+    for path in google_search_image_by_query(text, args.number)[1]:
         await namespace.instance.client.send_file(event.chat_id, path)
         await async_sleep(0.2)
 

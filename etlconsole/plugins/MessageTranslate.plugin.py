@@ -12,6 +12,7 @@
 #   changelog = [ "Support for the 1.4.0 version" ]
 # end info
 
+from source.argumentparser import ArgumentParser, Argument
 from source.exceptions import PluginRequiresError
 
 if 'translatelib' not in dir(namespace):
@@ -22,25 +23,39 @@ if 'translatelib' not in dir(namespace):
 
 namespace.translator.initialize('MessageTranslate')
 
+# string with the available languages to translate
+languages_string = '\n'.join(
+    [f'`{lang[0]}` -- {lang[1]}' for lang in namespace.translatelib.languages.items()]
+)
 
-@this.command(namespace.translations['MessageTranslate']['command']['gtranslate']['names'])
+
+@this.command(namespace.translations['MessageTranslate']['command']['gtranslate']['names'],
+              ap=ArgumentParser(this, [Argument('message', default='<<reply_to>>'),
+                                       Argument('translate_to', default=namespace.translator.lang)])
+              )
 async def gtranslate(event, args):
-    translate_to = namespace.translator.lang
-
-    # check the arguments
-    if len(args) > 1:
-        # check if first argument in the language code
-        if args[1] in namespace.translatelib.languages:
-            translate_to = args[1]  # set translate to language ...
-
     # check if the message is "reply to"
-    if event.reply_to:
+    if args.message == '<<reply_to>>':
+        if not event.reply_to:
+            return
+
         # find the "reply to" message
         msg = [msg async for msg in namespace.instance.client.iter_messages(event.chat_id, 25)
                         if msg.id == event.reply_to.reply_to_msg_id]
         text = msg[0].message
     else:
-        text = ' '.join(args[2:] if len(args) > 1 else args[1:]) if translate_to else ' '.join(args)
+        text = args.message
+
+    translate_to = args.translate_to.lower()
+
+    if translate_to not in namespace.translatelib.languages:
+        await namespace.instance.send_unsuccess(
+            event,
+            namespace.translations['MessageTranslate']['command']['gtranslate']['invalid_language'].format(
+                args.translate_to
+            )
+        )
+        return
 
     # send translated message
     await namespace.instance.send_success(
@@ -56,8 +71,6 @@ async def available_langs(event, _):
     await namespace.instance.send_success(
         event,
         namespace.translations['MessageTranslate']['command']['available_langs']['message'].format(
-            '\n'.join(
-                [f'`{lang[0]}` -- {lang[1]}' for lang in namespace.translatelib.languages.items()]
-            )
+            languages_string
         )
     )

@@ -109,7 +109,9 @@ class DictCast(ArgTypeCast):
         :return: Type-casted dict object
         :rtype: dict[Any, Any]
         """
+
         temp_cast = string.replace('==', self.temp_char)
+
         return {
             self.key_type.typecast((kvs := kv.split(self.kv_splitter))[0]):
                 self.values_type.typecast(kvs[1].replace(self.temp_char, '=='))
@@ -168,21 +170,38 @@ class Cast:
     StrCast = ArgTypeCast(str)
     IntCast = ArgTypeCast(int)
     FloatCast = ArgTypeCast(float)
-    BoolCast = ArgTypeCast(bool)
+    BoolCast = BoolCast()
+
+    @staticmethod
+    def setup_bool_cast_translations(true_list: list[str], false_list: list[str]):
+        """Set up the BoolCast type-cast translations
+
+        :param true_list: List with the true string variants
+        :type true_list: list[str]
+        :param false_list: List with the false string variants
+        :type false_list: list[str]
+        """
+
+        Cast.BoolCast = BoolCast(true_list, false_list)
 
 
-class ListCastEnum:
+class ListCast:
     ListStrCast = ListCast()
     ListIntCast = ListCast(values_type=Cast.IntCast)
     ListFloatCast = ListCast(values_type=Cast.FloatCast)
     ListBoolCast = ListCast(values_type=Cast.BoolCast)
 
 
-class ListDictEnum:
+class DictCast:
     DictStrStrCast = DictCast()
     DictStrIntCast = DictCast(values_type=Cast.IntCast)
     DictStrFloatCast = DictCast(values_type=Cast.FloatCast)
     DictStrBoolCast = DictCast(values_type=Cast.BoolCast)
+
+    DictIntStrCast = DictCast(key_type=Cast.IntCast)
+    DictIntIntCast = DictCast(key_type=Cast.IntCast, values_type=Cast.IntCast)
+    DictIntFloatCast = DictCast(key_type=Cast.IntCast, values_type=Cast.FloatCast)
+    DictIntBoolCast = DictCast(key_type=Cast.IntCast, values_type=Cast.BoolCast)
 
 
 class Argument:
@@ -223,7 +242,7 @@ class Argument:
         """
 
         try:
-            return False, self.arg_type.typecast(input_arg)
+            return False, self.arg_type.typecast(input_arg) if input_arg != '' else self.default
         except Exception as e:
             return True, e
 
@@ -256,16 +275,26 @@ class ArgumentParser:
             self.position_arguments += 1
 
     async def parse(self, args: list[str]) -> (bool, Namespace | ArgumentParseError):
-        self.logger.debug('Logger called with arguments list: ' + ', '.join(args))
+        """(System) Parses the default EasyTl arguments system to new
+
+        :param args: List with the arguments
+        :type args: list[str]
+
+        :return: Namespace with the parsed arguments
+        :rtype: (bool, Namespace | ArgumentParseError)
+        """
+
+        self.logger.debug('ArgumentParser called with arguments list: ' + ', '.join(args))
 
         # initialize the variables
         output_args = Namespace()
         output_args.PREFIX = args[0]
         output_args.CMD = args[1]
-        input_str = ' '.join(args[2:]) + '\00'
+        input_str = ' '.join(args[2:]) + '\00' if len(args) > 2 else ''
 
         # initialize the variables to first parse stage
         str_open = False
+        str_open_char = None
         temp_str = ''
         temp_args = []
         escaped = False
@@ -285,10 +314,16 @@ class ArgumentParser:
                     escaped = True
 
                 case "'" | '"':
+                    if str_open_char is not None and str_open_char != s:
+                        temp_str += s
+                        continue
+
                     if str_open:
                         str_open = False
+                        str_open_char = None
                     else:
                         str_open = True
+                        str_open_char = s
 
                 case ' ':
                     # check for the open string
@@ -305,22 +340,33 @@ class ArgumentParser:
                 case _:
                     temp_str += s
 
+        # check for the positional arguments
         if len(temp_args) < self.position_arguments:
             self.logger.debug('Too little arguments')
             return True, ArgumentParseError.TooLittleArguments
 
+        # check for arguments sum length
         if len(temp_args) > self.position_arguments + self.default_arguments:
             self.logger.debug('Too much arguments')
             return True, ArgumentParseError.TooMuchArguments
 
+        # initialize the default arguments
+        for arg in self.arguments:
+            if arg.default:
+                setattr(output_args, arg.arg_name, arg.default)
+
+        # type-cast & define the arguments
         for arg, targ in zip(self.arguments, temp_args):
+            # type-cast the argument
             error, result = arg.typecast(targ)
 
+            # check for the error
             if error:
                 self.logger.debug('can\'t cast the argument')
                 log_exception(self.logger, result)
                 return True, ArgumentParseError.IncorrectType
 
+            # define variable
             setattr(output_args, arg.arg_name, result)
             
         return False, output_args

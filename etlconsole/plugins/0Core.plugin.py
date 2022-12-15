@@ -20,11 +20,12 @@ import math  # for extend the calculator features
 from source.utils import log_exception
 from source.argumentparser import ArgumentParser, Argument, Cast
 
-# initialize the core translation
 namespace.translator.initialize('core')
 
-# get the prefixes
-namespace.instance.prefixes = namespace.translations['core']['prefixes']
+# variables
+
+namespace.instance.prefixes = namespace.translations['core']['prefixes']  # get the prefixes
+namespace.temp_files = []  # list with the temp (cache) files
 
 # write some config values to the namespace
 namespace.platform  = namespace.instance.config['build_platform']
@@ -33,12 +34,6 @@ namespace.version   = namespace.instance.config['version']
 # variables for the commands
 logs_dir   = namespace.instance.logs_dir
 cache_dir  = namespace.instance.cache_dir
-
-# list with the temp (cache) files
-namespace.temp_files = []
-
-# is instance running indicator
-namespace.is_run = True
 
 # check if namespace.instance_file is set
 namespace.instance_file = namespace.instance_file if 'instance_file' in dir(namespace) else None
@@ -54,6 +49,11 @@ if sys.platform == 'win32':
 elif sys.platform == 'linux':
     if os.system('dpkg -l ffmpeg') == 0:
         namespace.ffmpeg = True
+
+
+# set up the bool cast translations
+Cast.setup_bool_cast_translations(namespace.translations['core']['argumentparser']['boolcast_true_list'],
+                                  namespace.translations['core']['argumentparser']['boolcast_false_list'])
 
 
 # stop the userbot
@@ -75,14 +75,6 @@ async def stop(event, _):
 @this.command(namespace.translations['core']['command']['restart']['names'])
 async def restart(event, _):
     this.logger.info('Restarting the instance')
-
-    if namespace.gui_enabled:
-        this.logger.info('Operation unsupported')
-        await namespace.instance.send(
-            event,
-            namespace.instance.f_warning(namespace.translations['core']['unsupported'])
-        )
-        return
 
     if namespace.instance_file is None:
         this.logger.info('namespace.instance_file not set. Can\'t do restart')
@@ -139,20 +131,23 @@ async def calculate(event, expr):
 
 
 # calculates the expression
-@this.command(namespace.translations['core']['command']['calc']['names'])
+@this.command(namespace.translations['core']['command']['calc']['names'],
+              ap=ArgumentParser(this, [Argument('expr', default='<<reply_to>>'), ])
+              )
 async def calc(event, args):
 
-    if event.reply_to:
-        # find the "replied to" message
-        msg = [msg async for msg in namespace.instance.client.iter_messages(event.chat_id, 25)
-                        if msg.id == event.reply_to.reply_to_msg_id]
+    if args.expr == '<<reply_to>>':
+        if event.reply_to:
+            # find the "replied to" message
+            msg = [msg async for msg in namespace.instance.client.iter_messages(event.chat_id, 25)
+                            if msg.id == event.reply_to.reply_to_msg_id]
 
-        # calculate the "replied to" message text
-        await calculate(event, msg[0].message)
-        return
-
-    # calculate the arguments
-    await calculate(event, ' '.join(args[1:]))
+            # calculate the "replied to" message text
+            await calculate(event, msg[0].message)
+            return
+    else:
+        # calculate the arguments
+        await calculate(event, args.expr)
 
 namespace.pcommands[calc.__name__].append('danger')  # mark this command as danger
 

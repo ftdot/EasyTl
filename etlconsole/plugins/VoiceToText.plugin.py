@@ -13,6 +13,7 @@
 # end info
 
 import os
+from source.argumentparser import ArgumentParser, Argument, Cast
 from source.exceptions import PluginRequiresError
 
 if 'sttlib' not in dir(namespace):
@@ -23,10 +24,6 @@ if 'sttlib' not in dir(namespace):
 
 namespace.translator.initialize('VoiceToText')
 
-# settings
-
-AUTO_STT = False  # on any voice message (only PM) converts it to the text
-
 # advanced settings
 
 temp_file_path = os.path.join(namespace.instance.cache_dir, 'temp.')  # keep the dot at the end!
@@ -34,63 +31,49 @@ temp_file_path = os.path.join(namespace.instance.cache_dir, 'temp.')  # keep the
 ####
 
 
-@this.command(namespace.translations['VoiceToText']['command']['vtt']['names'])
+@this.command(namespace.translations['VoiceToText']['command']['vtt']['names'],
+              ap=ArgumentParser(this, [Argument('translate_from', default=namespace.translator.lang),
+                                       Argument('offline', Cast.BoolCast, default=False)])
+              )
 async def vtt(event, args):
-    translate_from = namespace.translator.lang
-    offline = False
-
-    # check the arguments
-    if len(args) > 1:
-
-        # check for the offline mode argument
-        if args[1] in namespace.translations['VoiceToText']['command']['vtt']['offline_mode_names']:
-            offline = True
-        else:
-            translate_from = args[1]  # set translate to language ...
-
-    if len(args) > 2:
-        if args[2] in namespace.translations['VoiceToText']['command']['vtt']['offline_mode_names']:
-            offline = True
-
-        # Don't look at this ^)
-        if args[2] == 'whowon':
-            await namespace.instance.send_success(event, 'Ukraine is won ^)')
-            return
-
     # check if the message is "reply to"
-    if event.reply_to:
-        # find the "reply to" message
-        msg = [msg async for msg in namespace.instance.client.iter_messages(event.chat_id, 25)
-                        if msg.id == event.reply_to.reply_to_msg_id]
-        msg = msg[0]
-
-        if not msg.media:
-            await namespace.instance.send_unsuccess(
-                event,
-                namespace.translations['VoiceToText']['command']['vtt']['no_media_message']
-            )
-            return
-
-        if not (mime_type := msg.media.document.mime_type.split('/'))[0] == 'audio':
-            await namespace.instance.send_unsuccess(
-                event,
-                namespace.translations['VoiceToText']['command']['vtt']['isnt_audio_message']
-            )
-            return
-
-        await msg.download_media(temp_file_path+mime_type[1])
-
+    if not event.reply_to:
         await namespace.instance.send_unsuccess(
             event,
-            namespace.translations['VoiceToText']['command']['vtt']['sphinx_success_message' if offline else 'google_success_message']
-            .format(
-                namespace.sttlib.recognize_speech_from_file(temp_file_path+mime_type[1], offline, translate_from)
-            )
+            namespace.translations['VoiceToText']['command']['vtt']['no_reply_to_message']
         )
         return
 
-    await namespace.instance.send_unsuccess(
+    # find the "reply to" message
+    msg = [msg async for msg in namespace.instance.client.iter_messages(event.chat_id, 25)
+                    if msg.id == event.reply_to.reply_to_msg_id]
+    msg = msg[0]
+
+    if not msg.media:
+        await namespace.instance.send_unsuccess(
+            event,
+            namespace.translations['VoiceToText']['command']['vtt']['no_media_message']
+        )
+        return
+
+    # check if message media content is audio
+    if not (mime_type := msg.media.document.mime_type.split('/'))[0] == 'audio':
+        await namespace.instance.send_unsuccess(
+            event,
+            namespace.translations['VoiceToText']['command']['vtt']['isnt_audio_message']
+        )
+        return
+
+    # download the message media
+    await msg.download_media(temp_file_path+mime_type[1])
+
+    # send message with the recognized speech
+    await namespace.instance.send_success(
         event,
-        namespace.translations['VoiceToText']['command']['vtt']['no_reply_to_message']
+        namespace.translations['VoiceToText']['command']['vtt']['sphinx_success_message' if offline else 'google_success_message']
+        .format(
+            namespace.sttlib.recognize_speech_from_file(temp_file_path+mime_type[1], offline, translate_from)
+        )
     )
     return
+

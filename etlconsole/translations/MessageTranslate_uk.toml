@@ -2,6 +2,7 @@
 [command.gtranslate]
 names = [ "gtranslate", "gtrans", "перевести", "перекласти" ]
 translated_message = "Текст був переклан:\n- `{0}`"
+invalid_language = "Мова `{0}` недійсна!"
 
 [command.available_langs]
 names = [ "available-langs", "knownlangs", "доступные-языки", "доступязыки", "доступні-мови" ]

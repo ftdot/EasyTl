@@ -1,8 +1,0 @@
-
-[get_phone_number]
-title = 'Authorize to Telegram'
-prompt = 'Enter your phone number:'
-
-[get_code]
-title = 'Authorize to Telegram'
-prompt = 'Enter recieved code:'
