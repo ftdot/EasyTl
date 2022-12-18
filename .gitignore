@@ -1,6 +1,6 @@
 # byte-compiled
-etlconsole/__pycache__/
-etlconsole/source/__pycache__/
+src/__pycache__/
+src/source/__pycache__/
 
 # PyCharm files
 .idea/
@@ -8,27 +8,24 @@ etlconsole/source/__pycache__/
 # EasyTl-CLI files
 
 # EasyTl cache folder
-etlconsole/cache/*
-!etlconsole/cache/.gitkeep
+src/cache/*
+!src/cache/.gitkeep
 
 # EasyTl logs folder
-etlconsole/logs/*
-!etlconsole/logs/.gitkeep
+src/logs/*
+!src/logs/.gitkeep
 
 # creds for test
-etlconsole/test_creds.py
-etlconsole/EasyTl.session
-etlconsole/EasyTl.session-journal
-etlconsole/EasyTl-TestInstance.session
-etlconsole/EasyTl-TestInstance.session-journal
+src/test_creds.py
+src/*.session
 
 # SearchPlease plugin cache
-etlconsole/.google-cookie
+src/.google-cookie
 
 # already installed
-etlconsole/run.bat
-etlconsole/run.sh
-etlconsole/ffmpeg/
+src/run.bat
+src/run.sh
+src/ffmpeg/
 
 test/
 IGNR_*
