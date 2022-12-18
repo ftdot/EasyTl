@@ -1,6 +1,13 @@
 
 
 class PluginError(Exception):
+    """Class for all the plugins errors
+
+    :ivar plugin_name: Name of the plugin raised exception
+    :type plugin_name: str
+    :ivar description: Description of the exception
+    :type description: str
+    """
 
     def __init__(self, plugin_name: str, description: str, *args):
         """
@@ -14,24 +21,33 @@ class PluginError(Exception):
         self.description  = description
 
     def __str__(self):
-        return f'Plugin "{self.plugin_name}" '+self.description
+        return f'Plugin "{self.plugin_name}" ' + self.description
 
 
 class PluginRequiresError(PluginError):
 
-    def __init__(self, plugin_name, required, *args):
+    def __init__(self, plugin_name: str, required: str, *args):
         super().__init__(plugin_name, f'requires the "{self.required}" to work', *args)
 
 
 class PluginExitedError(PluginError):
 
-    def __init__(self, plugin_name, *args):
+    def __init__(self, plugin_name: str, *args):
         super().__init__(plugin_name, 'is exited', *args)
 
 
 class ArgumentTypeCastingError(Exception):
+    """Error for the ArgumentParser's type-casts
 
-    def __init__(self, description, *args):
+    :ivar description: Description of the error
+    :type description: str
+    """
+
+    def __init__(self, description: str, *args):
+        """
+        :param description: Description of the error
+        :type description: str
+        """
         super().__init__(*args)
 
         self.description = description

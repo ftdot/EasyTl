@@ -113,7 +113,6 @@ class Instance:
         self.namespace.commands      = {}
         self.namespace.pcommands     = {}
         self.namespace.notify_stack  = []
-        self.namespace.on_run        = lambda: None
 
         # load the plugins
         plugins_list = [pluginapi.Plugin(os.path.basename(f)[:-10], os.path.join(self.plugins_dir, f))
@@ -233,8 +232,6 @@ class Instance:
         if self.config['version']['beta']:
             self.logger.info('This is a beta version. If you have some problems with EasyTl, '
                              'inform about it there: https://github.com/ftdot/EasyTl/issues')
-
-        self.namespace.on_run()
         
         if run_until_disconnected:
             self.client.run_until_disconnected()
@@ -265,8 +262,7 @@ class Instance:
         command_func = self.namespace.commands[args[1]]
 
         # parsing the arguments or use arguments list without prefix
-        # because ArgumentParser is only preview in the v1.4.0 - it always return list without prefix
-        # see v1.4.0 release (notes)
+        # WARNING! Raw arguments list without prefix will be deleted in 1.5.1 releases
         if isinstance(command_func.ap, ArgumentParser):
             error, result = await command_func.ap.parse(args)
             if error:

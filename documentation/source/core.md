@@ -1,7 +1,7 @@
 # EasyTl documentation
 
 ## source.core
-`source/core.py` is a core file with all main functional. At now is released only `Instance` class.
+`source/core.py` is a core file with all main functional. At now is released only `Instance` class
 
 File: [src/source/core.py](../../src/source/core.py)
 
@@ -9,7 +9,7 @@ File: [src/source/core.py](../../src/source/core.py)
 ```python
 class Instance()
 ```
-`Instance` class is providing an instance of EasyTl userbot. This class is main for all.
+`Instance` class is providing an instance of EasyTl userbot. This class is main for all
 
 Example of usage:
 ```python
@@ -44,7 +44,7 @@ logs_dir     = os.path.join(install_dir, 'logs')
 win_ffmpeg_dir   = os.path.join(install_dir, 'ffmpeg', 'ffmpeg-master-latest-win64-gpl-shared')
 
 log_level          = logging.DEBUG
-console_log_level  = logging.INFO  # Set this to the logging.DEBUG if you want to see all the debug information
+console_log_level  = logging.INFO  # set this to the logging.DEBUG if you want to see all the debug information
 
 ####
 
@@ -57,10 +57,11 @@ if __name__ == '__main__':
 
     main_instance.namespace.enable_plugins_auto_update  = enable_plugins_auto_update
     main_instance.namespace.ffmpeg_dir                  = win_ffmpeg_dir
-    main_instance.namespace.instance_file               = os.path.abspath(__file__)
+    main_instance.namespace.instance_file               = os.path.abspath(__file__)  # it is for restart feature
 
-    main_instance.initialize()
+    main_instance.initialize()  # initialize instance
 
+    # Support for the restart
     if len(sys.argv) == 2:
         if sys.argv[1] == 'restart':  # check if EasyTl started from the restart command
             # add notify about the restart
@@ -73,14 +74,14 @@ if __name__ == '__main__':
                 )
             )
 
-    main_instance.run()
+    main_instance.run()  # run instance
 
 ```
 
 #### Parameters + variables:
 
 ##### Instance.instance\_name `str`
-Name of the instance.
+Name of the instance
 
 ##### Instance.api\_id `int`
 API ID value for the telethon. You can get it there: [my.telegram.org](https://my.telegram.org) -> Apps
@@ -91,7 +92,7 @@ API HASH value for the telethon. You can get it there: [my.telegram.org](https:/
 ##### Instance.owner\_id `int`
 ID of the owner of the instance. You can get it from the Telegram bot [@myidbot](https://t.me/myidbot)
 
-##### Instance.config_file `str`
+##### Instance.config\_file `str`
 Path to the file with TOML config of the instance.
 Config is static, required values for work the EasyTl
 
@@ -117,16 +118,25 @@ By default: `os.path.join('.', 'plugins')`
 
 #### Variables of the `Instance`:
 
+##### Instance.client `telethon.TelegramClient`
+Instance of the TelegramClient
+
+##### Instance.config `dict[str, Any]`
+System configuration of the instance. Contains values such as version information
+
+##### Instance.logger `logging.Logger`
+Logger of the instance
+
+##### Instance.addition_handlers `list[logging.Logger]`
+Additional logging handlers
+
 ##### Instance.prefixes `list[str]`
 List with the prefixes of userbot.
 By default: `['easy']`
 
-##### Instance.client `telethon.TelegramClient`
-Instance of the TelegramClient
-
 ##### Instance.namespace `source.namespace.Namespace`
 Instance of the Namespace.
-By default is have there values:
+By default, there these values:
 - `instance` (`source.core.Instance`) - link to the current instance
 - `pluginapi` (`source.pluginapi`) - link to the pluginapi module
 - `Namespace` (`source.namespace.Namespace`) - link to the Namespace class
@@ -134,16 +144,8 @@ By default is have there values:
 - `translator` (`source.translations.Translator`) - link to translator of current instance (`Instance.translator`)
 - `commands` (`dict[str, function]`) - dict with the registered commands
 - `pcommands` (`dict[str, list[str]]`) - dict with the commands(functions) names and permissions for it
-- `notify_stack` (`list[str]`) - list with the notifies. It was send to the Telegram chat at first command
-
-##### Instance.plugins `source.pluginapi.PluginsList`
-Instance of `PluginsList`. By the way is a list with the plugins
-
-##### Instance.logger `logging.Logger`
-An `logging.Logger` instance
-
-##### Instance.stdout\_handler `logging.StreamHandler`
-An `logging.StreamHandler` instance for logging into the console. Is a handler for `sys.stdout`
+- `notify_stack` (`list[str]`) - list with the notifies. It will be sent to the Telegram chat at first command
+- `plugins` (`source.pluginapi.PluginsList`) - list with the plugins
 
 #### Methods of the `Instance`:
 
@@ -152,11 +154,6 @@ Initializes the working environment for userbot. Takes no argument (only `self`)
 
 ##### Instance.initialize\_logging()
 Initializes instance.Logger object. Takes no argument (only `self`)
-
-##### Instance.partialy\_run()
-DELETED in v1.4.0
-
-~~Run only `Instance.client`, without the call of `Instance.client.run_until_disconnected()`. Takes no argument (only `self`)~~
 
 ##### Instance.run()
 Run `Instance.client` until disconnected from the Telegram. Takes no argument (only `self`)
@@ -172,23 +169,6 @@ Run `Instance.client` until disconnected from the Telegram. Takes no argument (o
 (System method) Handles the messages from the Telegram. Arguments:
 - `self`
 - `event` (`telethon.events.newmessage.NewMessage.Event`) - Telethon's event of the NewMessage
-
-#### Getters for the config values:
-
-##### Instance.get\_platform() -> `str`
-DELETED IN v1.4.0. Use `Instance.config['platform']` instead of.
-
-~~Reads and return a `\_platform` file value from the directory with configs (`Instance.config\_dir`). Takes no argument (only `self`)~~
-
-##### Instance.get\_version() -> `dict`
-DELETED IN v1.4.0. Use `Instance.config['version']` instead of.
-
-~~Reads, parses TOML to dict and return a `version.toml` file value from the directory with configs (`Instance.config_dir`). Takes no argument (only `self`)~~
-
-##### Instance.log_plugins_to_stdout() -> `bool`
-DELETED IN v1.4.0. Use `Instance.config['log_plugins_to_stdout']` instead of.
-
-~~Reads, parse from TOML to dict and return a `version.toml` file value from the directory with configs (`Instance.config\_dir`). Takes no argument (only `self`)~~
 
 #### Static methods, formatters:
 Methods there decorated with `@staticmethod`!
@@ -209,7 +189,7 @@ Formats a message argument as `EasyTl ✅ (message)`. Arguments:
 Formats a message argument as `EasyTl ❌ (message)`. Arguments:
 - `message` (`str`) - Message to be formatted
 
-#### Wrappers to send the text:
+#### Wrappers to send the messages:
 
 ##### async Instance.send()
 Send message to current chat. Shorthand for client.send_message(event.chat_id, ...). Arguments:
@@ -224,24 +204,24 @@ Send message to current chat, formatted as success. Shorthand for Instance.send(
 - `message` (`str`) - Message to be formatted and sent
 
 ##### async Instance.send\_unsuccess()
-Send message to current chat, formatted as success. Shorthand for Instance.send(event, Instance.f_unsuccess(message)). Arguments:
+Send message to current chat, formatted as unsuccess. Shorthand for Instance.send(event, Instance.f_unsuccess(message)). Arguments:
 - `self`
 - `event` (`telethon.events.newmessage.NewMessage.Event`)
 - `message` (`str`) - Message to be formatted and sent
 
 ##### async Instance.send\_notify()
-Send message to current chat, formatted as success. Shorthand for Instance.send(event, Instance.f_notify(message)). Arguments:
+Send message to current chat, formatted as notify. Shorthand for Instance.send(event, Instance.f_notify(message)). Arguments:
 - `self`
 - `event` (`telethon.events.newmessage.NewMessage.Event`)
 - `message` (`str`) - Message to be formatted and sent
 
 ##### async Instance.send\_warning()
-Send message to current chat, formatted as success. Shorthand for Instance.send(event, Instance.f_warning(message)). Arguments:
+Send message to current chat, formatted as warning. Shorthand for Instance.send(event, Instance.f_warning(message)). Arguments:
 - `self`
 - `event` (`telethon.events.newmessage.NewMessage.Event`)
 - `message` (`str`) - Message to be formatted and sent
 
-#### Wrappers to get translated credentials:
+#### Wrappers to get credentials with translated question for it:
 
 ##### Instance.\_t\_get\_code() -> `str`
 Gets input for the code, but get the translation from `core.instance.telegram_get_code`
