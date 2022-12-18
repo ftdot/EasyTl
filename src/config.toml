@@ -1,5 +1,4 @@
 
-is_gui          = false
 build_platform  = ''
 
 plugins_auto_update    = false
@@ -8,6 +7,7 @@ plugins_auto_update    = false
 major         = 1
 minor         = 4
 patch         = 0
+subpatch      = 0
 list          = [ 1, 4, 0 ]
 beta          = false
 indev         = true
