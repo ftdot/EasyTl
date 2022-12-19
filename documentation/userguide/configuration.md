@@ -33,7 +33,7 @@ For get configured the EasyTl you must open the `easytl.py` and paste there cred
 4. Insert your **API HASH** inside the quotes where `API_ID = ''`. Result must be as `API_HASH = 'aaaabbbbccccddddeeeeffffgggghhhh'`
 5. Go to the [@myidbot](https://t.me/myidbot) and get **your id**
 6. Replace **-1** to **your id** where `MY_ID = -1`. Result must be as `MY_ID = 9999999999`
-7. As optional, you can change the language of the userbot. To do this, change value insert `lang` to this:
+7. As optional, you can change the language of the userbot. To do this, change value in `lang` to this:
    - `en` - English language
    - `ru` - Russian language
    - `ua` - Ukrainian language

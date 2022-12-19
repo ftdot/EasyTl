@@ -2,13 +2,13 @@
 **WARNING!** Documentation can be wrong.
 Any issue you can describe [there](https://github.com/ftdot/EasyTl/issues)
 
-## ![Guide](icons/guide-icon.png) Users guide
-- 📖 [Installation](userguide/installation.md) 
-- - [Installation on Windows](userguide/installation.md#installation-on-windows)
-- - [Installation on Linux](userguide/installation.md#installation-on-linux)
-- ⚙️[Configuration](userguide/configuration.md) 
+## ![User icon](icons/user-icon.png) Users guide
+- ![Guide icon](icons/guide-icon.png) [Installation](userguide/installation.md) 
+- - ![Windows icon](icons/windows-icon.png) [Installation on Windows](userguide/installation.md#installation-on-windows)
+- - ![Linux icon](icons/linux-icon.png) [Installation on Linux](userguide/installation.md#installation-on-linux)
+- ️![Settings icon](icons/settings-icon.png) [Configuration](userguide/configuration.md) 
 
-## For the developers
+## ![Developers icon](icons/developer-icon.png) For the developers
 
 ### [source.core](source/core.md)
 
