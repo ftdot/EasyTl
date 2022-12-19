@@ -66,7 +66,7 @@ cd EasyTl-master/src
 
 As optional, you can install the FFMPEG. It required for the `1STTLib` plugin (allows to convert speech to text). To do this, execute it command after commands above:
 ```bash
-./install_ffmpeg.bat
+./install_ffmpeg.sh
 ```
 
 After you can execute it by the `run.sh` file in the `src` directory. But, before to do this you must configure the EasyTl [here](configuration.md)
