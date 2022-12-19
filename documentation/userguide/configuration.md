@@ -1,6 +1,6 @@
 # EasyTl documentation
 
-## 1. Obtaining the credentials
+## ![Telegram icon](../icons/telegram-icon.png) 1. Obtaining the credentials
 For execute the EasyTl you must get API ID, API HASH [here](https://my.telegram.org)
 
 1. Go to the [https://my.telegram.org](https://my.telegram.org) and authorize to it
@@ -8,7 +8,7 @@ For execute the EasyTl you must get API ID, API HASH [here](https://my.telegram.
 3. Create your "application"
 4. Save the API ID and API HASH values
 
-## 2. Editing the `easytl.py` file
+## ![Code icon](../icons/code-icon.png)  2. Editing the `easytl.py` file
 For get configured the EasyTl you must open the `easytl.py` and paste there credentials
 
 1. Open the `easytl.py` in any editor. On Windows you can use notepad or any other editor. On Linux you can use "vim" or "nano" also can use any other editor
