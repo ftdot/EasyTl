@@ -25,13 +25,13 @@ Description of the error
 class PluginRequiresError(PluginError)
 ```
 
-#### Parameters:
-
-##### PluginError.plugin\_name `str`
-Name of the plugin
-
-##### PluginError.required `str`
-A thing required for the plugin
+> Parameters:
+> 
+>> ##### PluginError.plugin\_name `str`
+>> Name of the plugin
+>
+>> ##### PluginError.required `str`
+>> A thing required for the plugin
 
 
 #### PluginExitedError `exceptions.PluginExitedError`
@@ -39,10 +39,10 @@ A thing required for the plugin
 class PluginExitedError(PluginError)
 ```
 
-#### Parameters:
-
-##### PluginError.plugin\_name `str`
-Name of the plugin
+> Parameters:
+> 
+>> ##### PluginError.plugin\_name `str`
+>> Name of the plugin
 
 
 #### ArgumentTypeCastingError `exceptions.ArgumentTypeCastingError`
@@ -51,7 +51,7 @@ class ArgumentTypeCastingError(Exception)
 ```
 Error for the ArgumentParser's type-casts
 
-#### Parameters:
-
-##### PluginError.description `str`
-Description of the error
+> #### Parameters:
+> 
+>> ##### PluginError.description `str`
+>> Description of the error
