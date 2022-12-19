@@ -12,7 +12,7 @@ You can install it from [official site](https://www.python.org)
 1. Move your mouse to the `Downloads` tab on the top
 2. Click to the Python 3.\*.\* and you will get the python installer
 3. Run it
-4. **IMPORTANT!** In the bottom you can see `Add python.exe to the PATH` you **MUST** check it!
+4. **IMPORTANT!** Down bellow you can see `Add python.exe to the PATH` you **MUST** check it!
 5. Click **Install now**
 6. Congratulations! You installed the python
 
