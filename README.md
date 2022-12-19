@@ -14,11 +14,6 @@ Any plugin extends the functional of the Telegram by adding there the user-side 
 
 #### EasyTl is the reproduced **ftub** project
 
-## 📘 Navigation
-* [Installation guide, developers guide, documentation](#installation-guide-developers-guide-documentation)
-
-* [Credits](#credits)
-
 ## Installation guide, developers guide, documentation
 To get installation guide, developers guide and documentation go [here](https://github.com/ftdot/EasyTl/tree/master/documentation)
 
