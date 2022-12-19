@@ -3,7 +3,7 @@
 ## source.exceptions
 `source/exceptions.py` is a file with all working exceptions
 
-File: [src/source/exceptions.py](../../src/source/exceptions.py)
+**File: [src/source/exceptions.py](../../src/source/exceptions.py)**
 
 #### PluginError `exceptions.PluginError`
 ```python
@@ -11,7 +11,7 @@ class PluginError(Exception)
 ```
 Class for all the plugins errors
 
->> #### Parameters:
+> #### Parameters:
 >
 >> ##### PluginError.plugin\_name `str`
 >> Name of the plugin
