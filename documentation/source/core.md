@@ -87,7 +87,7 @@ if __name__ == '__main__':
 >> API ID value for the telethon. You can get it there: [my.telegram.org](https://my.telegram.org) -> Apps
 >
 >> ##### Instance.api\_hash `str`
-> API HASH value for the telethon. You can get it there: [my.telegram.org](https://my.telegram.org) -> Apps
+>> API HASH value for the telethon. You can get it there: [my.telegram.org](https://my.telegram.org) -> Apps
 > 
 >> ##### Instance.owner\_id `int`
 >> ID of the owner of the instance. You can get it from the Telegram bot [@myidbot](https://t.me/myidbot)
