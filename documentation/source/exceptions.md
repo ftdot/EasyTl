@@ -11,13 +11,13 @@ class PluginError(Exception)
 ```
 Class for all the plugins errors
 
-#### Parameters:
-
-##### PluginError.plugin\_name `str`
-Name of the plugin
-
-##### PluginError.description `str`
-Description of the error
+>> #### Parameters:
+>
+>> ##### PluginError.plugin\_name `str`
+>> Name of the plugin
+>
+>> PluginError.description `str`
+>> Description of the error
 
 
 #### PluginRequiresError `exceptions.PluginRequiresError`
