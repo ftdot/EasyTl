@@ -2,7 +2,7 @@
 **WARNING!** Documentation can be wrong.
 Any issue you can describe [there](https://github.com/ftdot/EasyTl/issues)
 
-## Users guide
+## ![Guide](icons/guide-icon.png) Users guide
 - 📖 [Installation](userguide/installation.md) 
 - - [Installation on Windows](userguide/installation.md#installation-on-windows)
 - - [Installation on Linux](userguide/installation.md#installation-on-linux)
