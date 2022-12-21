@@ -25,7 +25,7 @@ Class for all the plugins errors
 class PluginRequiresError(PluginError)
 ```
 
-> Parameters:
+> #### Parameters:
 > 
 >> ##### PluginError.plugin\_name `str`
 >> Name of the plugin
@@ -39,7 +39,7 @@ class PluginRequiresError(PluginError)
 class PluginExitedError(PluginError)
 ```
 
-> Parameters:
+> #### Parameters:
 > 
 >> ##### PluginError.plugin\_name `str`
 >> Name of the plugin
