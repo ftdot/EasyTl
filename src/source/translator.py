@@ -1,5 +1,5 @@
 import os.path
-import toml
+import tomlkit
 import logging
 
 
@@ -28,15 +28,6 @@ class Translator:
         self.namespace = None
         self.logger = logging.getLogger('EasyTl : Translator')
 
-    @staticmethod
-    def cyrillic(string: str):
-        """Fixes cyrillic encoding problem
-
-        :returns: Encoded string with UTF-8
-        """
-
-        return string.encode('1251').decode('utf8')
-
     def load_file(self, path: str):
         """(System method) Loads a file to the translations dictionary
 
@@ -47,8 +38,8 @@ class Translator:
         self.logger.debug('Loading languages from the file by path '+path)
 
         n = os.path.basename(path)[:-8]
-        with open(path, 'r') as f:
-            self.namespace.translations[n] = toml.load(f)
+        with open(path, 'rb') as f:
+            self.namespace.translations[n] = tomlkit.load(f)
 
     def load_languages(self):
         """(System method) Loads the languages to the current languages dictionary"""

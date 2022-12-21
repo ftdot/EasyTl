@@ -2,7 +2,7 @@ import os
 import logging
 import time
 import sys
-import toml
+import tomlkit
 from getpass import getpass
 from telethon import TelegramClient, events
 from .namespace import Namespace
@@ -138,7 +138,7 @@ class Instance:
         self.logger.debug('Loading config for the instance')
 
         with open(self.config_file, 'r') as f:
-            self.config = toml.load(f)
+            self.config = tomlkit.load(f)
 
         self.logger.debug('Checking the config')
         self.check_config()

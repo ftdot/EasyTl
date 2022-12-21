@@ -1,4 +1,4 @@
-toml
+tomlkit
 telethon
 telethon[cryptg]
 requests

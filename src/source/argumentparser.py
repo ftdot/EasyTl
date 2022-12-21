@@ -41,7 +41,7 @@ class ArgTypeCast:
         return self.type(string)
 
 
-class ListCast(ArgTypeCast):
+class ListCast_(ArgTypeCast):
     """Type-cast a string to the list"""
 
     def __init__(self, splitter: str = ', ', values_type: ArgTypeCast = ArgTypeCast(str)):
@@ -186,10 +186,10 @@ class Cast:
 
 
 class ListCast:
-    ListStrCast = ListCast()
-    ListIntCast = ListCast(values_type=Cast.IntCast)
-    ListFloatCast = ListCast(values_type=Cast.FloatCast)
-    ListBoolCast = ListCast(values_type=Cast.BoolCast)
+    ListStrCast = ListCast_()
+    ListIntCast = ListCast_(values_type=Cast.IntCast)
+    ListFloatCast = ListCast_(values_type=Cast.FloatCast)
+    ListBoolCast = ListCast_(values_type=Cast.BoolCast)
 
 
 class DictCast:

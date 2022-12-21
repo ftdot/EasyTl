@@ -8,7 +8,7 @@ This is a main plugin with the main functional
 > #### Commands **EN**
 > 
 >> ##### `stop` command
->> By this command you can stop the 
+>> By this command you can stop the EasyTl
 >> 
 >> Example: `ez restart`
 > 

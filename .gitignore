@@ -18,6 +18,7 @@ src/logs/*
 # creds for test
 src/test_creds.py
 src/*.session
+src/*.session-journal
 
 # SearchPlease plugin cache
 src/.google-cookie
