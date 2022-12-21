@@ -1,5 +1,5 @@
 import logging
-import tomllib
+import toml
 import traceback
 import pkg_resources
 import time
@@ -192,7 +192,7 @@ def parse_plugin_information(file_lines: list[str]) -> (bool, dict):
         utils_logger.debug('parse_plugin_information() : '
                            'TOML LINES : ' + line)
 
-    return v2_format, tomllib.loads(toml_lines)
+    return v2_format, toml.loads(toml_lines)
 
 
 ####

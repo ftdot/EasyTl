@@ -1,5 +1,5 @@
 import os.path
-import tomllib
+import toml
 import logging
 
 
@@ -47,8 +47,8 @@ class Translator:
         self.logger.debug('Loading languages from the file by path '+path)
 
         n = os.path.basename(path)[:-8]
-        with open(path, 'rb') as f:
-            self.namespace.translations[n] = tomllib.load(f)
+        with open(path, 'r') as f:
+            self.namespace.translations[n] = toml.load(f)
 
     def load_languages(self):
         """(System method) Loads the languages to the current languages dictionary"""
