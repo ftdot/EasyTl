@@ -13,9 +13,9 @@ escape_dict = {
 
 
 class ArgumentParseError(Enum):
-    TooMuchArguments    = auto()
-    TooLittleArguments  = auto()
-    IncorrectType       = auto()
+    TooMuchArguments = auto()
+    TooLittleArguments = auto()
+    IncorrectType = auto()
 
 
 class ArgTypeCast:
@@ -69,7 +69,7 @@ class ListCast(ArgTypeCast):
         return [self.values_type.typecast(v) for v in string.split(self.splitter)]
 
 
-class DictCast(ArgTypeCast):
+class DictCast_(ArgTypeCast):
     """Type-cast a string to the dict"""
 
     def __init__(self,
@@ -193,15 +193,15 @@ class ListCast:
 
 
 class DictCast:
-    DictStrStrCast = DictCast()
-    DictStrIntCast = DictCast(values_type=Cast.IntCast)
-    DictStrFloatCast = DictCast(values_type=Cast.FloatCast)
-    DictStrBoolCast = DictCast(values_type=Cast.BoolCast)
+    DictStrStrCast = DictCast_()
+    DictStrIntCast = DictCast_(values_type=Cast.IntCast)
+    DictStrFloatCast = DictCast_(values_type=Cast.FloatCast)
+    DictStrBoolCast = DictCast_(values_type=Cast.BoolCast)
 
-    DictIntStrCast = DictCast(key_type=Cast.IntCast)
-    DictIntIntCast = DictCast(key_type=Cast.IntCast, values_type=Cast.IntCast)
-    DictIntFloatCast = DictCast(key_type=Cast.IntCast, values_type=Cast.FloatCast)
-    DictIntBoolCast = DictCast(key_type=Cast.IntCast, values_type=Cast.BoolCast)
+    DictIntStrCast = DictCast_(key_type=Cast.IntCast)
+    DictIntIntCast = DictCast_(key_type=Cast.IntCast, values_type=Cast.IntCast)
+    DictIntFloatCast = DictCast_(key_type=Cast.IntCast, values_type=Cast.FloatCast)
+    DictIntBoolCast = DictCast_(key_type=Cast.IntCast, values_type=Cast.BoolCast)
 
 
 class Argument:
@@ -257,7 +257,7 @@ class ArgumentParser:
         :param arguments: List with the arguments
         :type arguments: list[Argument]
         """
-    
+
         self.parent_plugin = parent_plugin
         self.arguments = arguments
 
@@ -301,11 +301,13 @@ class ArgumentParser:
 
         # first parse stage (strings with spaces, escaping)
         for s in input_str:
+
             if escaped:
                 if s not in escape_dict:
                     temp_str += '\\' + s
                 else:
                     temp_str += escape_dict[s]
+
                 escaped = False
                 continue
 
@@ -340,12 +342,12 @@ class ArgumentParser:
                 case _:
                     temp_str += s
 
-        # check for the positional arguments
+        # compare the positional arguments
         if len(temp_args) < self.position_arguments:
             self.logger.debug('Too little arguments')
             return True, ArgumentParseError.TooLittleArguments
 
-        # check for arguments sum length
+        # compare the arguments sum length
         if len(temp_args) > self.position_arguments + self.default_arguments:
             self.logger.debug('Too much arguments')
             return True, ArgumentParseError.TooMuchArguments
@@ -364,12 +366,10 @@ class ArgumentParser:
             if error:
                 self.logger.debug('can\'t cast the argument')
                 log_exception(self.logger, result)
+
                 return True, ArgumentParseError.IncorrectType
 
             # define variable
             setattr(output_args, arg.arg_name, result)
-            
-        return False, output_args
 
-        #  self.logger.debug('Currently ArgumentParser.parse() is unavailable, return list back')
-        #  return args[1:]
+        return False, output_args
