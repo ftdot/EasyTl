@@ -160,7 +160,8 @@ class Instance:
                            auto_config: bool = False,
                            log_level: str | int = logging.DEBUG,
                            console_log_level: str | int = logging.INFO,
-                           disable_telethon_loggers: bool = True):
+                           disable_telethon_loggers: bool = True,
+                           disable_utils_logger: bool = False):
         """Initializes the logging system
 
         :param auto_config: Auto configure the logging
@@ -171,6 +172,8 @@ class Instance:
         :type console_log_level: int
         :param disable_telethon_loggers: Set the telethon loggers log level to logging.ERROR level
         :type disable_telethon_loggers: bool
+        :param disable_utils_logger: Set the utils logger log level to logging.ERROR level
+        :type disable_utils_logger: bool
         """
 
         if auto_config:
@@ -203,8 +206,11 @@ class Instance:
             )
 
         if disable_telethon_loggers:
-            logging.getLogger('telethon.extensions.messagepacker').setLevel(logging.CRITICAL)
-            logging.getLogger('telethon.network.mtprotosender').setLevel(logging.CRITICAL)
+            logging.getLogger('telethon.extensions.messagepacker').setLevel(logging.ERROR)
+            logging.getLogger('telethon.network.mtprotosender').setLevel(logging.ERROR)
+
+        if disable_telethon_loggers:
+            logging.getLogger('EasyTl : Utils').setLevel(logging.ERROR)
 
         # init instance logger
         self.logger = logging.getLogger('EasyTl : Instance')
