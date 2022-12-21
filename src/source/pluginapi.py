@@ -209,8 +209,7 @@ class Plugin:
     def check_for_updates(self):
         """Does check for the plugin updates"""
 
-        if 'enable_plugins_auto_update' not in dir(self.namespace) or \
-                ('enable_plugins_auto_update' in dir(self.namespace) and not self.namespace.enable_plugins_auto_update):
+        if 'enable_plugins_auto_update' in dir(self.namespace) and not self.namespace.enable_plugins_auto_update:
             self.logger.debug('check_for_updates() : Auto-updates is disabled. Parse info lines')
             self.parse_info_v2()
             return
