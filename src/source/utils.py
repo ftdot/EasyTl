@@ -61,7 +61,7 @@ def _check_types(value1: int | str, value2: int | str) -> (bool, str | int, str 
             return int(value)
         else:
             utils_logger.debug('_check_types._check_type() : '
-                                'First value is can\'t be type-casted. Return with the error')
+                               'First value is can\'t be type-casted. Return with the error')
             return None
 
     return (False, value_tc1, value_tc2) \
@@ -143,6 +143,7 @@ def check_version_compatibility(
 
     return True
 
+
 ####
 
 
@@ -158,7 +159,7 @@ def parse_plugin_information(file_lines: list[str]) -> (bool, dict):
     """
 
     utils_logger.debug('parse_plugin_information() : '
-                        'Start parsing the info lines')
+                       'Start parsing the info lines')
 
     v2_format = False
 
@@ -171,27 +172,28 @@ def parse_plugin_information(file_lines: list[str]) -> (bool, dict):
             begin = True
 
             utils_logger.debug('parse_plugin_information() : '
-                                'Found a begin of info line')
+                               'Found a begin of info line')
 
         elif line.startswith(PLUGIN_INFO_PREFIX + 'end info'):
             begin = False
 
             utils_logger.debug('parse_plugin_information() : '
-                                'Found the end of info line')
+                               'Found the end of info line')
         else:
             if begin:
                 utils_logger.debug('parse_plugin_information() : '
-                                    'Add TOML line : ' + (toml_line := line.removeprefix(PLUGIN_INFO_PREFIX + ' ')))
+                                   'Add TOML line : ' + (toml_line := line.removeprefix(PLUGIN_INFO_PREFIX + ' ')))
                 toml_lines += toml_line + '\n'
 
     utils_logger.debug('parse_plugin_information() : '
-                        'Plugin is v2_format? : ' + 'yes' if v2_format else 'no')
+                       'Plugin is v2_format? : ' + 'yes' if v2_format else 'no')
 
     for line in toml_lines.split('\n'):
         utils_logger.debug('parse_plugin_information() : '
-                            'TOML LINES : ' + line)
+                           'TOML LINES : ' + line)
 
     return v2_format, tomllib.loads(toml_lines)
+
 
 ####
 
@@ -234,12 +236,12 @@ def install_requirements(requirements: list[str | list[str, str]], pip_logs_dir:
 
     utils_logger.debug('check_requirements() : Requirements are found. Checking it')
     utils_logger.debug('check_requirements() : Getting list of the installed packages')
-    
+
     # define missing packages
     plugin_requirements = set(requirements_names)
     installed = {pkg.key for pkg in pkg_resources.working_set}
     missing = plugin_requirements - installed
-        
+
     if missing:
         utils_logger.debug('check_requirements() : Installing missing packages: ' + ', '.join(missing))
 
@@ -250,7 +252,7 @@ def install_requirements(requirements: list[str | list[str, str]], pip_logs_dir:
         # run PIP to install the package
         subprocess.check_call(
             [sys.executable, '-m', 'pip', 'install', ] + [cmd for n, cmd in requirements_dict.items() if n in missing],
-	    stdout=l_f
+            stdout=l_f
         )
 
         l_f.close()
