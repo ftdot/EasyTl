@@ -8,6 +8,14 @@ Any issue you can describe [there](https://github.com/ftdot/EasyTl/issues)
 - - ![Linux icon](icons/linux-icon.png) [Installation on Linux](userguide/installation.md#installation-on-linux)
 - ️![Settings icon](icons/settings-icon.png) [Configuration](userguide/configuration.md) 
 
+## ![Plugin icon](icons/plugin-icon.png) Plugins
+
+- [Core plugin (`0Core`)](plugins/core-plugin.md)
+- - ![Command icon](icons/cmd-icon.png) [Commands **EN**](plugins/core-plugin.md#commands-en)
+- - ![Command icon](icons/cmd-icon.png) [Команды **РУ**](plugins/core-plugin.md#команды-ру)
+- - ![Developers icon](icons/developer-icon.png) [Low level (for developers)](plugins/core-plugin.md#low-level-for-developers)
+
+
 ## ![Developers icon](icons/developer-icon.png) For the developers
 
 ### [source.core](source/core.md)
