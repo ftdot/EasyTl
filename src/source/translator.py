@@ -6,20 +6,27 @@ import logging
 class Translator:
     """Translator object provides the easy methods to translate text
 
-    :param lang_dir: Path to the directory with the translation files
+    :ivar lang_dir: Path to the directory with the translation files
     :type lang_dir: str
-    :param lang: Language (Country code)
+    :ivar lang: Language (Country code)
     :type lang: str
-
     :ivar namespace: Instance of the Namespace
     :type namespace: Namespace
+    :ivar logger: Translator logger
+    :type logger: logging.Logger
     """
 
     def __init__(self, lang_dir: str = os.path.join('.', 'lang'), lang: str = 'en'):
+        """
+        :param lang_dir: Path to the directory with the translation files
+        :type lang_dir: str
+        :param lang: Language (Country code)
+        :type lang: str
+        """
         self.lang_dir, self.lang = lang_dir, lang
 
         self.namespace = None
-        self.logger = logging.Logger('EasyTl : Translator')
+        self.logger = logging.getLogger('EasyTl : Translator')
 
     @staticmethod
     def cyrillic(string: str):
@@ -57,7 +64,7 @@ class Translator:
             self.load_file(os.path.join(self.lang_dir, f))
 
     def initialize(self, head: str):
-        """Initializes the concrete translations file (loads it at the English language)
+        """Initializes the concrete translations file (loads it to the English language)
 
         :param head: Head of the translations file
         :type head: str
