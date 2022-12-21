@@ -4,11 +4,12 @@ import requests
 import subprocess
 import logging
 import time
+
 from .namespace import Namespace
 from .argumentparser import ArgumentParser
-from .utils import VersionCheckOperation, check_version_compatibility, parse_plugin_information, log_exception, install_requirements
+from .utils import VersionCheckOperation, check_version_compatibility, parse_plugin_information, log_exception, \
+    install_requirements
 from .exceptions import PluginExitedError
-
 from .filehash import get_file_hash, get_string_hash
 
 required_info_lines = {'description', 'required_platforms', 'required_plugins',
@@ -23,10 +24,8 @@ class Plugin:
     :type plugin_name: str
     :ivar plugin_path: Path to the plugin file
     :type plugin_path: str
-    :ivar active: Is plugin active
+    :ivar active: Is the plugin active
     :type active: bool
-    :ivar partially_active: Is plugin partially active
-    :type partially_active: bool
     :ivar namespace: The global namespace
     :type namespace: Namespace
     :ivar info: Namespace object with the information about the plugin (deprecated version).
@@ -52,7 +51,6 @@ class Plugin:
         self.plugin_path = plugin_path
 
         self.active = False
-        self.partially_active = False
         self.namespace = None
         self.info = None
 
@@ -75,9 +73,6 @@ class Plugin:
 
         if self.errored or self.active:
             return
-
-        if self.partially_active:
-            self.logger.debug('Plugin is partially activate. Run the plugin')
 
         for step in self.activation_steps:
             self.logger.debug('activate() : ' + step[1])
