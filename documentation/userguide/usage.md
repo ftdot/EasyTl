@@ -6,15 +6,24 @@
 From the `EasyTl v1.4.0` all commands MUST use the argument parser. It has a specific syntax:
 
 1. All commands must start with the prefix to use it. Prefixes available in default translations:
-    **EN** translation: `easy`, `ez`
-    **RU** translation: `easy`, `ez`, `изи`
-    **UK** translation: `easy`, `ez`, `изи`, `ізі`
-    You can use any from it. Examples:
-        `easy pass`
-        `ez pass`
-        `изи пасс`
-        `ізі пас`
-   (About the command `pass` see [here](../plugins/core-plugin.md#pass-command))
+   >
+   > **EN** translation: `easy`, `ez`
+   > 
+   > **RU** translation: `easy`, `ez`, `изи`
+   > 
+   > **UK** translation: `easy`, `ez`, `изи`, `ізі`
+   > 
+   >> You can use any from it. Examples:
+   >>
+   >>    `easy pass`
+   >>
+   >>    `ez pass`
+   >>
+   >>    `изи пасс`
+   >>
+   >>    `ізі пас`
+   >>
+   > (About the command `pass` see [here](../plugins/core-plugin.md#pass-command))
 2. All arguments are **STRONGLY** separated by SPACES. It doesn't allow to use SPACES in arguments.
 3. To use SPACES in arguments you must use the quotes. Example:
     `easy calc "1 + 1"`

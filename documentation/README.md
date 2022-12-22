@@ -13,7 +13,7 @@ Any issue you can describe [there](https://github.com/ftdot/EasyTl/issues)
 
 - [Core plugin (`0Core`)](plugins/core-plugin.md)
 - - ![Command icon](icons/cmd-icon.png) [Commands **EN**](plugins/core-plugin.md#commands-en)
-- - ![Command icon](icons/cmd-icon.png) [Команды **РУ**](plugins/core-plugin.md#команды-ру)
+- - ![Command icon](icons/cmd-icon.png) [Команды **РУ**](plugins/core-plugin.md#команды-ru)
 - - ![Developers icon](icons/developer-icon.png) [Low level (for developers)](plugins/core-plugin.md#low-level-for-developers)
 
 
