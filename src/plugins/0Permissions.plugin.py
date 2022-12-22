@@ -17,14 +17,12 @@ from source.argumentparser import ArgumentParser, Argument
 namespace.translator.initialize('permissions')
 
 
-async def call_w_permissions(func, event, args: list[str]):
+async def call_w_permissions(func, event, args):
     """(System method) Calls the command (function) with checking the permissions
 
     :param func: Function
-    :type func: function
     :param event: Telethon's event variable
     :param args: List with the arguments
-    :type args: list[str]
     """
 
     user_id = (await event.get_sender()).id
