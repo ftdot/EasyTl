@@ -2,14 +2,14 @@
 **WARNING!** Documentation can be wrong.
 Any issue you can describe [there](https://github.com/ftdot/EasyTl/issues)
 
-## ![User icon](icons/user-icon.png) Users guide (**Туториал для пользователей**)
+## ![User icon](icons/user-icon.png) Users guide | Туториал для пользователей
 - ![Guide icon](icons/guide-icon.png) [Installation](userguide/installation.md) 
 - - ![Windows icon](icons/windows-icon.png) [Installation on Windows](userguide/installation.md#installation-on-windows)
 - - ![Linux icon](icons/linux-icon.png) [Installation on Linux](userguide/installation.md#installation-on-linux)
 - ️![Settings icon](icons/settings-icon.png) [Configuration](userguide/configuration.md) 
-- **IMPORTANT** (**ВАЖНО**) [Small usage guide (**Маленький гайд по использованию**)](userguide/usage.md)
+- **IMPORTANT** | **ВАЖНО** [Small usage guide | Маленький гайд по использованию](userguide/usage.md)
 
-## ![Plugin icon](icons/plugin-icon.png) Plugins documentation (and usage)
+## ![Plugin icon](icons/plugin-icon.png) Plugins documentation (and usage) | Использование плагинов
 
 - [Core plugin (`0Core`)](plugins/core-plugin.md)
 - - ![Command icon](icons/cmd-icon.png) [Commands **EN**](plugins/core-plugin.md#commands-en)
