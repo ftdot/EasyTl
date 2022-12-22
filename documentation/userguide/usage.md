@@ -26,16 +26,25 @@ From the `EasyTl v1.4.0` all commands MUST use the argument parser. It has a spe
    > (About the command `pass` see [here](../plugins/core-plugin.md#pass-command))
 2. All arguments are **STRONGLY** separated by SPACES. It doesn't allow to use SPACES in arguments.
 3. To use SPACES in arguments you must use the quotes. Example:
-    `easy calc "1 + 1"`
-    If you wouldn't use the quotes:
-    `easy calc 1 + 1`
-    Argument parser will be thought that are three arguments. EasyTl will give you an error.
-    (About the command `calc` see [here](../plugins/core-plugin.md#calculator-command))
+   >
+   > `easy calc "1 + 1"`
+   > 
+   > If you wouldn't use the quotes:
+   > 
+   >`easy calc 1 + 1`
+   > 
+   > Argument parser will be thought that are three arguments. EasyTl will give you an error.
+   > 
+   > (About the command `calc` see [here](../plugins/core-plugin.md#calculator-command))
 4. To use quotes in quotes you can use `\\` symbol:
-    `easy gsearch "inurl: \"dog\" cute"`
-    You can also use `'` this quote:
-    `easy gsearch 'inurl: "dog" cute'`
-    These commands are give one result.
+   >
+   > `easy gsearch "inurl: \"dog\" cute"`
+   > 
+   > You can also use `'` this quote:
+   > 
+   > `easy gsearch 'inurl: "dog" cute'`
+   > 
+   > These commands are give one result.
 
 Also, commands may support the "reply-to-message" usage. It is means that command can work if you reply by it command to any message. 
 Example:
