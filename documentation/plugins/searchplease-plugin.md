@@ -21,6 +21,8 @@ Adds to the EasyTl searching functional (google search, search images, etc.)s
 >>
 >> By optional takes second argument - number of the queries
 >> 
+>> Command supports reply-to-message searching
+>>
 >> Examples: `ez gsearch "EasyTl github"`, `ez gsearch "Russian war in Ukraine" 5`
 >
 >> ##### `gimgsearch` command
@@ -48,6 +50,8 @@ Adds to the EasyTl searching functional (google search, search images, etc.)s
 >> Первым аргументом принимает запрос
 >>
 >> Опционально принимает второй аргумент - число запросов
+>> 
+>> Команда поддерживает поиск ответом на сообщение
 >> 
 >> Примеры: `изи найти "ftdot гитхаб"`, `изи найти Алина 5`
 >
