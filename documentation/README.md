@@ -31,6 +31,11 @@ Any issue you can describe [there](https://github.com/ftdot/EasyTl/issues)
 - - ![Command icon](icons/cmd-icon.png) [Команды **РУ**](plugins/messagetranslate-plugin.md#команды-ru)
 - - ![Developers icon](icons/developer-icon.png) [Low level (for the developers)](plugins/messagetranslate-plugin.md#low-level-for-developers)
 
+- [VoiceToText plugin](plugins/voicetotext-plugin.md)
+- - ![Command icon](icons/cmd-icon.png) [Commands **EN**](plugins/voicetotext-plugin.md#commands-en)
+- - ![Command icon](icons/cmd-icon.png) [Команды **РУ**](plugins/voicetotext-plugin.md#команды-ru)
+- - ![Developers icon](icons/developer-icon.png) [Low level (for the developers)](plugins/voicetotext-plugin.md#low-level-for-developers)
+
 - [Library-plugins (For the developers)](plugins/library-plugins.md)
 - - [About it](plugins/library-plugins.md#library-plugins)
 - - ![Plugin icon](icons/plugin-icon.png) [Library-plugin `1STTLib`](plugins/library-plugins.md#library-plugin-1sttlib)
