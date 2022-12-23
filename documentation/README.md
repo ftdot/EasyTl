@@ -16,6 +16,15 @@ Any issue you can describe [there](https://github.com/ftdot/EasyTl/issues)
 - - ![Command icon](icons/cmd-icon.png) [Команды **РУ**](plugins/core-plugin.md#команды-ru)
 - - ![Developers icon](icons/developer-icon.png) [Low level (for developers)](plugins/core-plugin.md#low-level-for-developers)
 
+- [Permissions plugin (`0Permissions`)](plugins/permissions-plugin.md)
+- - ![Command icon](icons/cmd-icon.png) [Commands **EN**](plugins/permissions-plugin.md#commands-en)
+- - ![Command icon](icons/cmd-icon.png) [Команды **РУ**](plugins/permissions-plugin.md#команды-ru)
+- - ![Developers icon](icons/developer-icon.png) [Low level (for developers)](plugins/permissions-plugin.md#low-level-for-developers)
+
+- [Library-plugins (For developers only)](plugins/library-plugins.md)
+- - [About it](plugins/library-plugins.md#library-plugins)
+- - ![Plugin icon](icons/plugin-icon.png) [Library-plugin `1STTLib`](plugins/library-plugins.md#library-plugin-1sttlib)
+- - ![Plugin icon](icons/plugin-icon.png) [Library-plugin `1TranslationsLib`](plugins/library-plugins.md#library-plugin-1translationslib)
 
 ## ![Developers icon](icons/developer-icon.png) For the developers
 

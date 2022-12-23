@@ -146,6 +146,8 @@ if __name__ == '__main__':
 >> - `pcommands` (`dict[str, list[str]]`) - dict with the commands(functions) names and permissions for it
 >> - `notify_stack` (`list[str]`) - list with the notifies. It will be sent to the Telegram chat at first command
 >> - `plugins` (`source.pluginapi.PluginsList`) - list with the plugins
+>>
+>> This can be extended by the [**plugins**](../README.md#plugin-iconiconsplugin-iconpng-plugins-documentation-and-usage---)
 
 > #### Methods of the `Instance`:
 > 

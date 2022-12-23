@@ -1,6 +1,6 @@
 # EasyTl documentation
 
-## Libraries plugins
+## Library-plugins
 Library-plugin - is plugin that provides functional for the developers. You can use it functional from any other plugin
 
 **NOTE:** If you create the library-plugin, all functional you must place to the `namespace`!
@@ -25,7 +25,7 @@ def myfunc(text):
 namespace.mylib = namespace.Namespace()
 namespace.mylib.myfunc = myfunc
 ```
-Also note, that library-plugins must start with '1' to be loaded first than other plugins
+Also note, that library-plugins must start with `1` to be loaded first than other plugins
 
 ## Library-plugin: 1STTLib
 Provides the Speech To Text functional by using Google Recognition or Sphinx recognition APIs
@@ -67,9 +67,19 @@ Provides the text translation functional by using Google Translation API
 >>
 >> Value - language name
 >
->> ##### namespace.sttlib.translate `text: str, to=Instance.translator.lang -> str`
+>> ##### namespace.sttlib.translate `(text: str, to=Instance.translator.lang) -> str`
 >> Translates any text to other language.
 >> Wrapper to googletrans.Translator.translate().text
+>>
+>>> **Arguments:**
+>>>
+>>> path: str -- The text to be translated
+>>>
+>>> language: str (default: Instance.translator.lang, language of instance translator) -- The language (country code)
+>
+>> ##### namespace.sttlib.detect `(text: str) -> str`
+>> Detects the language of the text,
+>> Wrapper to googletrans.Translator.detect().lang
 >>
 >>> **Arguments:**
 >>>

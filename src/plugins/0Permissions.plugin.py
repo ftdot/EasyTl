@@ -1,5 +1,5 @@
 # begin info
-#   description = "Library-plugin | Allows to manage the commands permissions"
+#   description = "Core plugin | Allows to manage the commands permissions"
 #   required_platforms = [ "windows", "linux", "android" ]
 #   required_plugins = "no requirements"
 #   etl_version_min = [ 1, 4, 0 ]

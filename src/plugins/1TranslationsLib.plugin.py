@@ -39,7 +39,7 @@ def translate(text: str, to=default_translate_to) -> str:
 
 def detect(text: str) -> str:
     """Detects the language of the text.
-    Wrapper to googletrans.Translator.detect()
+    Wrapper to googletrans.Translator.detect().lang
 
     :param text: The text to detect the language
     :type text: str
@@ -55,5 +55,8 @@ namespace.translatelib = namespace.Namespace()
 
 # add functions to translatelib namespace
 namespace.translatelib.translate = translate
+namespace.translatelib.detect = detect
+
+# other variables
 namespace.translatelib.translator = translator
 namespace.translatelib.languages = googletrans.LANGUAGES
