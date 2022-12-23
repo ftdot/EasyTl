@@ -42,6 +42,7 @@ Any issue you can describe [there](https://github.com/ftdot/EasyTl/issues)
 - - ![Plugin icon](icons/plugin-icon.png) [Library-plugin `1TranslationsLib`](plugins/library-plugins.md#library-plugin-1translationslib)
 
 ## ![Developers icon](icons/developer-icon.png) For the developers
+[**Create example plugin tutorial**](plugins_tutorial/create-example-plugin.md)
 
 ### [source.core](source/core.md)
 
