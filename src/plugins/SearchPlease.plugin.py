@@ -4,12 +4,12 @@
 #   required_plugins = "no requirements"
 #   etl_version_min = [ 1, 4, 0 ]
 #   etl_version_max = [ 1, 4, "*" ]
-#   version = "1.5.0"
+#   version = "1.5.1"
 #   update_link = "https://github.com/ftdot/EasyTl/raw/master/easytl-cli/plugins/SearchPlease.plugin.py"
 #   lang_links = [ ["searchplease_en.toml", "https://github.com/ftdot/EasyTl/raw/master/easytl-cli/translations/searchplease_en.toml"], ["searchplease_ru.toml", "https://github.com/ftdot/EasyTl/raw/master/easytl-cli/translations/searchplease_ru.toml"], ["searchplease_uk.toml", "https://github.com/ftdot/EasyTl/raw/master/easytl-cli/translations/searchplease_uk.toml"] ]
 #   requirements = [ "google", "BeautifulSoup4" ]
 #   author = "ftdot (https://github.com/ftdot)"
-#   changelog = [ "Added search images by query", "Added Edge, FireFox, Default browsers support", "Reply search support for the gsearch, gimgsearch commands" ]
+#   changelog = [ "Changed default settings" ]
 # end info
 
 
@@ -42,9 +42,9 @@ search_engines = {
 }
 
 # settings
-find_browser     = 'OperaGX'     # change it to your browser
-search_engine    = 'duckduckgo'  # change it to your prefer search engine
-gsearch_country  = 'ua'          # "gsearch" will search in that country (write country code only!)
+find_browser     = 'Default'     # change it to your browser
+search_engine    = 'google'      # change it to your prefer search engine
+gsearch_country  = 'us'          # "gsearch" will search in that country (write only ISO 3166-alpha-2 code)
 
 search_line = f'{browsers[find_browser]}{search_engines[search_engine]}'
 
