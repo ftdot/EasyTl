@@ -70,9 +70,9 @@ async def vtt(event, args):
     # send message with the recognized speech
     await namespace.instance.send_success(
         event,
-        namespace.translations['VoiceToText']['command']['vtt']['sphinx_success_message' if offline else 'google_success_message']
+        namespace.translations['VoiceToText']['command']['vtt']['sphinx_success_message' if args.offline else 'google_success_message']
         .format(
-            namespace.sttlib.recognize_speech_from_file(temp_file_path+mime_type[1], offline, translate_from)
+            namespace.sttlib.recognize_speech_from_file(temp_file_path+mime_type[1], args.offline, args.translate_from)
         )
     )
     return
