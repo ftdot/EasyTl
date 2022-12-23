@@ -10,9 +10,11 @@ Adds to the EasyTl translation feature. It uses [1TranslationsLib](../plugins/li
 >> ##### `gtranslate` command
 >> Translates text by using the Google Translate services
 >>
->> As first arguments takes text to be translate
+>> As first arguments takes text to be translated
 >>
 >> By optional takes second argument - language to be translated into
+>>
+>> Command supports reply-to-message translating
 >> 
 >> Examples: `ez gtranslate "Привіт, мене звати Валера і я маю дуже багато дівчин"`, `ez gtrans "I'm using the EasyTl!" es`
 >
@@ -29,7 +31,9 @@ Adds to the EasyTl translation feature. It uses [1TranslationsLib](../plugins/li
 >> Первым аргументом принимает текст который нужно перевести
 >>
 >> Опционально принимает второй аргумент - язык на который нужно перевести
->> 
+>>
+>> Команда поддерживает перевод ответом на сообщение
+>>
 >> Примеры: `изи перевести "Привіт, мене звати Валера і я маю дуже багато дівчин"`, `изи перевести "Я использую EasyTl!" es`
 >
 >> ##### Команда `доступязыки`
