@@ -1,9 +1,9 @@
 # EasyTl documentation
 
-## plugins -> 0Permissions plugin
-This is a main plugin with the permissions control functional
+## plugins -> SearchPlease plugin
+Adds to the EasyTl searching functional (google search, search images, etc.)s
 
-**File: [src/plugins/0Permissions.plugin.py](../../src/plugins/0Permissions.plugin.py)**
+**File: [src/plugins/SearchPlease.plugin.py](../../src/plugins/SearchPlease.plugin.py)**
 
 > #### Commands **EN**
 > 
