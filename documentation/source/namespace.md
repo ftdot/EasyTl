@@ -25,4 +25,4 @@ Class that helps replace dict with the sample namespace
 > n.some_value = 'Hello!'  # write some value to the namespace
 > ```
 > 
-> Default variables in instance see here: [Documentation of source/core.py](../core.md#instancenamespace-sourcenamespacenamespace)
+> Default variables in instance you can see here: [Documentation of source/core.py](../core.md#instancenamespace-sourcenamespacenamespace)
