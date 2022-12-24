@@ -24,6 +24,7 @@ This is enum with the possible argument parser errors
 >> ##### IncorrectType
 >> Returned when argument have incorrect type passed into
 
+
 #### ArgTypeCast `argumentparser.ArgTypeCast`
 ```python
 class ArgTypeCast()

@@ -2,12 +2,14 @@
 **WARNING!** Documentation can be wrong.
 Any issue you can describe [there](https://github.com/ftdot/EasyTl/issues)
 
+
 ## ![User icon](icons/user-icon.png) Users guide | Туториал для пользователей
 - ![Guide icon](icons/guide-icon.png) [Installation](userguide/installation.md) 
 - - ![Windows icon](icons/windows-icon.png) [Installation on Windows](userguide/installation.md#installation-on-windows)
 - - ![Linux icon](icons/linux-icon.png) [Installation on Linux](userguide/installation.md#installation-on-linux)
 - ️![Settings icon](icons/settings-icon.png) [Configuration](userguide/configuration.md) 
 - **IMPORTANT** | **ВАЖНО** [Small usage guide | Маленький гайд по использованию](userguide/usage.md)
+
 
 ## ![Plugin icon](icons/plugin-icon.png) Plugins documentation (and usage) | Использование плагинов
 
@@ -41,8 +43,10 @@ Any issue you can describe [there](https://github.com/ftdot/EasyTl/issues)
 - - ![Plugin icon](icons/plugin-icon.png) [Library-plugin `1STTLib`](plugins/library-plugins.md#library-plugin-1sttlib)
 - - ![Plugin icon](icons/plugin-icon.png) [Library-plugin `1TranslationsLib`](plugins/library-plugins.md#library-plugin-1translationslib)
 
+
 ## ![Developers icon](icons/developer-icon.png) For the developers
 [**Create example plugin tutorial**](plugins_tutorial/create-example-plugin.md)
+
 
 ### [source.core](source/core.md)
 
@@ -79,3 +83,45 @@ Any issue you can describe [there](https://github.com/ftdot/EasyTl/issues)
 - [`source.namespace.Namespace`](source/namespace.md#namespace-namespacenamespace)
 - - [`source.namespace.Namespace Parameters`](source/namespace.md#parameters)
 - - [`source.namespace.Namespace Variables`](source/namespace.md#variables-of-the-namespace)
+
+
+### [source.translator](source/translator.md)
+
+- [`source.translator.Translator`](source/translator.md#translator-translatornamespace)
+- - [`source.translator.Translator Parameters`](source/translator.md#parameters)
+- - [`source.translator.Translator Methods`](source/translator.md#methods)
+
+
+### [source.argumentparser](source/argumentparser.md)
+
+- [`source.argumentparser.ArgumentParseError`](source/argumentparser.md#argumentparseerror-argumentparserargumentparseerror)
+- - [`source.argumentparser.ArgumentParseError Values`](source/argumentparser.md#values)
+
+- [`source.argumentparser.ArgTypeCast`](source/argumentparser.md#argtypecast-argumentparserargtypecast)
+- - [`source.argumentparser.ArgTypeCast Parameters`](source/argumentparser.md#parameters)
+- - [`source.argumentparser.ArgTypeCast Methods`](source/argumentparser.md#methods)
+
+- [`source.argumentparser.ListCast_`](source/argumentparser.md#listcast_-argumentparserlistcast_)
+- - [`source.argumentparser.ListCast_ Parameters`](source/argumentparser.md#parameters-1)
+- - [`source.argumentparser.ListCast_ Methods`](source/argumentparser.md#methods-1)
+
+- [`source.argumentparser.DictCast_`](source/argumentparser.md#dictcast_-argumentparserdictcast_)
+- - [`source.argumentparser.DictCast_ Parameters`](source/argumentparser.md#parameters-2)
+- - [`source.argumentparser.DictCast_ Methods`](source/argumentparser.md#methods-2)
+
+- [`source.argumentparser.Cast`](source/argumentparser.md#cast-argumentparsercast)
+- - [`source.argumentparser.Cast Casts`](source/argumentparser.md#casts)
+
+- [`source.argumentparser.ListCast`](source/argumentparser.md#listcast-argumentparserlistcast)
+- - [`source.argumentparser.ListCast Casts`](source/argumentparser.md#casts-1)
+- 
+- [`source.argumentparser.DictCast`](source/argumentparser.md#dictcast-argumentparserdictcast)
+- - [`source.argumentparser.DictCast Casts`](source/argumentparser.md#casts-2)
+
+- [`source.argumentparser.Argument`](source/argumentparser.md#argument-argumentparserargument)
+- - [`source.argumentparser.Argument Parameters`](source/argumentparser.md#parameters-3)
+- - [`source.argumentparser.Argument Methods`](source/argumentparser.md#methods-3)
+
+- [`source.argumentparser.ArgumentParser`](source/argumentparser.md#argumentparser-argumentparserargumentparser)
+- - [`source.argumentparser.ArgumentParser Parameters`](source/argumentparser.md#parameters-4)
+- - [`source.argumentparser.ArgumentParser Methods`](source/argumentparser.md#methods-4)
