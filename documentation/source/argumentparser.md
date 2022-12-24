@@ -13,6 +13,16 @@ class ArgumentParseError(Enum)
 
 This is enum with the possible argument parser errors
 
+> #### Values
+>
+>> ##### TooManyArguments
+>> Returned when there is too many arguments passed
+>
+>> ##### TooLittleArguments
+>> Returned when there is too little arguments passed
+> 
+>> ##### IncorrectType
+>> Returned when argument have incorrect type passed into
 
 #### ArgTypeCast `argumentparser.ArgTypeCast`
 ```python

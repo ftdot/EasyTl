@@ -13,7 +13,7 @@ escape_dict = {
 
 
 class ArgumentParseError(Enum):
-    TooMuchArguments = auto()
+    TooManyArguments = auto()
     TooLittleArguments = auto()
     IncorrectType = auto()
 
@@ -352,7 +352,7 @@ class ArgumentParser:
         # compare the arguments sum length
         if len(temp_args) > self.position_arguments + self.default_arguments:
             self.logger.debug('Too much arguments')
-            return True, ArgumentParseError.TooMuchArguments
+            return True, ArgumentParseError.TooManyArguments
 
         # initialize the default arguments
         for arg in self.arguments:
