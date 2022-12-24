@@ -56,7 +56,7 @@ class ListCast_(ArgTypeCast):
         self.splitter = splitter
         self.values_type = values_type
 
-    def typecast(self, string: str) -> list[str]:
+    def typecast(self, string: str) -> list[Any]:
         """Type-cast string to the list
 
         :param string: String to be type-casted
@@ -127,7 +127,9 @@ _false_list = ['no', 'nop', '-', 'false']
 class BoolCast(ArgTypeCast):
     """Type-cast a string to the bool"""
 
-    def __init__(self, true_list: list[str] | None = None, false_list: list[str] | None = None,
+    def __init__(self,
+                 true_list: list[str] | None = None,
+                 false_list: list[str] | None = None,
                  match_case: bool = False):
         """
         :param true_list: List with the true string variants

@@ -12,10 +12,14 @@ Any plugin extends the functional of the Telegram by adding there the user-side 
 
 **Our official telegram channel:** [@easytl](https://t.me/easytl)
 
+* [All information about it](https://t.me/easytl/21)
+* [Get more plugins - @easytlplugins](https://t.me/easytlplugins)
+* [Suggest your ideas\plugins\translations](https://t.me/easytlplugins/3)
+
 #### EasyTl is the reproduced **ftub** project
 
-## Installation guide, developers guide, documentation
-To get installation guide, developers guide and documentation go [here](https://github.com/ftdot/EasyTl/tree/master/documentation)
+## Installation guide, developers guide, plugins guide, documentation
+To get installation guide, developers guide, plugins and documentation go [here](documentation)
 
 ## Credits
 Thanks to [Icons8](https://icons8.com) site for the icons
