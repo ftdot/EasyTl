@@ -154,7 +154,7 @@ class Instance:
         # activate the plugins
         self.logger.info('Activating plugins')
 
-        self.namespace.plugins.activate_plugins_list()
+        self.namespace.plugins.activate_plugin_list()
 
     def initialize_logging(self,
                            auto_config: bool = False,
@@ -279,7 +279,7 @@ class Instance:
                             self.namespace.translations['core']['argumentparser']['too_little_arguments']
                         )
 
-                    case ArgumentParseError.TooMuchArguments:
+                    case ArgumentParseError.TooManyArguments:
                         await self.send_unsuccess(
                             event,
                             self.namespace.translations['core']['argumentparser']['too_much_arguments']

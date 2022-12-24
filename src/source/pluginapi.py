@@ -28,12 +28,11 @@ class Plugin:
     :type active: bool
     :ivar namespace: The global namespace
     :type namespace: Namespace
-    :ivar info: Namespace object with the information about the plugin (deprecated version).
-                Dict with the info lines of the plugin (v2 format version)
-    :type info: Namespace | dict
+    :ivar info: Dict with the info lines of the plugin
+    :type info: dict
     :ivar errored: Is plugin raised error
     :type errored: bool
-    :ivar logger: Logger instance
+    :ivar logger: Instance of the Logger
     :type logger: logging.Logger
     :ivar activation_steps: Contains the tuples with the FUNCTION and LOG DESCRIPTION
     :type activation_steps: list[tuple[() -> None, str]]
@@ -175,7 +174,7 @@ class Plugin:
             return
 
     def _convert_operator(self, char: str) -> VersionCheckOperation | None:
-        """Converts chas =, >, < to VersionCheckOperator
+        """Converts chars =, >, < to VersionCheckOperator
 
         :param char: Character to be converted
         :type char: str
@@ -330,6 +329,7 @@ class Plugin:
         self.logger.debug('check_for_updates() : No updates')
 
     def check_platform(self):
+        """Checks the platform compatibility with the plugin"""
         if not self.namespace.instance.config['build_platform'] in self.info['required_platforms']:
             self.logger.debug('check_platform() : Doesn\'t support current platform')
 
@@ -345,6 +345,7 @@ class Plugin:
         self.logger.debug('check_platform() : Check passed. Platform is supporting')
 
     def check_compatibility(self):
+        """Checks the verison compatibility with the plugin"""
         current_version = self.namespace.instance.config['version']['list']
 
         # get a version min\max support by the format of the info lines
@@ -377,6 +378,7 @@ class Plugin:
         self.logger.debug('check_compatibility() : Passed the version check')
 
     def check_required_plugins(self):
+        """Checks for the required plugins"""
         required_plugins = self.info['required_plugins']
         if required_plugins == 'no requirements':
             self.logger.debug(f'check_required_plugins() : Plugin hasn\'t requirement for the others plugins')
@@ -501,6 +503,8 @@ class Plugin:
         :type ap: ArgumentParser | None
         :param static_pname: Static name in the namespace.pcommands dict
         :type static_pname: str | None
+
+        :returns: func with the changed attributes
         """
 
         # check if the aliases is a list or string and type-cast it to the list
@@ -528,11 +532,13 @@ class Plugin:
         return deco
 
     def only(self, platforms: list[str] | str, alt: ... = lambda: None):
-        """Decorator, that helps allow only to concrete platform(s)
+        """Decorator, that returns function only if concrete platform(s) is supported
 
-        :param platforms: Platforms that support the function
+        :param platforms: Platform(s) that support the function
         :type platforms: list[str] | str
         :param alt: Alt function, that will return if it isn't support
+
+        :returns: If platform is supported - decorated function, otherwise - alt function
         """
 
         platforms = platform if isinstance(platforms, list) else [platforms]
@@ -557,8 +563,8 @@ class PluginsList:
     :type plugins: dict[str, Plugin] | None
     :ivar plugins_dir: Path to the directory with the plugins
     :type plugins_dir: str
-    :ivar namespace: The namespace instance
-    :type namespace: Namespace
+    :ivar namespace: Global namespace
+    :type namespace: Namespace | None
     :ivar logger: Logger instance
     :type logger: logging.Logger
     """
@@ -570,7 +576,7 @@ class PluginsList:
         :type plugins: dict[str, Plugin] | None
         :param plugins_dir: Path to the directory with the plugins
         :type plugins_dir: str
-        :param namespace: The namespace instance
+        :param namespace: Global namespace
         :type namespace: Namespace
         """
 
@@ -637,7 +643,7 @@ class PluginsList:
 
             self.logger.info(f'Plugin {n} successfully updated!')
 
-    def activate_plugins_list(self, plugins: dict[str, Plugin] | None = None):
+    def activate_plugin_list(self, plugins: dict[str, Plugin] | None = None):
         """Activates current plugin list
 
         :param plugins: Dict of the plugins, that will be added to the current list
