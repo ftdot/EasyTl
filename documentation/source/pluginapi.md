@@ -82,7 +82,7 @@ The base class of the argument type-casts
 >> ##### execute() `() -> None`. Takes no arguments (only `self`)
 >> Executes the plugin. Takes no arguments (only `self`)
 
-> #### Methods for development
+> #### Methods for the plugins development
 >
 >> ##### command() `() -> (func) -> func`
 >> **Decorator**, that helps register the new command
@@ -131,7 +131,7 @@ The base class of the argument type-casts
 >> ##### namespace (`namespace.Namespace | None`)
 >> Global namespace
 
-> #### Attributes of the `PluginList` objects
+> #### Attributes of the `PluginsList` objects
 >
 >> ##### plugins (`dict[str, Plugin] | None`)
 >> Dict with the plugins.

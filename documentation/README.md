@@ -114,7 +114,7 @@ Any issue you can describe [there](https://github.com/ftdot/EasyTl/issues)
 
 - [`source.argumentparser.ListCast`](source/argumentparser.md#listcast-argumentparserlistcast)
 - - [`source.argumentparser.ListCast Casts`](source/argumentparser.md#casts-1)
-- 
+
 - [`source.argumentparser.DictCast`](source/argumentparser.md#dictcast-argumentparserdictcast)
 - - [`source.argumentparser.DictCast Casts`](source/argumentparser.md#casts-2)
 
@@ -125,3 +125,14 @@ Any issue you can describe [there](https://github.com/ftdot/EasyTl/issues)
 - [`source.argumentparser.ArgumentParser`](source/argumentparser.md#argumentparser-argumentparserargumentparser)
 - - [`source.argumentparser.ArgumentParser Parameters`](source/argumentparser.md#parameters-4)
 - - [`source.argumentparser.ArgumentParser Methods`](source/argumentparser.md#methods-4)
+
+### [source.pluginapi](source/pluginapi.md)
+
+- [`source.pluginapi.Plugin`](source/pluginapi.md#plugin-pluginapiplugin)
+- - [`source.pluginapi.Plugin Parameters`](source/pluginapi.md#parameters)
+- - [`source.pluginapi.Plugin System methods`](source/pluginapi.md#system-methods)
+- - [`source.pluginapi.Plugin Methods for the plugins development`](source/pluginapi.md#methods-for-the-plugins-development)
+
+- [`source.pluginapi.PluginsList`](source/pluginapi.md#pluginslist-pluginapipluginslist)
+- - [`source.pluginapi.PluginsList Parameters`](source/pluginapi.md#parameters-1)
+- - [`source.pluginapi.PluginsList Methods`](source/pluginapi.md#methods)
