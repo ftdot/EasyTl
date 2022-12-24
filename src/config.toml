@@ -10,5 +10,5 @@ patch         = 0
 subpatch      = 0
 list          = [ 1, 4, 0 ]
 beta          = false
-indev         = true
+indev         = false
 full_version  = "1.4.0"
