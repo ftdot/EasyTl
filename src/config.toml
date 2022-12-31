@@ -6,9 +6,9 @@ plugins_auto_update    = false
 [version]
 major         = 1
 minor         = 4
-patch         = 0
+patch         = 1
 subpatch      = 0
-list          = [ 1, 4, 0 ]
+list          = [ 1, 4, 1 ]
 beta          = false
-indev         = false
-full_version  = "1.4.0"
+indev         = true
+full_version  = "1.4.1-indev"
