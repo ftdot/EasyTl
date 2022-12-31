@@ -113,11 +113,12 @@ class Instance:
         self.namespace.commands      = {}
         self.namespace.pcommands     = {}
         self.namespace.notify_stack  = []
+        self.namespace.misc_loggers  = []
 
         # load the plugins
         plugins_list = [pluginapi.Plugin(os.path.basename(f)[:-10], os.path.join(self.plugins_dir, f))
-                        for f in
-                        [f for f in os.listdir(self.plugins_dir) if f.endswith('.plugin.py')]
+                            for f in
+                                [f for f in os.listdir(self.plugins_dir) if f.endswith('.plugin.py')]
                         ]
         plugins_dict = {p.plugin_name: p for p in plugins_list}
 
@@ -161,19 +162,22 @@ class Instance:
                            log_level: str | int = logging.DEBUG,
                            console_log_level: str | int = logging.INFO,
                            disable_telethon_loggers: bool = True,
-                           disable_utils_logger: bool = False):
+                           disable_utils_logger: bool = False,
+                           disable_other_misc_loggers: bool = True):
         """Initializes the logging system
 
         :param auto_config: Auto configure the logging
         :type auto_config: bool
         :param log_level: Log level of logger (logging.INFO, logging.DEBUG and etc...)
         :type log_level: int
-        :param console_log_level: Log level of console logging (logging.INFO, logging.DEBUG and etc...) (DEFAULT: logging.INFO)
+        :param console_log_level: Log level of console logging (logging.INFO, logging.DEBUG and etc...)
         :type console_log_level: int
         :param disable_telethon_loggers: Set the telethon loggers log level to logging.ERROR level
         :type disable_telethon_loggers: bool
         :param disable_utils_logger: Set the utils logger log level to logging.ERROR level
         :type disable_utils_logger: bool
+        param disable_other_misc_loggers: Disable other misc loggers
+        :type disable_other_misc_loggers: bool
         """
 
         if auto_config:
@@ -185,7 +189,7 @@ class Instance:
             stdout_handler.setFormatter(formatter)
             stdout_handler.setLevel(console_log_level)
 
-            # init a stream handler for the file
+            # init a stream handler for the file log
             file_handler = logging.FileHandler(
                 os.path.join(self.logs_dir, f'{time.strftime("%Y-%m-%d_%H-%M", time.localtime())}-log.txt'),
                 'w',
@@ -208,9 +212,16 @@ class Instance:
         if disable_telethon_loggers:
             logging.getLogger('telethon.extensions.messagepacker').setLevel(logging.ERROR)
             logging.getLogger('telethon.network.mtprotosender').setLevel(logging.ERROR)
+            logging.getLogger('telethon.client.updates').setLevel(logging.ERROR)
+            logging.getLogger('telethon.client.uploads').setLevel(logging.ERROR)
 
         if disable_telethon_loggers:
             logging.getLogger('EasyTl : Utils').setLevel(logging.ERROR)
+
+        if disable_other_misc_loggers:
+            logging.getLogger('hpack.hpack').setLevel(logging.ERROR)
+            for logger in self.namespace.misc_loggers:
+                logger.setLevel(logging.ERROR)
 
         # init instance logger
         self.logger = logging.getLogger('EasyTl : Instance')
@@ -270,35 +281,37 @@ class Instance:
         # parsing the arguments or use arguments list without prefix
         # WARNING! Raw arguments list without prefix will be deleted in 1.5.1 releases
         if isinstance(command_func.ap, ArgumentParser):
-            error, result = await command_func.ap.parse(args)
+            error = await command_func.ap.parse(args, event, command_func)
+
             if error:
-                match result:
+                message = 'Unknown error'
+
+                match error:
                     case ArgumentParseError.TooLittleArguments:
-                        await self.send_unsuccess(
-                            event,
-                            self.namespace.translations['core']['argumentparser']['too_little_arguments']
-                        )
+                        message = self.namespace.translations['core']['argumentparser']['too_little_arguments']
 
                     case ArgumentParseError.TooManyArguments:
-                        await self.send_unsuccess(
-                            event,
-                            self.namespace.translations['core']['argumentparser']['too_much_arguments']
-                        )
+                        message = self.namespace.translations['core']['argumentparser']['too_much_arguments']
 
                     case ArgumentParseError.IncorrectType:
-                        await self.send_unsuccess(
-                            event,
-                            self.namespace.translations['core']['argumentparser']['incorrect_type']
-                        )
+                        message = self.namespace.translations['core']['argumentparser']['incorrect_type']
+
+                    case ArgumentParseError.IncorrectSubcommand:
+                        message = self.namespace.translations['core']['argumentparser']['incorrect_subcommand']
+
+                    case ArgumentParseError.ReplyToRequired:
+                        message = self.namespace.translations['core']['argumentparser']['reply_to_required']
+
+                    case ArgumentParseError.CantFindOriginalMessage:
+                        message = self.namespace.translations['core']['argumentparser']['cant_find_original_message']
+
+                await self.send_unsuccess(event, message)
+
                 return
 
-            p_args = result
-
         else:
-            p_args = args[1:]
-
-        self.logger.debug('Call the command with permissions')
-        await self.namespace.call_w_permissions(command_func, event, p_args)
+            self.logger.debug('Call the command with permissions')
+            await self.namespace.call_w_permissions(command_func, event, args[1:])
 
     async def messages_handler(self, event):
         """(System method) Handles the messages from the Telegram

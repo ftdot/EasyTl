@@ -41,8 +41,9 @@ log_level          = logging.DEBUG
 console_log_level  = logging.INFO  # Set this to the logging.DEBUG if you want to see all the debug information
 
 # advanced logging settings
-disable_telethon_loggers  = True
-disable_utils_logger      = True
+disable_telethon_loggers    = True
+disable_utils_logger        = True
+disable_other_misc_loggers  = True
 
 ####
 
@@ -62,7 +63,8 @@ if __name__ == '__main__':
                                      log_level,
                                      console_log_level,
                                      disable_telethon_loggers,
-                                     disable_utils_logger)
+                                     disable_utils_logger,
+                                     disable_other_misc_loggers)
 
     main_instance.namespace.enable_plugins_auto_update  = enable_plugins_auto_update
     main_instance.namespace.ffmpeg_dir                  = win_ffmpeg_dir

@@ -54,3 +54,28 @@ class ArgumentTypeCastingError(Exception):
 
     def __str__(self):
         return self.description
+
+
+class IncorrectCommandAliasesError(Exception):
+    """Error of the pluginapi.Plugin.command() decorator
+
+    :ivar plugin_name: Name of the plugin
+    :type plugin_name: str
+    :ivar function_name: Name of the function
+    :type function_name: str
+    """
+
+    def __init__(self, plugin_name: str, function_name: str,  *args):
+        """
+        :param plugin_name: Description of the error
+        :type plugin_name: str
+        :param function_name: Name of the function
+        :type function_name: str
+        """
+        super().__init__(*args)
+
+        self.plugin_name = plugin_name
+        self.function_name = function_name
+
+    def __str__(self):
+        return f'Plugin "{self.plugin_name}" have function "{self.function_name}()" with incorrect aliases set'

@@ -9,7 +9,7 @@ from .namespace import Namespace
 from .argumentparser import ArgumentParser
 from .utils import VersionCheckOperation, check_version_compatibility, parse_plugin_information, log_exception, \
     install_requirements
-from .exceptions import PluginExitedError
+from .exceptions import PluginExitedError, IncorrectCommandAliasesError
 from .filehash import get_file_hash, get_string_hash
 
 required_info_lines = {'description', 'required_platforms', 'required_plugins',
@@ -493,6 +493,18 @@ class Plugin:
 
     ####
 
+    def mark_danger(self, pname: str):
+        """Marks given pname (command function name) as danger
+
+        :param pname: Name of the command function
+        :type pname: str
+        """
+
+        if pname in self.namespace.pcommands:
+            self.namespace.pcommands[pname].append('danger')
+
+    ####
+
     def command(self, aliases: str | list | None = None, ap: ArgumentParser | None = None,
                 static_pname: str | None = None):
         """Decorator, that helps register the new command
@@ -507,13 +519,18 @@ class Plugin:
         :returns: func with the changed attributes
         """
 
-        # check if the aliases is a list or string and type-cast it to the list
-        aliases = aliases \
-            if isinstance(aliases, list) else [aliases, ]
+        if aliases is not None:
+            # check if the aliases is a list or string and type-cast it to the list
+            aliases = aliases if isinstance(aliases, list) else [aliases, ]
 
         self.logger.debug('Register the command ALIASES: ' + ', '.join(aliases))
 
         def deco(func):
+            if aliases is None:
+                # check if the aliases are None
+                if aliases is None:
+                    raise IncorrectCommandAliasesError(self.plugin_name, func.__name__)
+
             func.ap = ap
 
             # pname - name in the permissions list
