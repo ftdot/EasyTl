@@ -6,9 +6,12 @@ error_notify = "⚠️⛔️ Error was occurred {0}"  # Any error will formatted
 unsupported = "This command and\\or operation is unsupported"
 
 [argumentparser]
-too_little_arguments = "Too little arguments are passed in to the command"
-too_much_arguments = "Too much arguments are passed in to the command"
-incorrect_type = "Incorrect argument type passed in to the command"
+too_little_arguments = "Too little arguments are passed into the command"
+too_much_arguments = "Too much arguments are passed into the command"
+incorrect_type = "Incorrect argument type passed into the command"
+incorrect_subcommand = "Incorrect subcommand passed into the command"
+reply_to_required = "To this command work required to reply-to usage"
+cant_find_original_message = "Cant find original message"
 
 boolcast_true_list = ['yes', 'yea', '+', 'true']
 boolcast_false_list = ['no', 'nop', '-', 'false']
