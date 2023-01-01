@@ -257,24 +257,7 @@ class Argument:
 
 class ReplyToArgument(Argument):
     """Argument for the Reply-To functional"""
-
-    def __init__(self,
-                 arg_name: str,
-                 arg_type: ArgTypeCast = Cast.StrCast,
-                 default: Any | None = None,
-                 description: str = 'Sample argument'
-                 ):
-        """
-        :param arg_name: Name of the argument
-        :type arg_name: str
-        :param arg_type: Type of the argument (NOTE: It must support type-casting with using str)
-        :type arg_type: type
-        :param default: Defines default value of the argument. If it None - argument is marked as required
-        :type default: Any | None
-        :param description: Description of the argument
-        :type description: str
-        """
-        super().__init__(arg_name, arg_type, default, description)
+    pass
 
 
 # cache of the ArgumentParser
@@ -298,7 +281,8 @@ class ArgumentParser:
     :type default_arguments: int
     """
 
-    def __init__(self, parent_plugin,
+    def __init__(self,
+                 parent_plugin,
                  arguments: list[Argument],
                  allow_caching: bool = True,
                  enable_escaping: bool = False,
@@ -345,6 +329,7 @@ class ArgumentParser:
             # create empty command by the plugin decorator
             self.parent_plugin.command(main_command_aliases, ap=self)(self.parent_plugin.async_empty)
 
+        # check for the reply-to argument
         if len(self.arguments) > 0 and isinstance(self.arguments[0], ReplyToArgument):
             if self.arguments[0].default is None:
                 self.position_arguments -= 1
@@ -561,6 +546,18 @@ class ArgumentParser:
     ####
 
     def subcommand(self, aliases: str | list | None = None, ap=None, static_pname: str | None = None):
+        """Decorator, that helps register the new subcommand.
+           This is redirects to the `parent_plugin.command` decorator
+
+        :param aliases: Aliases to the command
+        :type aliases: str | list | None
+        :param ap: Argument parser
+        :type ap: ArgumentParser | None
+        :param static_pname: Static name in the namespace.pcommands dict
+        :type static_pname: str | None
+
+        :returns: func with the changed attributes
+        """
 
         def deco(func):
             nonlocal aliases

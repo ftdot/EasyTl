@@ -1,6 +1,7 @@
 # byte-compiled
 src/__pycache__/
 src/source/__pycache__/
+src/external/__pycache__/
 
 # PyCharm files
 .idea/

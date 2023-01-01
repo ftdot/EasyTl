@@ -10,6 +10,10 @@ from .translator import Translator
 from .argumentparser import ArgumentParser, ArgumentParseError
 from . import pluginapi
 
+sys.path.append('..')
+
+from external.colargulog import ColorizedArgsFormatter, BraceFormatStyleFormatter
+
 
 class Instance:
     """Instance object of EasyTl userbot for Telegram
@@ -126,6 +130,9 @@ class Instance:
                                                        plugins_dir=self.plugins_dir,
                                                        namespace=self.namespace)
 
+        # other
+        self.disable_misc_loggers = False
+
     def initialize(self):
         """Initializes the working environment for userbot"""
 
@@ -157,13 +164,18 @@ class Instance:
 
         self.namespace.plugins.activate_plugin_list()
 
+        # disable misc logger if it required
+        if self.disable_misc_loggers:
+            for logger in self.namespace.misc_loggers:
+                logger.setLevel(logging.ERROR)
+
     def initialize_logging(self,
                            auto_config: bool = False,
                            log_level: str | int = logging.DEBUG,
                            console_log_level: str | int = logging.INFO,
                            disable_telethon_loggers: bool = True,
                            disable_utils_logger: bool = False,
-                           disable_other_misc_loggers: bool = True):
+                           disable_misc_loggers: bool = True):
         """Initializes the logging system
 
         :param auto_config: Auto configure the logging
@@ -176,17 +188,19 @@ class Instance:
         :type disable_telethon_loggers: bool
         :param disable_utils_logger: Set the utils logger log level to logging.ERROR level
         :type disable_utils_logger: bool
-        param disable_other_misc_loggers: Disable other misc loggers
-        :type disable_other_misc_loggers: bool
+        :param disable_misc_loggers: Disable other misc loggers
+        :type disable_misc_loggers: bool
         """
 
         if auto_config:
-            s_format = '%(name)s | %(asctime)s | [%(levelname)s] : %(message)s'
-            formatter = logging.Formatter(s_format)
+            s_format = '%(asctime)s | %(levelname)-8s | %(name)-35s — %(message)s'
+
+            stdout_formatter = ColorizedArgsFormatter(s_format)
+            file_formatter = BraceFormatStyleFormatter('%(asctime)s | %(levelname)-8s | %(name)-45s — %(message)s [%(pathname)s:%(funcName)s:%(lineno)d]')
 
             # init a stream handler for the console output
             stdout_handler = logging.StreamHandler(sys.stdout)
-            stdout_handler.setFormatter(formatter)
+            stdout_handler.setFormatter(stdout_formatter)
             stdout_handler.setLevel(console_log_level)
 
             # init a stream handler for the file log
@@ -195,7 +209,7 @@ class Instance:
                 'w',
                 'utf8'
             )
-            file_handler.setFormatter(formatter)
+            file_handler.setFormatter(file_formatter)
             file_handler.setLevel(logging.DEBUG)
 
             # add handlers to the list with it
@@ -215,18 +229,15 @@ class Instance:
             logging.getLogger('telethon.client.updates').setLevel(logging.ERROR)
             logging.getLogger('telethon.client.uploads').setLevel(logging.ERROR)
 
-        if disable_telethon_loggers:
+        if disable_utils_logger:
             logging.getLogger('EasyTl : Utils').setLevel(logging.ERROR)
 
-        if disable_other_misc_loggers:
-            logging.getLogger('hpack.hpack').setLevel(logging.ERROR)
-            for logger in self.namespace.misc_loggers:
-                logger.setLevel(logging.ERROR)
+        self.disable_misc_loggers = disable_misc_loggers
 
         # init instance logger
         self.logger = logging.getLogger('EasyTl : Instance')
 
-        self.logger.info('Logging is initialized')
+        self.logger.info('Logging is {}', 'initialized')
 
     def run(self, run_until_disconnected: bool = True):
         """Run the telegram client until disconnected
@@ -245,9 +256,9 @@ class Instance:
         )
 
         if self.config['version']['indev']:
-            self.logger.info('Current version may be unstable, because this version in the development')
+            self.logger.warning('Current version may be unstable, because this version in the development')
         if self.config['version']['beta']:
-            self.logger.info('This is a beta version. If you have some problems with EasyTl, '
+            self.logger.warning('This is a beta version. If you have some problems with EasyTl, '
                              'inform about it there: https://github.com/ftdot/EasyTl/issues')
         
         if run_until_disconnected:
