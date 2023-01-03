@@ -2,9 +2,7 @@
   <img src="https://github.com/ftdot/ftdot/raw/main/imgs/easytl_banner_nb-new.png" />
 </p>
 
-[![Latest tag](https://img.shields.io/github/v/tag/ftdot/EasyTl?label=LATEST%20TAG&style=for-the-badge)](https://github.com/ftdot/EasyTl/tags)
-[![Project telegram](https://badgen.net/badge/icon/telegram?icon=telegram&label=EASYTL&style=for-the-badge&scale=1.4)](https://t.me/easytl)
-[![Issues](https://img.shields.io/github/issues/ftdot/EasyTl?style=for-the-badge)](https://github.com/ftdot/EasyTl/issues)
+# PROJECT CLOSED
 
 # EasyTl
 This is an userbot for Telegram, that have very comfortable plugin API that allows developers to easily create the plugins. 
@@ -22,6 +20,8 @@ Any plugin extends the functional of the Telegram by adding there the user-side 
 To get installation guide, developers guide, plugins and documentation go [here](documentation)
 
 ## Credits
-Thanks to [Icons8](https://icons8.com) site for the icons
+[Icons8](https://icons8.com) - Documentation icons
 
-Special thanks to [GitHub](https://github.com) for hosting this project
+[GitHub](https://github.com) - Hosts this project
+
+Special thanks to [davidohana](https://github.com/davidohana) - Project [colargulog](https://github.com/davidohana/colargulog)
